@@ -17,5 +17,12 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+private slots:
+    void NumPressed();
+    void MathButtonpressed();
+    void EqualsButton();
+    void ChangeNumberSign();
+    void clear();
 };
 #endif // MAINWINDOW_H
