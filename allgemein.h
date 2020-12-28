@@ -2,6 +2,8 @@
 #define ALLGEMEIN_H
 
 #include <QMainWindow>
+#include <QtDebug>
+#include <QMainWindow>
 
 class allgemein
 {
@@ -11,5 +13,8 @@ public:
 };
 
 QMenuBar* addmenu(QMenuBar*);
+
+
+void debug(QString);
 
 #endif // ALLGEMEIN_H

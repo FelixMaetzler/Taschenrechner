@@ -11,12 +11,14 @@ CONFIG += c++11
 SOURCES += \
     allgemein.cpp \
     basictaschenrechner.cpp \
+    komplex.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     allgemein.h \
     basictaschenrechner.h \
+    komplex.h \
     mainwindow.h
 
 FORMS += \
