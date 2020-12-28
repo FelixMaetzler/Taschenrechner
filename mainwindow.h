@@ -2,6 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QDebug>
+#include "basictaschenrechner.h"
+#include "allgemein.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,12 +21,8 @@ public:
 
 private:
     Ui::MainWindow *ui;
-
 private slots:
-    void NumPressed();
-    void MathButtonpressed();
-    void EqualsButton();
-    void ChangeNumberSign();
-    void clear();
+    void handler();
+
 };
 #endif // MAINWINDOW_H
