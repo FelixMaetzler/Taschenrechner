@@ -2,7 +2,8 @@
 #define KOMPLEX_H
 
 
-#include "math.h"
+#include "cmath"
+#include <QtDebug>
 #include "allgemein.h"
 class komplex
 {
@@ -11,6 +12,7 @@ class komplex
 public:
     komplex();
     komplex(double, double);
+    komplex(double);
     double get_real(void) const;
     double get_imag(void) const;
     void set_real(double);
@@ -21,7 +23,6 @@ public:
 
     komplex operator*(double d);
     komplex operator/(double d);
-    komplex operator^(double d);
 
     komplex operator+(komplex z);
     komplex operator-(komplex z);
@@ -29,11 +30,16 @@ public:
     komplex operator/(komplex z);
 
 
-private:
-    //existiert nur für die Berechnungen
-    //deshalb auch Privat
+
+
+    //Diese Funktionen sollten nicht benutzt werden
     komplex toKaart(void);
     komplex toPol(void);
 };
+komplex pow(komplex, double);
+komplex pow(double, komplex);
+komplex pow(komplex, komplex);
+void debug(komplex);
+
 
 #endif // KOMPLEX_H

@@ -18,15 +18,31 @@ MainWindow::MainWindow(QWidget *parent)
     action->setObjectName("Menu");
     action->setParent(menu);
     menu->addAction(action);
+
 action = new QAction("BasicTaschenrechner");
 action->setObjectName("BasicTaschenrechner");
 action->setParent(menu);
     menu->addAction(action);
-qDebug()<<action->text();
+
+    action = new QAction("Nullstellenfinder");
+    action->setObjectName("Nullstellenfinder");
+    action->setParent(menu);
+        menu->addAction(action);
     ui->menubar->addMenu(menu);
 
 connect(MainWindow::findChild<QAction*>("BasicTaschenrechner"), SIGNAL(triggered()),this , SLOT(handler()));
+connect(MainWindow::findChild<QAction*>("Nullstellenfinder"), SIGNAL(triggered()),this , SLOT(handler()));
 
+QVector<double> inputs;
+inputs.append(1);
+inputs.append(2);
+inputs.append(-33);
+inputs.append(63);
+
+auto outputs = cardano(inputs);
+foreach(komplex elem, outputs){
+    debug(elem);
+}
 }
 
 
@@ -43,6 +59,12 @@ void MainWindow::handler(){
    if(Buttonname == "BasicTaschenrechner"){
 
        auto y = new basicTaschenrechner();
+       y->show();
+       this->close();
+   }
+   if(Buttonname == "Nullstellenfinder"){
+
+       auto y = new Nullstellenfinder();
        y->show();
        this->close();
    }

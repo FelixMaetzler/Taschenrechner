@@ -5,6 +5,9 @@
 #include <QDebug>
 #include "basictaschenrechner.h"
 #include "allgemein.h"
+#include "nullstellenfinder.h"
+#include "komplex.h"
+#include "nullstellenfinder.h"
 
 
 QT_BEGIN_NAMESPACE

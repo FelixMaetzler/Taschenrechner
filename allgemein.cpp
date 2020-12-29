@@ -13,4 +13,6 @@ QMenuBar* addmenu(QMenuBar* menubar){
 
 void debug(QString fehler){
     qDebug()<<fehler;
+    return;
 }
+

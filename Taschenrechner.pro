@@ -13,17 +13,20 @@ SOURCES += \
     basictaschenrechner.cpp \
     komplex.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    nullstellenfinder.cpp
 
 HEADERS += \
     allgemein.h \
     basictaschenrechner.h \
     komplex.h \
-    mainwindow.h
+    mainwindow.h \
+    nullstellenfinder.h
 
 FORMS += \
     basictaschenrechner.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    nullstellenfinder.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
