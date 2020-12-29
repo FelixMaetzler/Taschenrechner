@@ -40,21 +40,26 @@ QVector<komplex> cardano(QVector<double> inputs){
     if(D<0){
         double phi = acos((-q)/(2.0*pow(-p/3.0, 1.5)));
         for (int i = 0;i < 3 ;i++ ) {
-            double x = 2.0*pow(-p/3.0, 0.5)*cos((phi + 2.0* M_PI * i)/3.0);
+            double y = 2.0*pow(-p/3.0, 0.5)*cos((phi + 2.0* M_PI * i)/3.0);
+            double x = y - r/3.0;
             outputs.append(komplex(x));
         }
     }else if(D>0){
         double u = cbrt(-q/2.0 + pow(D, 0.5));
         double v = cbrt(-q/2.0 - pow(D, 0.5));
-        double x1 = u+v;
-        double real = -0.5*(u+v);
+        double y1 = u+v;
+        double x1 =  y1 - r/3.0;
+        double realy = -0.5*(u+v);
+        double realx = realy - r/3.0;
         double imag = 0.5 * pow(3.0, 0.5)*(u-v);
         outputs.append(komplex(x1));
-        outputs.append(komplex(real, imag));
-        outputs.append(komplex(real, -imag));
+        outputs.append(komplex(realx, imag));
+        outputs.append(komplex(realx, -imag));
     }else{
-        double x1 = 2*cbrt(-q/2.0);
-        double x2 = -cbrt(-q/2.0);
+        double y1 = 2*cbrt(-q/2.0);
+        double y2 = -cbrt(-q/2.0);
+        double x1 = y1 - r/3.0;
+        double x2 = y2 - r/3.0;
         outputs.append(komplex(x1));
         outputs.append(komplex(x2));
         outputs.append(komplex(x2));
