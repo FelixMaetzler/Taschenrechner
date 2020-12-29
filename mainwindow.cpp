@@ -34,12 +34,15 @@ connect(MainWindow::findChild<QAction*>("BasicTaschenrechner"), SIGNAL(triggered
 connect(MainWindow::findChild<QAction*>("Nullstellenfinder"), SIGNAL(triggered()),this , SLOT(handler()));
 
 QVector<double> inputs;
+inputs.append(1);
+inputs.append(2);
+inputs.append(3);
+inputs.append(4);
 inputs.append(5);
-inputs.append(17);
-inputs.append(-39);
-inputs.append(-63);
+inputs.append(6);
+inputs.append(7);
 
-auto outputs = cardano(inputs);
+auto outputs = numerisch(inputs);
 foreach(komplex elem, outputs){
     debug(elem);
 }

@@ -2,7 +2,8 @@
 
 komplex::komplex()
 {
-
+    this->set_real(0);
+    this->set_imag(0);
 }
 komplex::komplex(double real, double imag){
     this->set_real(real);

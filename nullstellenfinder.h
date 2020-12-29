@@ -24,4 +24,7 @@ private slots:
 };
 QVector<komplex> abcFormel(QVector<double>);
 QVector<komplex> cardano(QVector<double>);
+QVector<komplex> numerisch(QVector<double>);
+komplex yWert(QVector<double>, komplex);
+komplex appAusrechnen(QVector<double>, QVector<komplex>, int);
 #endif // NULLSTELLENFINDER_H
