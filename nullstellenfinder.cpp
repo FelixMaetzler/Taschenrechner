@@ -14,7 +14,12 @@ Nullstellenfinder::~Nullstellenfinder()
 {
     delete ui;
 }
-
+QVector<komplex> linear(QVector<double> inputs){
+    double erg = -inputs.at(1)/inputs.at(0);
+    QVector<komplex> outputs;
+    outputs.append(komplex(erg));
+    return outputs;
+}
 QVector<komplex> abcFormel(QVector<double> inputs){
     QVector<komplex> outputs;
     komplex a(inputs.at(0));
@@ -67,70 +72,84 @@ QVector<komplex> cardano(QVector<double> inputs){
     return outputs;
 }
 QVector<komplex> numerisch(QVector<double> input){
+    //Durand-Kerner Algorithmus
     //https://youtu.be/5JcpOj2KtWc
     QVector<double> inputs;
-    for(int i = input.count() - 1; i >= 0; i--){//sortiert die ganze Liste um. somit ist der Term mit dem niedrigsten Grad ganz vorne
-        inputs.append(input.at(i));
+    for(int i = input.count() - 1; i >= 0; i--){//sortiert die ganze Liste um
+        inputs.append(input.at(i));//somit ist der Term mit dem niedrigsten Grad ganz vorne
     }
+    //input ist normal sortiert (größte Potenz ist vorne) und inputs genau anders herum
     QVector<komplex> appvalues;//Approximation Values
 
-    const double genauigkeit = pow(10, -9);
-    double aktuelle_genauigkeit = INFINITY;
-    double offset = M_PI/(2.0*inputs.count());
-    double winkel = (2*M_PI)/inputs.count();
-    double radius = pow(abs(inputs.at(0)/inputs.back()), (1/inputs.count()));
-    for(int i = 0; i < inputs.count()-1; i++){
+    const double genauigkeit = pow(10, -9);//Grenze für die Änderung von einer Iteration zur nächsten
+    //Wenn sich der Wert unterhalb der genauigkeit geändert  hat, dann gilt er als Nullstelle
+    double aktuelle_genauigkeit = INFINITY;//wird auf unendlich initialisiert
+    //Theoretisch müsste jede Zahl kleiner sein
+
+    //Hier werden die Startwerte initialisiert
+    //optimalerweise auf einem komplexen Kreis und alle Werte sollten gleichmäßig verteilt sein
+    //Auch sollte die reelle Achse vermieden werden. genauso wie komplex konjugierte Paare
+
+    double offset = M_PI/(2.0*inputs.count());//dieser vermeidet die reelle Achse und die Paare
+    double winkel = (2*M_PI)/inputs.count();//dieser kümmert sich um die gleichmäßige Verteilung
+    double radius = pow(abs(inputs.at(0)/inputs.back()), (1/inputs.count()));//Das ist der radius des Kreises
+    for(int i = 0; i < inputs.count()-1; i++){//ein Polynom nten Grades hat n Lösungen und n+1 monome
         komplex x;
         x.set_real(radius);
         x.set_imag(offset + i * winkel);
         x.toKaart();
         appvalues.append(x);
 
-    }//startingValues ferig
+    }//jetzt haben wir die Startwerte auf einem Kreis gleichmäßig verteilt und um einen winkeloffset verschoben
 
 
 
     QVector<komplex> aktuelle_appvalues = appvalues;
-    while(aktuelle_genauigkeit > genauigkeit){
+    while(aktuelle_genauigkeit > genauigkeit){//solange die Änderung nicht klein genug ist...
         double temp_genauigkeit = 0;
         for(int i = 0; i < appvalues.count(); i++){
 
-            komplex appValue = appAusrechnen(input, appvalues, i);
-            if (((appValue-appvalues.at(i)).betrag())>temp_genauigkeit){
-                temp_genauigkeit = (appValue-appvalues.at(i)).betrag();
+            komplex appValue = appAusrechnen(input, appvalues, i);//rechnet eine genauere Nullstelle aus
+            if (((appValue-appvalues.at(i)).betrag())>temp_genauigkeit){//Wenn die Änderung größer war wie tempgenauigkeit...
+                temp_genauigkeit = (appValue-appvalues.at(i)).betrag();//dann wird diese Änderung zu tempgenauigkeit
             }
-            aktuelle_appvalues[i] = appValue;
+            aktuelle_appvalues[i] = appValue;//die Nullstelle wird gespeichert
         }
-        if(aktuelle_genauigkeit>temp_genauigkeit){
-            aktuelle_genauigkeit = temp_genauigkeit;
+        //nachdem jede Nullstelle eine weitere Iteration durchgemacht hat...
+        if(aktuelle_genauigkeit>temp_genauigkeit){//wird geschaut ob die größte Abweichung kleiner ist als die von den vorherigen Iterationen
+            aktuelle_genauigkeit = temp_genauigkeit;//Wenn ja wird diese geupdated
         }
-        appvalues = aktuelle_appvalues;
-    }
-return appvalues;
+        appvalues = aktuelle_appvalues;//Die Liste aus der vorherigen Iteration wird die aktuelle Iteration
+    }//Wenn dann jede Nullstelle die oben festgelegte Geanuigkeit erreicht hat, ist der Vorgang abgeschlossen
+return appvalues;//und die Werte werden zurückgegeben
 }
 komplex yWert(QVector<double> input, komplex x){
-    //input müssen so sortiert sein, dass der höchste Grad an Index 0 ist
+    //Rechnet bei einem gegebenen Polynom und einem gegebenen x den yWert an der Stelle x aus
+    //input muss so sortiert sein, dass der höchste Grad an Index 0 ist
     QVector<double> inputs;
     for(int i = input.count() - 1; i >= 0; i--){//sortiert die ganze Liste um. somit ist der Term mit dem niedrigsten Grad ganz vorne
         inputs.append(input.at(i));
     }
-    komplex y(0, 0);
+    komplex y(0, 0);//neutrales Element bezüglich der Addition
     for(int i = 0; i < inputs.count(); i++){
+        //da jetzt der Index mit der Potenz übereinstimmt, funktioniert folgendes:
         y = y + pow(x, i) * inputs.at(i);
     }
     return y;
 }
 komplex appAusrechnen(QVector<double> inputs, QVector<komplex> appValues, int i){
-    komplex nenner(1,0);
+    //rechnet bei gegebenen Polynom, bei den gegebenen Nullstellen einer Iteration und dem index der nullstelle die berechnet werden soll
+    //die Nullstelle des index für die nächste Generation aus
+    komplex nenner(1,0);//neutrales Element bezüglich der Multiplikation
     komplex app;
     komplex x = appValues.at(i);
     for(int j = 0; j < appValues.count(); j++){
-        if(j != i){
+        if(j != i){//für den Nenner werden alle (x-Nullstelle) aufeinandermultipliziert, außer die Nullstelle für das das berechnet werden soll
             nenner = nenner * (x - appValues.at(j));
         }
     }
-komplex y = yWert(inputs, x);
-app = x - (y / nenner);
+komplex y = yWert(inputs, x);//rechnet den yWert der aktuellen Nullstelle aus
+app = x - (y / nenner);//hier wird die nächste Iteration dieser Nullstelle bestimmt
 return app;
 }
 

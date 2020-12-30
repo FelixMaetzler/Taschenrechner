@@ -22,9 +22,10 @@ private:
 private slots:
 
 };
+QVector<komplex> linear(QVector<double>);
 QVector<komplex> abcFormel(QVector<double>);
 QVector<komplex> cardano(QVector<double>);
 QVector<komplex> numerisch(QVector<double>);
-komplex yWert(QVector<double>, komplex);
-komplex appAusrechnen(QVector<double>, QVector<komplex>, int);
+komplex yWert(QVector<double>, komplex);//rechnet den yWert eines Polynoms an einer bestimmten Stelle aus
+komplex appAusrechnen(QVector<double>, QVector<komplex>, int);//berechnet die Nullstelle der nächsten Iteration
 #endif // NULLSTELLENFINDER_H
