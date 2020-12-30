@@ -29,6 +29,8 @@ public:
     komplex operator*(komplex z);
     komplex operator/(komplex z);
 
+    QString toQstring(void)const;
+
 
 
 

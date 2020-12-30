@@ -8,6 +8,7 @@ Nullstellenfinder::Nullstellenfinder(QWidget *parent) :
     ui->setupUi(this);
 
 
+    connect(ui->ButtonBerechnen, SIGNAL(released()), this, SLOT(berechnen()));
 }
 
 Nullstellenfinder::~Nullstellenfinder()
@@ -20,13 +21,17 @@ QVector<komplex> linear(QVector<double> inputs){
     outputs.append(komplex(erg));
     return outputs;
 }
-QVector<komplex> abcFormel(QVector<double> inputs){
+QVector<komplex> pqFormel(QVector<double> inputs){
     QVector<komplex> outputs;
     komplex a(inputs.at(0));
     komplex b(inputs.at(1));
     komplex c(inputs.at(2));
-    outputs.append((b*-1+pow(b*b-a*c*4,0.5))/(a*-2));
-    outputs.append((b*-1-pow(b*b-a*c*4,0.5))/(a*-2));
+    komplex p(b/a);
+    komplex q(c/a);
+    komplex x1 = (p/-2.0)+pow(pow(p/2.0,2) - q, 0.5);
+    komplex x2 = (p/-2.0)-pow(pow(p/2.0,2) - q, 0.5);
+    outputs.append(x1);
+    outputs.append(x2);
     return outputs;
 }
 QVector<komplex> cardano(QVector<double> inputs){
@@ -121,7 +126,7 @@ QVector<komplex> numerisch(QVector<double> input){
         }
         appvalues = aktuelle_appvalues;//Die Liste aus der vorherigen Iteration wird die aktuelle Iteration
     }//Wenn dann jede Nullstelle die oben festgelegte Geanuigkeit erreicht hat, ist der Vorgang abgeschlossen
-return appvalues;//und die Werte werden zurückgegeben
+    return appvalues;//und die Werte werden zurückgegeben
 }
 komplex yWert(QVector<double> input, komplex x){
     //Rechnet bei einem gegebenen Polynom und einem gegebenen x den yWert an der Stelle x aus
@@ -148,8 +153,43 @@ komplex appAusrechnen(QVector<double> inputs, QVector<komplex> appValues, int i)
             nenner = nenner * (x - appValues.at(j));
         }
     }
-komplex y = yWert(inputs, x);//rechnet den yWert der aktuellen Nullstelle aus
-app = x - (y / nenner);//hier wird die nächste Iteration dieser Nullstelle bestimmt
-return app;
+    komplex y = yWert(inputs, x);//rechnet den yWert der aktuellen Nullstelle aus
+    app = x - (y / nenner);//hier wird die nächste Iteration dieser Nullstelle bestimmt
+    return app;
+}
+QVector<komplex> PolynomHandler(QVector<double> inputs){
+    int grad = inputs.count()-1;
+    QVector<komplex> outputs;
+    if(grad < 1){
+        debug("Dieses Polynom ist nicht implementiert");
+        return outputs;
+    }else if(grad == 1){
+        return linear(inputs);
+    }else if(grad == 2){
+        return pqFormel(inputs);
+    }else if(grad == 3){
+        return cardano(inputs);
+    }else{
+        return numerisch(inputs);
+    }
+}
+void Nullstellenfinder::berechnen(){
+    QString koeffizientenstring = ui->lineKoeffizienten->text();
+    ui->textNullstellen->clear();
+    QVector<double> inputs;
+    auto liste = koeffizientenstring.split(';');
+    foreach(QString zahl, liste){
+        if (zahl == ""){
+            inputs.append(0.0);
+        }else{
+            inputs.append(zahl.toDouble());
+        }
+    }
+    QVector<komplex> outputs = PolynomHandler(inputs);
+    foreach(komplex z, outputs){
+
+        ui->textNullstellen->append(z.toQstring());
+        ui->textNullstellen->append("\n");
+    }
 }
 

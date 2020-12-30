@@ -37,7 +37,7 @@ double komplex::winkel() const {
         return 0;
     }else
     {
-    return std::atan2(this->get_imag(), this->get_real());
+        return std::atan2(this->get_imag(), this->get_real());
     }
 }
 komplex komplex::toKaart(){
@@ -61,35 +61,73 @@ komplex komplex::operator-(komplex z){
     return komplex(this->get_real()-z.get_real(), this->get_imag()-z.get_imag());
 }
 komplex komplex::operator*(komplex z){
-   return komplex((this->get_real()*z.get_real())-(this->get_imag()*z.get_imag()),
-                  (this->get_real()*z.get_imag())+(this->get_imag()*z.get_real()));
+    return komplex((this->get_real()*z.get_real())-(this->get_imag()*z.get_imag()),
+                   (this->get_real()*z.get_imag())+(this->get_imag()*z.get_real()));
 }
 komplex komplex::operator/(komplex z){
-   return (komplex(this->betrag()/z.betrag(), this->winkel()-z.winkel())).toKaart();
+    if(z.get_imag() == 0.0 && z.get_real() == 0.0){
+        debug("Teilen durch 0+0j geht nicht!!!");
+        return komplex();
+    }else if(this->betrag() == 0){
+        return komplex();
+    }else if(this->get_imag() == 0.0 && z.get_imag() == 0.0){
+        return komplex((this->get_real()/z.get_real()));
+    }else{
+        return (komplex(this->betrag()/z.betrag(), this->winkel()-z.winkel())).toKaart();
+    }
+
+}
+
+QString komplex::toQstring(void)const{
+    QString s = "";
+    if(this->get_imag() == 0.0){
+        s += QString::number(this->get_real());
+    }else if(this->get_real() == 0.0){
+        s += QString::number(this->get_imag());
+        s += "j";
+    }else{
+        s += QString::number(this->get_real());
+        if(this->get_imag()>=0){
+            s+= " + ";
+        }else{
+            s+= " - ";
+        }
+        s += QString::number(abs(this->get_imag()));
+        s += "j";
+    }
+
+    return s;
 }
 
 
 
 komplex pow(komplex z, double d){
-    return (komplex(pow(z.betrag(), d), d * z.winkel())).toKaart();
+    if(d == 0.0){
+        return komplex(1.0);
+    }else if(d == 1.0){
+        return z;
+    }else{
+        return (komplex(pow(z.betrag(), d), d * z.winkel())).toKaart();
+    }
 }
 komplex pow(double d, komplex z){
-    return ((komplex(pow(d, z.get_real()), z.get_imag()*log(d))).toKaart());
+    if(z.get_imag() == 0.0){
+        return komplex(pow(d, z.get_real()));
+    }else{
+        return ((komplex(pow(d, z.get_real()), z.get_imag()*log(d))).toKaart());
+    }
 }
 komplex pow(komplex a, komplex b){
-    return (pow(a.betrag(), b)*pow(M_E, (komplex(-b.get_imag(), b.get_real())*a.winkel())));
+    if(a.get_imag() == 0.0){
+        return pow(a.get_real(), b);
+    }else if(b.get_imag() == 0.0){
+        return pow(a, b.get_real());
+    }else{
+        return (pow(a.betrag(), b)*pow(M_E, (komplex(-b.get_imag(), b.get_real())*a.winkel())));
+    }
 }
 void debug(komplex z){
-    QString s = "";
-    s += QString::number(z.get_real());
-    if(z.get_imag()>=0){
-        s+= " + ";
-    }else{
-        s+= " - ";
-    }
-    s += QString::number(abs(z.get_imag()));
-    s += "";
-    s += "j";
+    QString s = z.toQstring();
     debug(s);
     return;
 }
