@@ -7,7 +7,7 @@ Nullstellenfinder::Nullstellenfinder(QWidget *parent) :
 {
     ui->setupUi(this);
 
-
+    ui->label_Equation->clear();
     connect(ui->ButtonBerechnen, SIGNAL(released()), this, SLOT(berechnen()));
 }
 
@@ -107,18 +107,25 @@ QVector<komplex> numerisch(QVector<double> input){
 
     }//jetzt haben wir die Startwerte auf einem Kreis gleichmäßig verteilt und um einen winkeloffset verschoben
 
-
+    QVector<bool> NullstelleGefunden;
+    foreach(komplex x, appvalues){
+        NullstelleGefunden.append(false);
+    }
 
     QVector<komplex> aktuelle_appvalues = appvalues;
     while(aktuelle_genauigkeit > genauigkeit){//solange die Änderung nicht klein genug ist...
         double temp_genauigkeit = 0;
         for(int i = 0; i < appvalues.count(); i++){
-
-            komplex appValue = appAusrechnen(input, appvalues, i);//rechnet eine genauere Nullstelle aus
-            if (((appValue-appvalues.at(i)).betrag())>temp_genauigkeit){//Wenn die Änderung größer war wie tempgenauigkeit...
-                temp_genauigkeit = (appValue-appvalues.at(i)).betrag();//dann wird diese Änderung zu tempgenauigkeit
+            if(NullstelleGefunden.at(i) == false){
+                komplex appValue = appAusrechnen(input, appvalues, i);//rechnet eine genauere Nullstelle aus
+                if (((appValue-appvalues.at(i)).betrag())>temp_genauigkeit){//Wenn die Änderung größer war wie tempgenauigkeit...
+                    temp_genauigkeit = (appValue-appvalues.at(i)).betrag();//dann wird diese Änderung zu tempgenauigkeit
+                    if((appValue-appvalues.at(i)).betrag()<genauigkeit){
+                        NullstelleGefunden[i] = true;
+                    }
+                }
+                aktuelle_appvalues[i] = appValue;//die Nullstelle wird gespeichert
             }
-            aktuelle_appvalues[i] = appValue;//die Nullstelle wird gespeichert
         }
         //nachdem jede Nullstelle eine weitere Iteration durchgemacht hat...
         if(aktuelle_genauigkeit>temp_genauigkeit){//wird geschaut ob die größte Abweichung kleiner ist als die von den vorherigen Iterationen
@@ -140,6 +147,9 @@ komplex yWert(QVector<double> input, komplex x){
         //da jetzt der Index mit der Potenz übereinstimmt, funktioniert folgendes:
         y = y + pow(x, i) * inputs.at(i);
     }
+    if(y.get_real() != y.get_real()){
+        debug("NAN 4");
+    }
     return y;
 }
 komplex appAusrechnen(QVector<double> inputs, QVector<komplex> appValues, int i){
@@ -151,10 +161,16 @@ komplex appAusrechnen(QVector<double> inputs, QVector<komplex> appValues, int i)
     for(int j = 0; j < appValues.count(); j++){
         if(j != i){//für den Nenner werden alle (x-Nullstelle) aufeinandermultipliziert, außer die Nullstelle für das das berechnet werden soll
             nenner = nenner * (x - appValues.at(j));
+            if(nenner.get_real() != nenner.get_real()){
+                debug("NAN 7");
+            }
         }
     }
     komplex y = yWert(inputs, x);//rechnet den yWert der aktuellen Nullstelle aus
     app = x - (y / nenner);//hier wird die nächste Iteration dieser Nullstelle bestimmt
+    if(app != app || app.get_imag()==INFINITY){
+        debug("NAN 5");
+    }
     return app;
 }
 QVector<komplex> PolynomHandler(QVector<double> inputs){
@@ -190,6 +206,45 @@ void Nullstellenfinder::berechnen(){
 
         ui->textNullstellen->append(z.toQstring());
         ui->textNullstellen->append("\n");
+        if(z.get_real() != z.get_real()){
+            debug("NAN 6");
+        }
     }
+    QString equation;
+    int j = inputs.count();
+    for(int i = 0; i < j; i++){
+        int grad = j-i-1;
+        QString x;
+        double y = inputs.at(i);
+        if(y != 0.0){
+            if(y > 0 && i !=0){
+                x += "+";
+            }
+            if(y == -1){
+                x += "-";
+            }else if(y == 1){
+
+            }else{
+                x +=  QString::number(y);
+            }
+            if(grad == 0){
+                if(y == 1 || y==-1){
+                    x += "1";
+                }
+
+
+            }else if(grad == 1){
+                x += "x";
+            }else{
+                x += "x^" + QString::number(grad);
+            }
+            x += " ";
+        }
+        equation.append(x);
+    }
+    equation.append(" = 0");
+    ui->label_Equation->setText(equation);
+
+
 }
 

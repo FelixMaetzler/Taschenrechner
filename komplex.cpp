@@ -78,6 +78,18 @@ komplex komplex::operator/(komplex z){
 
 }
 
+bool komplex::operator==(komplex a){
+    if(this->get_real() == a.get_real() && this->get_imag()==a.get_imag()){
+        return true;
+    }else{
+        return false;
+    }
+}
+bool komplex::operator!=(komplex a){
+    return (!(*this == a));
+}
+
+
 QString komplex::toQstring(void)const{
     QString s = "";
     if(this->get_imag() == 0.0){
@@ -107,14 +119,22 @@ komplex pow(komplex z, double d){
     }else if(d == 1.0){
         return z;
     }else{
-        return (komplex(pow(z.betrag(), d), d * z.winkel())).toKaart();
+        komplex x = (komplex(pow(z.betrag(), d), d * z.winkel())).toKaart();
+        if(x.get_real() != x.get_real()){
+            debug("NAN 3");
+        }
+        return x;
     }
 }
 komplex pow(double d, komplex z){
     if(z.get_imag() == 0.0){
         return komplex(pow(d, z.get_real()));
     }else{
-        return ((komplex(pow(d, z.get_real()), z.get_imag()*log(d))).toKaart());
+        komplex x = ((komplex(pow(d, z.get_real()), z.get_imag()*log(d))).toKaart());
+        if(x.get_real() != x.get_real()){
+            debug("NAN 2");
+        }
+        return x;
     }
 }
 komplex pow(komplex a, komplex b){
@@ -123,7 +143,11 @@ komplex pow(komplex a, komplex b){
     }else if(b.get_imag() == 0.0){
         return pow(a, b.get_real());
     }else{
-        return (pow(a.betrag(), b)*pow(M_E, (komplex(-b.get_imag(), b.get_real())*a.winkel())));
+        komplex x = (pow(a.betrag(), b)*pow(M_E, (komplex(-b.get_imag(), b.get_real())*a.winkel())));
+        if(x.get_real() != x.get_real()){
+            debug("NAN 1");
+        }
+        return x;
     }
 }
 void debug(komplex z){

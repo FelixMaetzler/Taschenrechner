@@ -14,14 +14,20 @@ SOURCES += \
     komplex.cpp \
     main.cpp \
     mainwindow.cpp \
-    nullstellenfinder.cpp
+    nullstellenfinder.cpp \
+
+
+
 
 HEADERS += \
     allgemein.h \
     basictaschenrechner.h \
     komplex.h \
     mainwindow.h \
-    nullstellenfinder.h
+    nullstellenfinder.h \
+
+
+
 
 FORMS += \
     basictaschenrechner.ui \

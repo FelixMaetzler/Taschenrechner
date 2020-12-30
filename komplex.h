@@ -21,13 +21,16 @@ public:
     double betrag(void) const;
     double winkel(void) const;
 
-    komplex operator*(double d);
-    komplex operator/(double d);
+    komplex operator*(double);
+    komplex operator/(double);
 
-    komplex operator+(komplex z);
-    komplex operator-(komplex z);
-    komplex operator*(komplex z);
-    komplex operator/(komplex z);
+    komplex operator+(komplex);
+    komplex operator-(komplex);
+    komplex operator*(komplex);
+    komplex operator/(komplex);
+
+    bool operator==(komplex);
+    bool operator!=(komplex);
 
     QString toQstring(void)const;
 
