@@ -133,6 +133,7 @@ QVector<komplex> numerisch(QVector<double> input){
         }
         appvalues = aktuelle_appvalues;//Die Liste aus der vorherigen Iteration wird die aktuelle Iteration
     }//Wenn dann jede Nullstelle die oben festgelegte Geanuigkeit erreicht hat, ist der Vorgang abgeschlossen
+
     return appvalues;//und die Werte werden zurückgegeben
 }
 komplex yWert(QVector<double> input, komplex x){

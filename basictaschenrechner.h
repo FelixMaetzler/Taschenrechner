@@ -27,7 +27,11 @@ private slots:
     void EqualsButton();
     void ChangeNumberSign();
     void clear();
+    void KommaButtonpressed();
     void handler();
+    void Fakultaet();
+    void oneClick();
+    void labelClear();
 };
 
 #endif // BASICTASCHENRECHNER_H
