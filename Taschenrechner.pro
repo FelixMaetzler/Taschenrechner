@@ -15,6 +15,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     matrix.cpp \
+    matrizen.cpp \
     nullstellenfinder.cpp \
 
 
@@ -26,6 +27,7 @@ HEADERS += \
     komplex.h \
     mainwindow.h \
     matrix.h \
+    matrizen.h \
     nullstellenfinder.h \
 
 
