@@ -8,6 +8,7 @@
 #include "nullstellenfinder.h"
 #include "komplex.h"
 #include "nullstellenfinder.h"
+#include "matrix.h"
 
 
 QT_BEGIN_NAMESPACE

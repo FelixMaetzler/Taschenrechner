@@ -14,6 +14,7 @@ SOURCES += \
     komplex.cpp \
     main.cpp \
     mainwindow.cpp \
+    matrix.cpp \
     nullstellenfinder.cpp \
 
 
@@ -24,6 +25,7 @@ HEADERS += \
     basictaschenrechner.h \
     komplex.h \
     mainwindow.h \
+    matrix.h \
     nullstellenfinder.h \
 
 
@@ -32,6 +34,7 @@ HEADERS += \
 FORMS += \
     basictaschenrechner.ui \
     mainwindow.ui \
+    matrix.ui \
     nullstellenfinder.ui
 
 # Default rules for deployment.
