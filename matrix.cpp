@@ -12,14 +12,17 @@ Matrix::Matrix(QWidget *parent) :
     ui->setupUi(this);
     ui->textMatrix1->setReadOnly(true);
     ui->textMatrix2->setReadOnly(true);
-    ui->textErg->clear();
-    ui->textErg->setHidden(true);
+
+    ui->lineMatrixErg->setHidden(true);//nur für Debug auf false. später muss es wieder true
 
     connect(ui->lineMatrix1, SIGNAL(textChanged(const QString&)), this, SLOT(anzeigen()));
     connect(ui->lineMatrix2, SIGNAL(textChanged(const QString&)), this, SLOT(anzeigen()));
     connect(ui->ButtonChangeAB, SIGNAL(released()), this, SLOT(change()));
     connect(ui->ButtonChangeAErg, SIGNAL(released()), this, SLOT(change()));
     connect(ui->ButtonChangeBErg, SIGNAL(released()), this, SLOT(change()));
+    connect(ui->ButtonMult, SIGNAL(released()), this, SLOT(rechnungen()));
+    connect(ui->lineMatrixErg, SIGNAL(textChanged(const QString&)), this, SLOT(anzeigen()));
+
 
 }
 
@@ -37,6 +40,9 @@ QVector<QVector<double>> Matrix::einlesen(int welcheMatrix){
     }
     if(welcheMatrix == Matrix2){
         string = ui->lineMatrix2->text();
+    }
+    if(welcheMatrix == MatrixErgebnis){
+        string = ui->lineMatrixErg->text();
     }
 
     auto zeilen = string.split(';');
@@ -75,7 +81,7 @@ QVector<QVector<double>> Matrix::einlesen(int welcheMatrix){
             Matrix[zeilennummer][spaltennummer] = wert;
         }
     }
-    MatrixToLabel(Matrix);
+
     return Matrix;
 }
 void Matrix::anzeigen(){
@@ -85,6 +91,9 @@ void Matrix::anzeigen(){
     }
     if(sender()->objectName().contains("2")){
         welcheMatrix = Matrix2;
+    }
+    if(sender()->objectName().contains("Erg")){
+        welcheMatrix = MatrixErgebnis;
     }
 
     auto Matrix = einlesen(welcheMatrix);
@@ -124,6 +133,9 @@ void Matrix::anzeigen(){
     if(welcheMatrix == Matrix2){
         ui->textMatrix2->setText(text);
     }
+    if(welcheMatrix == MatrixErgebnis){
+        ui->textMatrixErg->setText(text);
+    }
 
 }
 void Matrix::change(){
@@ -134,13 +146,13 @@ void Matrix::change(){
         ui->lineMatrix2->setText(matrix1);
     }
     if(sender()->objectName().contains("AErg")){
-        ui->lineMatrix1->setText(ui->textErg->text());
+        ui->lineMatrix1->setText(ui->lineMatrixErg->text());
     }
     if(sender()->objectName().contains("BErg")){
-        ui->lineMatrix2->setText(ui->textErg->text());
+        ui->lineMatrix2->setText(ui->lineMatrixErg->text());
     }
 }
-void Matrix::MatrixToLabel(QVector<QVector<double>> matrix){
+void Matrix::erg(QVector<QVector<double>> matrix){
     QString text = "";
 
     for(int zeilennummer = 0; zeilennummer < matrix.count(); zeilennummer++){
@@ -156,5 +168,46 @@ void Matrix::MatrixToLabel(QVector<QVector<double>> matrix){
             text += ";";
         }
     }
-    ui->textErg->setText(text);
+    ui->lineMatrixErg->setReadOnly(false);
+    ui->lineMatrixErg->setText(text);
+    ui->lineMatrixErg->setReadOnly(true);
+    return;
+}
+QVector<QVector<double>> Matrix::mult(QVector<QVector<double>> m1, QVector<QVector<double>>m2){
+    QVector<QVector<double>> erg;
+    if(m1.at(0).count() != m2.count()){
+        //kann nicht durchgeführt werden
+        return erg;
+    }
+    int iterationen = m2.count();
+    int zeilenzahl = m1.count();
+    int spaltenzahl = m2.at(0).count();
+    QVector<double> spalte;
+    for(int i = 0; i < spaltenzahl; i++){
+        spalte.append(0);
+    }
+    for(int i = 0; i < zeilenzahl; i++){
+        erg.append(spalte);
+    }
+    //erg Matrix hat jetzt die richtigen Dimensionen
+    for(int zeilennummer = 0; zeilennummer < erg.count(); zeilennummer++){
+        for(int spaltennummer = 0; spaltennummer < erg.at(0).count(); spaltennummer++){
+       double wert = 0;
+       for(int i = 0; i < iterationen; i++){
+           wert += m1.at(zeilennummer).at(i) * m2.at(i).at(spaltennummer);
+       }
+       erg[zeilennummer][spaltennummer] = wert;
+        }
+    }
+    return erg;
+}
+void Matrix::rechnungen(){
+QVector<QVector<double>> ergebnis;
+QVector<QVector<double>> m1 = einlesen(Matrix1);
+QVector<QVector<double>> m2 = einlesen(Matrix2);
+
+    if(sender()->objectName().contains("Mult")){
+    ergebnis = mult(m1, m2);
+}
+    erg(ergebnis);
 }

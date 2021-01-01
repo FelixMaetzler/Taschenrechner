@@ -24,7 +24,10 @@ private slots:
 QVector<QVector<double>> einlesen(int);
 void anzeigen();
 void change();
-void MatrixToLabel(QVector<QVector<double>>);
+void rechnungen();
+void erg(QVector<QVector<double>>);
+QVector<QVector<double>> mult(QVector<QVector<double>>, QVector<QVector<double>>);
+
 };
 
 
