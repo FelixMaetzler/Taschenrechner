@@ -23,6 +23,8 @@ private:
 private slots:
 QVector<QVector<double>> einlesen(int);
 void anzeigen();
+void change();
+void MatrixToLabel(QVector<QVector<double>>);
 };
 
 

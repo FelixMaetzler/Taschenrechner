@@ -10,11 +10,17 @@ Matrix::Matrix(QWidget *parent) :
     ui(new Ui::Matrix)
 {
     ui->setupUi(this);
-    ui->textMatrix1->setReadOnly(false);
+    ui->textMatrix1->setReadOnly(true);
     ui->textMatrix2->setReadOnly(true);
+    ui->textErg->clear();
+    ui->textErg->setHidden(true);
 
     connect(ui->lineMatrix1, SIGNAL(textChanged(const QString&)), this, SLOT(anzeigen()));
     connect(ui->lineMatrix2, SIGNAL(textChanged(const QString&)), this, SLOT(anzeigen()));
+    connect(ui->ButtonChangeAB, SIGNAL(released()), this, SLOT(change()));
+    connect(ui->ButtonChangeAErg, SIGNAL(released()), this, SLOT(change()));
+    connect(ui->ButtonChangeBErg, SIGNAL(released()), this, SLOT(change()));
+
 }
 
 Matrix::~Matrix()
@@ -69,7 +75,7 @@ QVector<QVector<double>> Matrix::einlesen(int welcheMatrix){
             Matrix[zeilennummer][spaltennummer] = wert;
         }
     }
-
+    MatrixToLabel(Matrix);
     return Matrix;
 }
 void Matrix::anzeigen(){
@@ -80,6 +86,7 @@ void Matrix::anzeigen(){
     if(sender()->objectName().contains("2")){
         welcheMatrix = Matrix2;
     }
+
     auto Matrix = einlesen(welcheMatrix);
     QString text = "";
     int max_zeichenlaenge = 0;
@@ -96,25 +103,58 @@ void Matrix::anzeigen(){
 
     for(int zeilennummer = 0; zeilennummer < Matrix.count(); zeilennummer++){
         QString zeile = "";
-        text += "\n";
+
         for(int spaltennummer = 0; spaltennummer < Matrix.at(0).count(); spaltennummer++){
             QString zahl = QString::number(Matrix.at(zeilennummer).at(spaltennummer));
-            while(zahl.size() < max_zeichenlaenge){
-                //zahl += " ";
-
-                zahl += " ";
+            int differenz = max_zeichenlaenge - zahl.size();
+            for(int i = 0; i < differenz; i++){
+                zahl += "  ";
             }
-            zeile += zahl + " ";
+            zahl += "  ";
+            zeile += zahl;
         }
-
         text += zeile;
-
+        text += "\n";
     }
     if(welcheMatrix == Matrix1){
         ui->textMatrix1->setText(text);
+        //ui->textMatrix1->setPlainText(text);
+
     }
     if(welcheMatrix == Matrix2){
         ui->textMatrix2->setText(text);
     }
 
+}
+void Matrix::change(){
+    if(sender()->objectName().contains("AB")){
+        QString matrix1 = ui->lineMatrix1->text();
+        QString matrix2 = ui->lineMatrix2->text();
+        ui->lineMatrix1->setText(matrix2);
+        ui->lineMatrix2->setText(matrix1);
+    }
+    if(sender()->objectName().contains("AErg")){
+        ui->lineMatrix1->setText(ui->textErg->text());
+    }
+    if(sender()->objectName().contains("BErg")){
+        ui->lineMatrix2->setText(ui->textErg->text());
+    }
+}
+void Matrix::MatrixToLabel(QVector<QVector<double>> matrix){
+    QString text = "";
+
+    for(int zeilennummer = 0; zeilennummer < matrix.count(); zeilennummer++){
+        for(int spaltennummer = 0; spaltennummer < matrix.at(0).count(); spaltennummer++){
+            double wert = matrix.at(zeilennummer).at(spaltennummer);
+            QString val = QString::number(wert);
+            text += val + " ";
+            if(spaltennummer != matrix.at(0).count() - 1){
+                text += ",";
+            }
+        }
+        if(zeilennummer != matrix.count() - 1){
+            text += ";";
+        }
+    }
+    ui->textErg->setText(text);
 }

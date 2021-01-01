@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>600</height>
+    <height>660</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,7 +30,7 @@
    <widget class="QLineEdit" name="lineMatrix1">
     <property name="geometry">
      <rect>
-      <x>40</x>
+      <x>20</x>
       <y>140</y>
       <width>291</width>
       <height>21</height>
@@ -50,7 +50,7 @@
      <string>PushButton</string>
     </property>
    </widget>
-   <widget class="QTextEdit" name="textMatrix1">
+   <widget class="QTextBrowser" name="textMatrix1">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -63,21 +63,83 @@
    <widget class="QLineEdit" name="lineMatrix2">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>150</y>
+      <x>450</x>
+      <y>140</y>
       <width>291</width>
       <height>21</height>
      </rect>
     </property>
    </widget>
-   <widget class="QTextEdit" name="textMatrix2">
+   <widget class="QTextBrowser" name="textMatrix2">
     <property name="geometry">
      <rect>
-      <x>400</x>
-      <y>190</y>
+      <x>460</x>
+      <y>180</y>
       <width>256</width>
       <height>192</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ButtonChangeAB">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>140</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;==&gt;</string>
+    </property>
+   </widget>
+   <widget class="QTextBrowser" name="textBrowser">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>420</y>
+      <width>256</width>
+      <height>192</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ButtonChangeAErg">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>370</y>
+      <width>81</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;==</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ButtonChangeBErg">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>380</y>
+      <width>81</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>==&gt;</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="textErg">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>400</y>
+      <width>431</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
     </property>
    </widget>
   </widget>
