@@ -19,4 +19,11 @@ void debug(double fehler){
     debug(QString::number(fehler));
     return;
 }
+void debug(QVector<double> liste){
+    QString text = "";
+    foreach(auto x, liste){
+        text += QString::number(x) + " ";
+    }
+    debug(text);
+}
 

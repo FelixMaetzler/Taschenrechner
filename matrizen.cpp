@@ -55,7 +55,7 @@ QVector<double> matrizen::get_zeile(int zeilenindex) const {
         return zeile;
     }
     for(int i = 0; i < this->spaltenzahl(); i++){
-        zeile.append(this->get_wert(i, zeilenindex));
+        zeile.append(this->get_wert(zeilenindex, i));
     }
     return zeile;
 }
@@ -88,24 +88,26 @@ void matrizen::zeileMult(int zeilenindex, double multiplikator){
     }
     this->set_zeile(zeileNeu, zeilenindex);
 }
-void matrizen::zeileMultAdd(int veränderndeZeile, int addierendeZeile, double multiplikator){
-    QVector<double> zeileVerändert = this->get_zeile(veränderndeZeile);
+void matrizen::zeileMultAdd(int veraenderndeZeile, int addierendeZeile, double multiplikator){
+    QVector<double> zeileVeraendert = this->get_zeile(veraenderndeZeile);
     QVector<double> zeileAddieren = this->get_zeile(addierendeZeile);
-    for(int i = 0; i < zeileVerändert.count(); i++){
-        zeileVerändert[i] += (zeileAddieren.at(i) * multiplikator);
+    for(int i = 0; i < zeileVeraendert.count(); i++){
+        zeileVeraendert[i] += (zeileAddieren.at(i) * multiplikator);
     }
-    this->set_zeile(zeileVerändert, veränderndeZeile);
+    this->set_zeile(zeileVeraendert, veraenderndeZeile);
 
 }
 void matrizen::print() const {
     QString text = "";
-    for(int spaltenzahl = 0; spaltenzahl < this->spaltenzahl(); spaltenzahl++){
-        for(int zeilenzahl = 0; zeilenzahl < this->zeilenzahl(); zeilenzahl++){
-            text += QString::number(this->get_wert(zeilenzahl, spaltenzahl));
+    for(int zeilenzahl = 0; zeilenzahl < this->zeilenzahl(); zeilenzahl++){
+        for(int spaltenzahl = 0; spaltenzahl < this->spaltenzahl(); spaltenzahl++){
+
+            text += QString::number(this->get_wert(zeilenzahl, spaltenzahl)) + " ";
         }
-        text += "\n";
+        debug(text);
+        text = "";
     }
-    debug(text);
+
 }
 bool matrizen::isSquare() const {
     if(this->zeilenzahl() == this->spaltenzahl()){
@@ -128,5 +130,85 @@ void matrizen::toIdentity(){
         }
     }else{
         debug("aus einer nicht quadratischen Matrix kann keine Einheitsmatrix gebildet werden");
+    }
+}
+double matrizen::det() const {
+    double det = 0;
+
+
+    if(!this->isSquare()){
+        debug("aus einer nich quadratischen Matrix kann keine Determinante berechnet werden");
+        return 0;
+    }
+    if(this->zeilenzahl() == 2){//Base Case
+        det = ((this->get_wert(0,0)*this->get_wert(1,1))-(this->get_wert(0,1)*this->get_wert(1,0)));
+        return det;
+    }else{
+        int vorzeichen = 1;
+
+        for(int index = 0; index < this->zeilenzahl(); index++){
+            matrizen kopie(this->zeilenzahl(), this->spaltenzahl());
+            kopie.copy(this);
+            kopie.zeileLoeschen(0);
+            kopie.spalteLoeschen(index);
+            det += vorzeichen * this->get_wert(0, index) * kopie.det();
+            vorzeichen *= -1;
+        }
+    }
+    return det;
+}
+void matrizen::zeileLoeschen(int zeilenindex){
+    this->matrix.remove(zeilenindex);
+}
+void matrizen::spalteLoeschen(int spaltenindex){
+    for(int zeilenindex = 0; zeilenindex < this->zeilenzahl(); zeilenindex++){
+        this->matrix[zeilenindex].remove(spaltenindex);
+    }
+}
+void matrizen::copy(const matrizen* x){
+    if(this->zeilenzahl() != x->zeilenzahl() || this->spaltenzahl() != x->spaltenzahl()){
+        debug("Matrizen haben nich die gleichen Dimensionen");
+        return;
+    }
+    for(int spaltenzahl = 0; spaltenzahl < this->spaltenzahl(); spaltenzahl++){
+        for(int zeilenzahl = 0; zeilenzahl < this->zeilenzahl(); zeilenzahl++){
+            this->set_wert(x->get_wert(zeilenzahl, spaltenzahl), zeilenzahl, spaltenzahl);
+        }
+    }
+
+}
+void matrizen::transponieren(){
+
+
+
+
+}
+void matrizen::resize(int zeilenanzahl, int spaltenanzahl){
+    while(this->zeilenzahl() > zeilenanzahl){
+        this->matrix.erase(this->matrix.end()-1);
+    }
+    while(this->spaltenzahl() > spaltenanzahl){
+      for(int i = 0; i < this->zeilenzahl(); i++){
+          this->matrix[i].erase(this->matrix[i].end()-1);
+      }
+    }
+    QVector<double> zeile;
+    for(int i = 0; i < this->spaltenzahl(); i++){
+        zeile.append(0);
+    }
+    while(this->zeilenzahl() < zeilenanzahl){
+        this->matrix.append(zeile);
+    }
+    while(this->spaltenzahl() < spaltenanzahl){
+        for(int i = 0; i < this->zeilenzahl(); i++){
+            this->matrix[i].append(0);
+        }
+    }
+}
+void matrizen::nullen(){
+    for(int spaltenzahl = 0; spaltenzahl < this->spaltenzahl(); spaltenzahl++){
+        for(int zeilenzahl = 0; zeilenzahl < this->zeilenzahl(); zeilenzahl++){
+            this->set_wert(0, zeilenzahl, spaltenzahl);
+        }
     }
 }

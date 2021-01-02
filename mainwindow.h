@@ -9,6 +9,7 @@
 #include "komplex.h"
 #include "nullstellenfinder.h"
 #include "matrix.h"
+#include "matrizen.h"
 
 
 QT_BEGIN_NAMESPACE

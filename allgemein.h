@@ -19,6 +19,7 @@ QMenuBar* addmenu(QMenuBar*);
 
 void debug(QString);
 void debug(double);
+void debug(QVector<double>);
 
 
 

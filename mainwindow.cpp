@@ -39,10 +39,21 @@ MainWindow::MainWindow(QWidget *parent)
     connect(MainWindow::findChild<QAction*>("BasicTaschenrechner"), SIGNAL(triggered()),this , SLOT(handler()));
     connect(MainWindow::findChild<QAction*>("Nullstellenfinder"), SIGNAL(triggered()),this , SLOT(handler()));
     connect(MainWindow::findChild<QAction*>("Matrixrechner"), SIGNAL(triggered()),this , SLOT(handler()));
+    ///*
+    matrizen matrix(4, 3);
+    for(int zeilenzahl = 0; zeilenzahl < matrix.zeilenzahl(); zeilenzahl++){
+        for(int spaltenzahl = 0; spaltenzahl < matrix.spaltenzahl(); spaltenzahl++){
 
+            matrix.set_wert(spaltenzahl + zeilenzahl * matrix.zeilenzahl(), zeilenzahl, spaltenzahl);
+        }
+    }
 
+    matrix.print();
+    debug("");
+    matrix.resize(5,5);
+    matrix.print();
+    //*/
 }
-
 
 MainWindow::~MainWindow()
 {

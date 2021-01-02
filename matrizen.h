@@ -29,6 +29,14 @@ public:
 
     bool isSquare()const;
     void toIdentity();
+    double det()const;
+
+    void zeileLoeschen(int);
+    void spalteLoeschen(int);
+    void copy(const matrizen*);
+    void transponieren();
+    void resize(int, int);
+    void nullen();
 
 };
 
