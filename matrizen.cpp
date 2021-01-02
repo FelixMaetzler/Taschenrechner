@@ -15,6 +15,8 @@ matrizen::matrizen(int zeilenzahl, int spaltenzahl){
         this->matrix.append(spalte);
     }
 }
+
+
 double matrizen::get_wert(int zeilenzahl, int spaltenzahl) const {
     return this->matrix.at(zeilenzahl).at(spaltenzahl);
 }
@@ -25,7 +27,12 @@ int matrizen::zeilenzahl() const {
     return this->matrix.count();
 }
 int matrizen::spaltenzahl() const {
-    return this->matrix.at(0).count();
+    if(this->matrix.empty()){
+        return 0;
+    }else{
+        return this->matrix.at(0).count();
+    }
+
 }
 QVector<double> matrizen::get_spalte(int spaltenindex) const {
     QVector<double> spalte;
@@ -75,10 +82,17 @@ void matrizen::spaltentausch(int x, int y){
     this->set_spalte(spalte1, y);
 }
 void matrizen::zeilentausch(int x, int y){
+   if(x != y){
     QVector<double> zeile1 = this->get_zeile(x);
     QVector<double> zeile2 = this->get_zeile(y);
     this->set_zeile(zeile2, x);
     this->set_zeile(zeile1, y);
+//    debug("tausche Zeile: " + QString::number(x) + " mit Zeile: " + QString::number(y));
+//    this->print();
+   }else{
+
+   }
+
 }
 void matrizen::zeileMult(int zeilenindex, double multiplikator){
     QVector<double> zeile = this->get_zeile(zeilenindex);
@@ -87,6 +101,8 @@ void matrizen::zeileMult(int zeilenindex, double multiplikator){
         zeileNeu.append(x * multiplikator);
     }
     this->set_zeile(zeileNeu, zeilenindex);
+//    debug("multipliziere Zeile: " + QString::number(zeilenindex) + " mit " +QString::number(multiplikator));
+//    this->print();
 }
 void matrizen::zeileMultAdd(int veraenderndeZeile, int addierendeZeile, double multiplikator){
     QVector<double> zeileVeraendert = this->get_zeile(veraenderndeZeile);
@@ -95,7 +111,10 @@ void matrizen::zeileMultAdd(int veraenderndeZeile, int addierendeZeile, double m
         zeileVeraendert[i] += (zeileAddieren.at(i) * multiplikator);
     }
     this->set_zeile(zeileVeraendert, veraenderndeZeile);
-
+//debug("multipliziere Zeile: " + QString::number(addierendeZeile) + " mit: " +
+//      QString::number(multiplikator) + " und addiere es auf Zeile: " +
+//      QString::number(veraenderndeZeile));
+//this->print();
 }
 void matrizen::print() const {
     QString text = "";
@@ -188,9 +207,9 @@ void matrizen::resize(int zeilenanzahl, int spaltenanzahl){
         this->matrix.erase(this->matrix.end()-1);
     }
     while(this->spaltenzahl() > spaltenanzahl){
-      for(int i = 0; i < this->zeilenzahl(); i++){
-          this->matrix[i].erase(this->matrix[i].end()-1);
-      }
+        for(int i = 0; i < this->zeilenzahl(); i++){
+            this->matrix[i].erase(this->matrix[i].end()-1);
+        }
     }
     QVector<double> zeile;
     for(int i = 0; i < this->spaltenzahl(); i++){
@@ -210,5 +229,172 @@ void matrizen::nullen(){
         for(int zeilenzahl = 0; zeilenzahl < this->zeilenzahl(); zeilenzahl++){
             this->set_wert(0, zeilenzahl, spaltenzahl);
         }
+    }
+}
+void matrizen::join(matrizen x){
+    if(this->zeilenzahl() != x.zeilenzahl()){
+        debug("Join geht nicht. haben nicht die gleiche Zeilenanzahl");
+        return;
+    }
+    for(int i = 0; i < this->zeilenzahl(); i++){
+        this->matrix[i].append(x.get_zeile(i));
+    }
+}
+void matrizen::seperate(){
+    if(this->spaltenzahl() != 2*this->zeilenzahl()){
+        debug("geht net!");
+        return;
+    }
+    while(this->zeilenzahl() != this->spaltenzahl()){
+        this->spalteLoeschen(0);
+    }
+}
+int matrizen::findeZeilemitMax(int spaltenindex, int startZeilenIndex) const {
+    int index = -1;
+    double temp = INFINITY;
+    temp *= -1;
+    for(int i = startZeilenIndex; i < this->zeilenzahl(); i++){
+        double wert = this->get_wert(i, spaltenindex);
+        wert = abs(wert);
+        if(wert > temp){
+            temp = wert;
+            index = i;
+        }
+    }
+    return index;
+}
+bool matrizen::istUngefaehrGleich(matrizen x, int genauigkeit = pow(10, -6)){
+    if(this->zeilenzahl() != x.zeilenzahl() || this->spaltenzahl() != x.spaltenzahl()){
+        debug("kann man nicht vergleichen");
+        return false;
+    }
+    for(int spaltenzahl = 0; spaltenzahl < this->spaltenzahl(); spaltenzahl++){
+        for(int zeilenzahl = 0; zeilenzahl < this->zeilenzahl(); zeilenzahl++){
+            double wert1 = this->get_wert(zeilenzahl, spaltenzahl);
+            double wert2 = x.get_wert(zeilenzahl, spaltenzahl);
+            double differenz = wert1 - wert2;
+            differenz = abs(differenz);
+            if(differenz > genauigkeit){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+void matrizen::inverse(){
+    if(!this->isSquare()){
+        debug("Inverse geht nur für quadratische Matrizen");
+        return;
+    }
+    if(this->det() == 0){
+        debug("Inverse geht nur für Matrizen deren det != 0 ist");
+        return;
+    }
+    int zeilenindex = -1;
+    int spaltenindex = -1;
+    matrizen startmatrix(this->zeilenzahl(), this->spaltenzahl());
+    startmatrix.copy(this);
+    matrizen einheitsmatrix(this->zeilenzahl(), this->spaltenzahl());
+    einheitsmatrix.toIdentity();
+    this->join(einheitsmatrix);
+
+    int diagonalerIndex = 0;
+bool fertig = false;
+int Iteration = 0;
+int maxIteration = 10;
+while(!fertig && Iteration < maxIteration){
+    while(diagonalerIndex < this->zeilenzahl()){
+        zeilenindex = diagonalerIndex;
+        spaltenindex = diagonalerIndex;
+        int zeileMitMax = this->findeZeilemitMax(spaltenindex, zeilenindex);
+
+        this->zeilentausch(zeileMitMax, zeilenindex);
+
+
+
+        this->zeileMult(zeilenindex, (1.0/this->get_wert(zeilenindex, spaltenindex)));
+
+
+        this->spaltenalgorithmus(zeilenindex, spaltenindex);
+        this->zeilenalgorithmus(zeilenindex, spaltenindex);
+
+        diagonalerIndex++;
+    }
+    matrizen inverse(this->zeilenzahl(), this->spaltenzahl());
+    inverse.copy(this);
+    inverse.seperate();
+
+    if(inverse.istUngefaehrGleich(einheitsmatrix)){
+        fertig = true;
+    }else{
+       Iteration++;
+       diagonalerIndex = 0;
+    }
+
+}
+this->seperate();
+
+}
+void matrizen::spaltenalgorithmus(int zeilenindex, int spaltenindex){
+    zeilenindex++;
+    while(zeilenindex < this->zeilenzahl()){
+        if(istUngefaehrgleich(this->get_wert(zeilenindex, spaltenindex),0)){//vllt ein close to statt ein ==
+            zeilenindex++;
+        }else{
+            int ersteZeileIndex = spaltenindex;
+            double ersteZeileWert = this->get_wert(ersteZeileIndex, spaltenindex);
+            if(istUngefaehrgleich(ersteZeileWert, 0)){//vllt ein close to statt ein ==
+                zeilenindex++;
+            }else{
+                double aktuellerWert = this->get_wert(zeilenindex, spaltenindex);
+                double mult = -(aktuellerWert/ersteZeileWert);
+                this->zeileMultAdd(zeilenindex, ersteZeileIndex, mult);
+                zeilenindex++;
+            }
+        }
+    }
+}
+void matrizen::zeilenalgorithmus(int zeilenindex, int spaltenindex){
+    spaltenindex++;
+    while(spaltenindex < this->zeilenzahl()){
+        if(istUngefaehrgleich(this->get_wert(zeilenindex, spaltenindex),0)){//vllt ein close to statt ein ==
+            spaltenindex++;
+        }else{
+            int ersteZeileindex = spaltenindex;
+            double ersteZeileWert = this->get_wert(ersteZeileindex, spaltenindex);
+            if(istUngefaehrgleich(ersteZeileWert, 0)){//vllt ein close to statt ein ==
+                spaltenindex++;
+            }else{
+                double aktuellerWert = this->get_wert(zeilenindex, spaltenindex);
+                double mult = -(aktuellerWert/ersteZeileWert);
+                this->zeileMultAdd(zeilenindex, ersteZeileindex, mult);
+                spaltenindex++;
+            }
+        }
+    }
+}
+matrizen matrizen::operator*(matrizen x){
+    matrizen erg;
+    if(this->spaltenzahl() != x.zeilenzahl()){
+        debug("MatrixMultiplikation geht net. falsche Dimensionen");
+        return erg;
+    }
+    erg.resize(this->zeilenzahl(), x.spaltenzahl());
+    for(int zeilenindex = 0; zeilenindex < erg.zeilenzahl(); zeilenindex++){
+        for(int spaltenindex = 0; spaltenindex < erg.spaltenzahl(); spaltenindex++){
+            double wert = 0;
+            for(int i = 0; i < x.zeilenzahl(); i++){
+                wert += this->get_wert(zeilenindex, i) * x.get_wert(i, spaltenindex);
+            }
+            erg.set_wert(wert, zeilenindex, spaltenindex);
+        }
+    }
+    return erg;
+}
+bool istUngefaehrgleich(double z1, double z2, double genauigkeit){
+    if(abs(z1-z2)<genauigkeit){
+        return true;
+    }else{
+        return false;
     }
 }

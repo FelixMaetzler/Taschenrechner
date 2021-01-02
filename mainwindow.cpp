@@ -40,18 +40,29 @@ MainWindow::MainWindow(QWidget *parent)
     connect(MainWindow::findChild<QAction*>("Nullstellenfinder"), SIGNAL(triggered()),this , SLOT(handler()));
     connect(MainWindow::findChild<QAction*>("Matrixrechner"), SIGNAL(triggered()),this , SLOT(handler()));
     ///*
-    matrizen matrix(4, 3);
+    /*
+    matrizen matrix(3, 3);
     for(int zeilenzahl = 0; zeilenzahl < matrix.zeilenzahl(); zeilenzahl++){
         for(int spaltenzahl = 0; spaltenzahl < matrix.spaltenzahl(); spaltenzahl++){
 
             matrix.set_wert(spaltenzahl + zeilenzahl * matrix.zeilenzahl(), zeilenzahl, spaltenzahl);
         }
     }
-
+*/
+    matrizen matrix(3,3);
+    matrix.set_zeile({2,1,1}, 0);
+    matrix.set_zeile({1,0,1}, 1);
+    matrix.set_zeile({0,3,1}, 2);
     matrix.print();
     debug("");
-    matrix.resize(5,5);
-    matrix.print();
+matrizen vorher(3,3);
+vorher.copy(&matrix);
+matrix.inverse();
+matrix.print();
+debug("");
+matrizen erg = matrix * vorher;
+erg.print();
+
     //*/
 }
 

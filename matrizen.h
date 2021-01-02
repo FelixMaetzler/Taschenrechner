@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "allgemein.h"
+#include "cmath"
 
 class matrizen
 {
@@ -11,6 +12,7 @@ class matrizen
 public:
     matrizen();
     matrizen(int, int);
+
 
     double get_wert(int, int)const;
     void set_wert(double, int, int);
@@ -37,7 +39,16 @@ public:
     void transponieren();
     void resize(int, int);
     void nullen();
+void join(matrizen);
+void seperate();
+int findeZeilemitMax(int, int)const;
+void inverse();
+bool istUngefaehrGleich(matrizen,int);
+void zeilenalgorithmus(int, int);
+void spaltenalgorithmus(int, int);
 
+matrizen operator*(matrizen);
 };
+bool istUngefaehrgleich(double, double, double = pow(10,-9));
 
 #endif // MATRIZEN_H
