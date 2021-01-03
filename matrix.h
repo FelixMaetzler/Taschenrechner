@@ -27,7 +27,7 @@ void anzeigen();
 void change();
 void rechnungen();
 void erg(matrizen);
-matrizen mult(matrizen, matrizen);
+void spezielleMatrizen(int, matrizen);
 
 };
 

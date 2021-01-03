@@ -43,11 +43,33 @@ void join(matrizen);
 void seperate();
 int findeZeilemitMax(int, int)const;
 void inverse();
-bool istUngefaehrGleich(matrizen,int);
+bool istUngefaehrGleich(matrizen,int)const;
 void zeilenalgorithmus(int, int);
 void spaltenalgorithmus(int, int);
 
-matrizen operator*(matrizen);
+void gauss();
+int rang()const;
+int spur()const;
+bool linearAbhaengig(int, int)const;
+bool nullZeile(int)const;
+void nullZeilenLoeschen();
+
+bool diagonalMatrix()const;
+bool obereDreiecksMatrix()const;
+bool einheitsMatrix()const;
+bool nullMatrix()const;
+bool einsMatrix()const;
+bool symetrischeMatrix()const;
+bool schiefsymetrischeMatrix()const;
+bool orthogonnaleMatrix()const;
+bool idempotenteMatrix()const;
+
+
+
+matrizen operator*(matrizen)const;
+matrizen operator*(double)const;
+matrizen operator+(matrizen)const;
+matrizen operator-(matrizen)const;
 };
 bool istUngefaehrgleich(double, double, double = pow(10,-9));
 
