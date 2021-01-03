@@ -25,6 +25,7 @@ Matrix::Matrix(QWidget *parent) :
     connect(ui->ButtonMult, SIGNAL(released()), this, SLOT(rechnungen()));
     connect(ui->ButtonAdd, SIGNAL(released()), this, SLOT(rechnungen()));
     connect(ui->ButtonSub, SIGNAL(released()), this, SLOT(rechnungen()));
+    connect(ui->ButtonHadamard, SIGNAL(released()), this, SLOT(rechnungen()));
     connect(ui->ButtonInverse1, SIGNAL(released()), this, SLOT(rechnungen()));
     connect(ui->ButtonInverse2, SIGNAL(released()), this, SLOT(rechnungen()));
     connect(ui->ButtonTransponieren1, SIGNAL(released()), this, SLOT(rechnungen()));
@@ -303,6 +304,9 @@ void Matrix::rechnungen(){
         matrizen matrix = m2;
         matrix.transponieren();
         ergebnis = matrix;
+    }
+    if(sender()->objectName().contains("Hadamard")){
+        ergebnis = m1.hadamard(m2);
     }
     erg(ergebnis);
 }

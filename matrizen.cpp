@@ -655,3 +655,77 @@ int matrizen::spur() const {
     debug("Matrix nicht Quadratisch. Spurberechnung nicht möglich");
     return 0;
 }
+matrizen matrizen::hadamard(matrizen x) const {
+    matrizen erg;
+    if(this->zeilenzahl() != x.zeilenzahl() && this->spaltenzahl() != x.spaltenzahl()){
+        debug("Hadamardprodukt geht nicht. falsche Dimension");
+        return erg;
+    }
+    erg.resize(this->zeilenzahl(), this->spaltenzahl());
+    for(int zeilenindex = 0; zeilenindex < this->zeilenzahl(); zeilenindex++){
+        for(int spaltenindex = 0; spaltenindex < this->spaltenzahl(); spaltenindex++){
+            double wert = this->get_wert(zeilenindex, spaltenindex) * x.get_wert(zeilenindex, spaltenindex);
+            erg.set_wert(wert, zeilenindex, spaltenindex);
+        }
+    }
+    return erg;
+}
+QVector<double> matrizen::eigenwerte(){
+    QVector<double> eigenwerte;
+    matrizen A(this->zeilenzahl(), this->spaltenzahl());
+    matrizen Q(this->zeilenzahl(), this->spaltenzahl());
+    matrizen R(this->zeilenzahl(), this->spaltenzahl());
+    A.copy(this);
+    matrizen q(this->zeilenzahl(), this->spaltenzahl());
+    for(int n = 1; n <= q.spaltenzahl(); n++){
+        matrizen qn(this->zeilenzahl(), 1);
+        matrizen vn(this->zeilenzahl(), 1);
+        vn.set_spalte(A.get_spalte(n), 0);
+        qn = vn;
+        for(int i = 0; i < n; i++){
+            matrizen wert(this->zeilenzahl(), 1);
+           wert.set_spalte(Q.get_spalte(i), 0);
+           matrizen kopie = vn;
+           kopie.transponieren();
+           double skalarprodukt = (kopie * wert).get_wert(0,0);
+
+           wert = wert * skalarprodukt;
+           double betragImQuadrat = betragsquadrat(wert.get_spalte(1));
+
+           wert = wert * (1.0/betragImQuadrat);
+            qn = qn - wert;
+        }
+       qn = qn * (1.0/betrag(qn.get_spalte(0)));
+        Q.set_spalte(qn.get_spalte(0), n);
+
+    }//Q fertig
+
+
+    return eigenwerte;
+}
+double skalarprodukt(QVector<double> x, QVector<double> y){
+    if(x.count() != y.count()){
+        debug("Skalarprodukt geht nciht. nicht die gleiche Dimension");
+        return 0;
+    }
+    double sp = 0;
+    for(int i = 0; i < x.count(); i++){
+        sp += x.at(i) * y.at(i);
+    }
+    return sp;
+}
+double betrag(QVector<double> vector){
+    double betrag = 0;
+    foreach(auto x, vector){
+        betrag += x * x;
+    }
+    betrag = pow(betrag, 0.5);
+    return betrag;
+}
+double betragsquadrat(QVector<double> vector){
+    double betrag = 0;
+    foreach(auto x, vector){
+        betrag += x * x;
+    }
+    return betrag;
+}

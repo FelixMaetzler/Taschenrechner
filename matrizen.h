@@ -64,7 +64,8 @@ bool schiefsymetrischeMatrix()const;
 bool orthogonnaleMatrix()const;
 bool idempotenteMatrix()const;
 
-
+matrizen hadamard(matrizen)const;
+QVector<double> eigenwerte();
 
 matrizen operator*(matrizen)const;
 matrizen operator*(double)const;
@@ -72,5 +73,8 @@ matrizen operator+(matrizen)const;
 matrizen operator-(matrizen)const;
 };
 bool istUngefaehrgleich(double, double, double = pow(10,-9));
+double skalarprodukt(QVector<double>, QVector<double>);
+double betrag(QVector<double>);
+double betragsquadrat(QVector<double>);
 
 #endif // MATRIZEN_H
