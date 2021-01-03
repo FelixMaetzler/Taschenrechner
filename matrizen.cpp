@@ -76,25 +76,30 @@ void matrizen::set_zeile(QVector<double> zeile, int zeilenindex){
     }
 }
 void matrizen::spaltentausch(int x, int y){
+    if(x == y){
+        return;
+    }
     QVector<double> spalte1 = this->get_spalte(x);
     QVector<double> spalte2 = this->get_spalte(y);
     this->set_spalte(spalte2, x);
     this->set_spalte(spalte1, y);
 }
 void matrizen::zeilentausch(int x, int y){
-   if(x != y){
+   if(x == y){
+   return;
+   }
     QVector<double> zeile1 = this->get_zeile(x);
     QVector<double> zeile2 = this->get_zeile(y);
     this->set_zeile(zeile2, x);
     this->set_zeile(zeile1, y);
 //    debug("tausche Zeile: " + QString::number(x) + " mit Zeile: " + QString::number(y));
 //    this->print();
-   }else{
-
-   }
 
 }
 void matrizen::zeileMult(int zeilenindex, double multiplikator){
+    if(multiplikator == 1){
+
+    }
     QVector<double> zeile = this->get_zeile(zeilenindex);
     QVector<double> zeileNeu;
     foreach(double x, zeile){

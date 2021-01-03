@@ -32,8 +32,8 @@ Matrix::~Matrix()
 }
 
 
-QVector<QVector<double>> Matrix::einlesen(int welcheMatrix){
-    QVector<QVector<double>> Matrix;//Spalten innerhalb der Zeilen
+matrizen Matrix::einlesen(int welcheMatrix){
+
     QString string;
     if(welcheMatrix == Matrix1){
         string = ui->lineMatrix1->text();
@@ -56,21 +56,26 @@ QVector<QVector<double>> Matrix::einlesen(int welcheMatrix){
         }
     }
     */
+
     foreach(QString x, zeilen){
         if(anzahl_spalten < x.split(',').count()){
             anzahl_spalten = x.split(',').count();
         }
     }
+    /*
     foreach(QString x, zeilen){
         x = "";//nur damit die warnung weg geht
         Matrix.append(QVector<double>(anzahl_spalten));
+
     }//Matrix ist initialisiert
-    for(int zeilennummer = 0; zeilennummer < Matrix.count(); zeilennummer++){
+    */
+    matrizen Matrix(zeilen.count(), anzahl_spalten);
+    for(int zeilennummer = 0; zeilennummer < Matrix.zeilenzahl(); zeilennummer++){
         auto spalte = zeilen.at(zeilennummer).split(',');
         while(spalte.count() != anzahl_spalten){
             spalte.append("");
         }
-        for(int spaltennummer = 0; spaltennummer < anzahl_spalten; spaltennummer++){
+        for(int spaltennummer = 0; spaltennummer < Matrix.spaltenzahl(); spaltennummer++){
             QString aktueller_wert = spalte.at(spaltennummer);
             double wert;
             if(aktueller_wert == ""){
@@ -78,13 +83,14 @@ QVector<QVector<double>> Matrix::einlesen(int welcheMatrix){
             }
             wert = aktueller_wert.toDouble();
 
-            Matrix[zeilennummer][spaltennummer] = wert;
+            Matrix.set_wert(wert, zeilennummer, spaltennummer);
         }
     }
 
     return Matrix;
 }
 void Matrix::anzeigen(){
+    ui->labelError->clear();
     int welcheMatrix = -1;
     if(sender()->objectName().contains("1")){
         welcheMatrix = Matrix1;
@@ -99,9 +105,9 @@ void Matrix::anzeigen(){
     auto Matrix = einlesen(welcheMatrix);
     QString text = "";
     int max_zeichenlaenge = 0;
-    for(int zeilennummer = 0; zeilennummer < Matrix.count(); zeilennummer++){
-        for(int spaltennummer = 0; spaltennummer < Matrix.at(0).count(); spaltennummer++){
-            QString text = QString::number(Matrix.at(zeilennummer).at(spaltennummer));
+    for(int zeilennummer = 0; zeilennummer < Matrix.zeilenzahl(); zeilennummer++){
+        for(int spaltennummer = 0; spaltennummer < Matrix.spaltenzahl(); spaltennummer++){
+            QString text = QString::number(Matrix.get_wert(zeilennummer, spaltennummer));
 
             if(text.size() > max_zeichenlaenge){
                 max_zeichenlaenge = text.size();
@@ -110,11 +116,11 @@ void Matrix::anzeigen(){
     }
 
 
-    for(int zeilennummer = 0; zeilennummer < Matrix.count(); zeilennummer++){
+    for(int zeilennummer = 0; zeilennummer < Matrix.zeilenzahl(); zeilennummer++){
         QString zeile = "";
 
-        for(int spaltennummer = 0; spaltennummer < Matrix.at(0).count(); spaltennummer++){
-            QString zahl = QString::number(Matrix.at(zeilennummer).at(spaltennummer));
+        for(int spaltennummer = 0; spaltennummer < Matrix.spaltenzahl(); spaltennummer++){
+            QString zahl = QString::number(Matrix.get_wert(zeilennummer, spaltennummer));
             int differenz = max_zeichenlaenge - zahl.size();
             for(int i = 0; i < differenz; i++){
                 zahl += "  ";
@@ -139,6 +145,7 @@ void Matrix::anzeigen(){
 
 }
 void Matrix::change(){
+    ui->labelError->clear();
     if(sender()->objectName().contains("AB")){
         QString matrix1 = ui->lineMatrix1->text();
         QString matrix2 = ui->lineMatrix2->text();
@@ -152,19 +159,19 @@ void Matrix::change(){
         ui->lineMatrix2->setText(ui->lineMatrixErg->text());
     }
 }
-void Matrix::erg(QVector<QVector<double>> matrix){
+void Matrix::erg(matrizen matrix){
     QString text = "";
 
-    for(int zeilennummer = 0; zeilennummer < matrix.count(); zeilennummer++){
-        for(int spaltennummer = 0; spaltennummer < matrix.at(0).count(); spaltennummer++){
-            double wert = matrix.at(zeilennummer).at(spaltennummer);
+    for(int zeilennummer = 0; zeilennummer < matrix.zeilenzahl(); zeilennummer++){
+        for(int spaltennummer = 0; spaltennummer < matrix.spaltenzahl(); spaltennummer++){
+            double wert = matrix.get_wert(zeilennummer, spaltennummer);
             QString val = QString::number(wert);
             text += val + " ";
-            if(spaltennummer != matrix.at(0).count() - 1){
+            if(spaltennummer != matrix.spaltenzahl() - 1){
                 text += ",";
             }
         }
-        if(zeilennummer != matrix.count() - 1){
+        if(zeilennummer != matrix.zeilenzahl() - 1){
             text += ";";
         }
     }
@@ -173,7 +180,8 @@ void Matrix::erg(QVector<QVector<double>> matrix){
     ui->lineMatrixErg->setReadOnly(true);
     return;
 }
-QVector<QVector<double>> Matrix::mult(QVector<QVector<double>> m1, QVector<QVector<double>>m2){
+matrizen Matrix::mult(matrizen m1, matrizen m2){
+    /*
     QVector<QVector<double>> erg;
     if(m1.at(0).count() != m2.count()){
         //kann nicht durchgeführt werden
@@ -200,14 +208,21 @@ QVector<QVector<double>> Matrix::mult(QVector<QVector<double>> m1, QVector<QVect
         }
     }
     return erg;
+    */
+    if(m1.spaltenzahl() != m2.zeilenzahl()){
+        ui->labelError->setText("Matrixmultiplikation geht nicht. Falsche Dimension");
+        return matrizen();
+    }
+    return (m1 * m2);
 }
 void Matrix::rechnungen(){
-QVector<QVector<double>> ergebnis;
-QVector<QVector<double>> m1 = einlesen(Matrix1);
-QVector<QVector<double>> m2 = einlesen(Matrix2);
+    ui->labelError->clear();
+    matrizen ergebnis;
+    matrizen m1 = einlesen(Matrix1);
+    matrizen m2 = einlesen(Matrix2);
 
     if(sender()->objectName().contains("Mult")){
-    ergebnis = mult(m1, m2);
-}
+        ergebnis = mult(m1, m2);
+    }
     erg(ergebnis);
 }

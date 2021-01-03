@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "allgemein.h"
+#include "matrizen.h"
 
 namespace Ui {
 class Matrix;
@@ -21,12 +22,12 @@ private:
 
 
 private slots:
-QVector<QVector<double>> einlesen(int);
+matrizen einlesen(int);
 void anzeigen();
 void change();
 void rechnungen();
-void erg(QVector<QVector<double>>);
-QVector<QVector<double>> mult(QVector<QVector<double>>, QVector<QVector<double>>);
+void erg(matrizen);
+matrizen mult(matrizen, matrizen);
 
 };
 
