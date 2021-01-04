@@ -12,6 +12,7 @@ class matrizen
 public:
     matrizen();
     matrizen(int, int);
+    matrizen(matrizen*);
 
 
     double get_wert(int, int)const;

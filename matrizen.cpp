@@ -15,7 +15,9 @@ matrizen::matrizen(int zeilenzahl, int spaltenzahl){
         this->matrix.append(spalte);
     }
 }
-
+matrizen::matrizen(matrizen* x){
+    this->matrix = x->matrix;
+}
 
 double matrizen::get_wert(int zeilenzahl, int spaltenzahl) const {
     return this->matrix.at(zeilenzahl).at(spaltenzahl);
@@ -293,6 +295,10 @@ bool matrizen::istUngefaehrGleich(matrizen x, int genauigkeit = pow(10, -6)) con
     return true;
 }
 void matrizen::inverse(){
+
+//Gauß Jordan Verfahren
+
+
     if(!this->isSquare()){
         debug("Inverse geht nur für quadratische Matrizen");
         return;
@@ -301,6 +307,36 @@ void matrizen::inverse(){
         debug("Inverse geht nur für Matrizen deren det != 0 ist");
         return;
     }
+    matrizen startmatrix(this);
+    matrizen einheitsmatrix(this);
+    einheitsmatrix.toIdentity();
+const int maxZeile = this->zeilenzahl();
+    this->join(einheitsmatrix);
+
+    for(int diagIndex = 0; diagIndex < maxZeile; diagIndex++){
+        int i = diagIndex + 1;
+        double pivotelement = this->get_wert(diagIndex, diagIndex);
+        while(istUngefaehrgleich(pivotelement, 0) && i < maxZeile){
+            this->zeilentausch(i, diagIndex);
+            pivotelement = this->get_wert(diagIndex, diagIndex);
+            i++;
+        }//versucht das Pivotelement ungleich von Null zu machen
+        if(!istUngefaehrgleich(pivotelement, 0)){
+            this->zeileMult(diagIndex, 1.0/pivotelement);
+        }
+        for(int zeilenIndex = 0; zeilenIndex < maxZeile; zeilenIndex++){
+            if(diagIndex != zeilenIndex){
+                double element = this->get_wert(zeilenIndex, diagIndex);
+                if(!istUngefaehrgleich(0, element)){
+                    double mult = -element;
+                    this->zeileMultAdd(zeilenIndex, diagIndex, mult);
+                }
+            }
+        }
+    }
+    this->seperate();
+
+    /*
     int zeilenindex = -1;
     int spaltenindex = -1;
     matrizen startmatrix(this->zeilenzahl(), this->spaltenzahl());
@@ -344,6 +380,7 @@ void matrizen::inverse(){
 
     }
     this->seperate();
+    */
 
 }
 void matrizen::spaltenalgorithmus(int zeilenindex, int spaltenindex){
