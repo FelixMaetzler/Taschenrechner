@@ -26,6 +26,7 @@ Matrix::Matrix(QWidget *parent) :
     connect(ui->ButtonAdd, SIGNAL(released()), this, SLOT(rechnungen()));
     connect(ui->ButtonSub, SIGNAL(released()), this, SLOT(rechnungen()));
     connect(ui->ButtonHadamard, SIGNAL(released()), this, SLOT(rechnungen()));
+    connect(ui->ButtonKronecker, SIGNAL(released()), this, SLOT(rechnungen()));
     connect(ui->ButtonInverse1, SIGNAL(released()), this, SLOT(rechnungen()));
     connect(ui->ButtonInverse2, SIGNAL(released()), this, SLOT(rechnungen()));
     connect(ui->ButtonTransponieren1, SIGNAL(released()), this, SLOT(rechnungen()));
@@ -55,6 +56,9 @@ matrizen Matrix::einlesen(int welcheMatrix){
     }
     if(welcheMatrix == MatrixErgebnis){
         string = ui->lineMatrixErg->text();
+    }
+    if(string == ""){
+        return matrizen(0,0);
     }
 
     auto zeilen = string.split(';');
@@ -115,6 +119,9 @@ void Matrix::anzeigen(){
     }
 
     auto Matrix = einlesen(welcheMatrix);
+    if(!(Matrix.zeilenzahl() == 0 && Matrix.spaltenzahl() == 0)){
+
+
     QString text = "";
     int max_zeichenlaenge = 0;
     for(int zeilennummer = 0; zeilennummer < Matrix.zeilenzahl(); zeilennummer++){
@@ -160,7 +167,21 @@ void Matrix::anzeigen(){
         ui->textMatrixErg->setText(text);
     }
 
-spezielleMatrizen(welcheMatrix, Matrix);
+    spezielleMatrizen(welcheMatrix, Matrix);
+}else{
+        if(welcheMatrix == Matrix1){
+            ui->textMatrix1->clear();
+            ui->textEigenschaften1->clear();
+        }
+        if(welcheMatrix == Matrix2){
+            ui->textMatrix2->clear();
+            ui->textEigenschaften2->clear();
+        }
+        if(welcheMatrix == MatrixErgebnis){
+            ui->textMatrixErg->clear();
+            ui->textEigenschaftenErg->clear();
+        }
+    }
 }
 void Matrix::change(){
     ui->labelError->clear();
@@ -259,9 +280,8 @@ void Matrix::rechnungen(){
             m2.set_spalte(spalte, 0);
             m1.spalteLoeschen(m1.spaltenzahl() - 1);
         }
-        if(!m1.isSquare()){
-            ui->labelError->setText("Das LGS muss genausoviele unbekannte wie Gleichungen enthalten");
-        }
+        if(m1.isSquare()){
+
         if(m2.zeilenzahl() == m1.zeilenzahl() && m2.spaltenzahl() == 1){
 
         }else if(m2.spaltenzahl() == m1.spaltenzahl() && m2.zeilenzahl() == 1){
@@ -274,8 +294,9 @@ void Matrix::rechnungen(){
             m1.resize(m1.zeilenzahl(), m1.spaltenzahl() + 1);
             m1.set_spalte(m2.get_spalte(0), m1.zeilenzahl());
             m1.gauss();
-            QVector<double> letzteZeile = m1.get_zeile(m1.zeilenzahl() - 1);
-            foreach(auto x, letzteZeile){
+            auto letzteZeile = m1.get_zeile(m1.zeilenzahl() - 1);
+            for(int i = 0; i < letzteZeile.spaltenzahl(); i++){
+                double x = letzteZeile.get_wert(0, i);
                 if(x != 0){
                     unendlich = false;
                     break;
@@ -291,6 +312,9 @@ void Matrix::rechnungen(){
         }else{
             m1.inverse();
             ergebnis = m1 * m2;
+        }
+        }else{
+            ui->labelError->setText("Das LGS muss genausoviele unbekannte wie Gleichungen enthalten");
         }
     }
     if(sender()->objectName().contains("Transponieren1")){
@@ -308,16 +332,19 @@ void Matrix::rechnungen(){
     if(sender()->objectName().contains("Hadamard")){
         ergebnis = m1.hadamard(m2);
     }
+    if(sender()->objectName().contains("Kronecker")){
+        ergebnis = m1.kronecker(m2);
+    }
     erg(ergebnis);
 }
 void Matrix::spezielleMatrizen(int welcheMatrix, matrizen matrix){
-bool quadratisch = matrix.isSquare();
-QString text = "";
-text += "Rang: " + QString::number(matrix.rang()) + "\n";
-if(quadratisch){
-    text += "Determinante: " + QString::number(matrix.det()) + "\n";
-    text += "Spur: " + QString::number(matrix.spur()) + "\n";
-}
+    bool quadratisch = matrix.isSquare();
+    QString text = "";
+    text += "Rang: " + QString::number(matrix.rang()) + "\n";
+    if(quadratisch){
+        text += "Determinante: " + QString::number(matrix.det()) + "\n";
+        text += "Spur: " + QString::number(matrix.spur()) + "\n";
+    }
     text += "Spezielle Eigenschaften der Matrix: \n\n";
     if(quadratisch){
         if(matrix.diagonalMatrix()){

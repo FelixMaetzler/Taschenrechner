@@ -286,6 +286,19 @@
      <string>Hadamard</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="ButtonKronecker">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>190</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Kronecker</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

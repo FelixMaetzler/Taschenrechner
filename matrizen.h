@@ -12,17 +12,17 @@ class matrizen
 public:
     matrizen();
     matrizen(int, int);
-    matrizen(matrizen*);
+    matrizen(const matrizen*);
 
 
     double get_wert(int, int)const;
     void set_wert(double, int, int);
     int spaltenzahl(void)const;
     int zeilenzahl(void)const;
-    QVector<double> get_spalte(int)const;
-    void set_spalte(QVector<double>, int);
-    QVector<double> get_zeile(int)const;
-    void set_zeile(QVector<double>, int);
+    matrizen get_spalte(int)const;
+    void set_spalte(matrizen, int);
+    matrizen get_zeile(int)const;
+    void set_zeile(matrizen, int);
     void zeilentausch(int, int);
     void spaltentausch(int, int);
 
@@ -65,8 +65,13 @@ bool schiefsymetrischeMatrix()const;
 bool orthogonnaleMatrix()const;
 bool idempotenteMatrix()const;
 
+double betrag()const;
+double betragsquadrat()const;
+
 matrizen hadamard(matrizen)const;
-QVector<double> eigenwerte();
+matrizen kronecker(matrizen)const;
+int kleinsteDimension()const;
+QVector<double> eigenwerte()const;
 
 matrizen operator*(matrizen)const;
 matrizen operator*(double)const;
@@ -74,8 +79,7 @@ matrizen operator+(matrizen)const;
 matrizen operator-(matrizen)const;
 };
 bool istUngefaehrgleich(double, double, double = pow(10,-9));
-double skalarprodukt(QVector<double>, QVector<double>);
-double betrag(QVector<double>);
-double betragsquadrat(QVector<double>);
+double skalarprodukt(matrizen, matrizen);
+
 
 #endif // MATRIZEN_H
