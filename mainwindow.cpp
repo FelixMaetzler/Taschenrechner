@@ -39,7 +39,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(MainWindow::findChild<QAction*>("BasicTaschenrechner"), SIGNAL(triggered()),this , SLOT(handler()));
     connect(MainWindow::findChild<QAction*>("Nullstellenfinder"), SIGNAL(triggered()),this , SLOT(handler()));
     connect(MainWindow::findChild<QAction*>("Matrixrechner"), SIGNAL(triggered()),this , SLOT(handler()));
-matrizen matrix(3,3);
+/*
+    matrizen matrix(3,3);
     matrix.set_wert(1, 0,0);
     matrix.set_wert(2, 1,0);
     matrix.set_wert(35, 2,0);
@@ -55,7 +56,7 @@ matrizen matrix(3,3);
     matrix.set_wert(5, 2,2);
 
     matrix.eigenwerte();
-
+*/
 }
 
 MainWindow::~MainWindow()

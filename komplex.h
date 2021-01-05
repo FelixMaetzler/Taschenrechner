@@ -20,14 +20,15 @@ public:
 
     double betrag(void) const;
     double winkel(void) const;
+    void runden(int nachkommastellen = 9);
 
     komplex operator*(double);
     komplex operator/(double);
 
-    komplex operator+(komplex);
-    komplex operator-(komplex);
-    komplex operator*(komplex);
-    komplex operator/(komplex);
+    komplex operator+(komplex)const;
+    komplex operator-(komplex)const;
+    komplex operator*(komplex)const;
+    komplex operator/(komplex)const;
 
     bool operator==(komplex);
     bool operator!=(komplex);

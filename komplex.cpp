@@ -54,17 +54,17 @@ komplex komplex::operator*(double d){
 komplex komplex::operator/(double d){
     return komplex(this->get_real()/d, this->get_imag()/d);
 }
-komplex komplex::operator+(komplex z){
+komplex komplex::operator+(komplex z) const {
     return komplex(this->get_real()+z.get_real(), this->get_imag()+z.get_imag());
 }
-komplex komplex::operator-(komplex z){
+komplex komplex::operator-(komplex z) const {
     return komplex(this->get_real()-z.get_real(), this->get_imag()-z.get_imag());
 }
-komplex komplex::operator*(komplex z){
+komplex komplex::operator*(komplex z) const {
     return komplex((this->get_real()*z.get_real())-(this->get_imag()*z.get_imag()),
                    (this->get_real()*z.get_imag())+(this->get_imag()*z.get_real()));
 }
-komplex komplex::operator/(komplex z){
+komplex komplex::operator/(komplex z) const {
     if(z.get_imag() == 0.0 && z.get_real() == 0.0){
         debug("Teilen durch 0+0j geht nicht!!!");
         return komplex();
@@ -155,4 +155,16 @@ void debug(komplex z){
     debug(s);
     return;
 }
-
+void komplex::runden(int nachkommastellen){
+    double nks = nachkommastellen;
+    double real = this->get_real();
+    double imag = this->get_imag();
+    real *= pow(10, nks);
+    imag *= pow(10, nks);
+    real = round(real);
+    imag = round(imag);
+    real *= pow(10, -nks);
+    imag *= pow(10, -nks);
+    this->set_real(real);
+    this->set_imag(imag);
+}

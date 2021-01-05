@@ -37,7 +37,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Bitte die Koeffizienten durch ein Semikolon getrennt eingeben. Angefangen bei dem Monom mit dem höchsten Grad.</string>
+     <string>Bitte die Koeffizienten durch ein Komma getrennt eingeben. Angefangen bei dem Monom mit dem höchsten Grad.</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineKoeffizienten">

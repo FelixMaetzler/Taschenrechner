@@ -9,6 +9,7 @@ Nullstellenfinder::Nullstellenfinder(QWidget *parent) :
 
     ui->label_Equation->clear();
     connect(ui->ButtonBerechnen, SIGNAL(released()), this, SLOT(berechnen()));
+    connect(ui->lineKoeffizienten, SIGNAL(textChanged(const QString&)), this, SLOT(berechnen()));
 }
 
 Nullstellenfinder::~Nullstellenfinder()
@@ -176,10 +177,9 @@ komplex appAusrechnen(QVector<double> inputs, QVector<komplex> appValues, int i)
 }
 QVector<komplex> PolynomHandler(QVector<double> inputs){
     int grad = inputs.count()-1;
-    QVector<komplex> outputs;
     if(grad < 1){
         debug("Dieses Polynom ist nicht implementiert");
-        return outputs;
+        return QVector<komplex>();
     }else if(grad == 1){
         return linear(inputs);
     }else if(grad == 2){
@@ -187,14 +187,20 @@ QVector<komplex> PolynomHandler(QVector<double> inputs){
     }else if(grad == 3){
         return cardano(inputs);
     }else{
-        return numerisch(inputs);
+        //return numerisch(inputs);
+        auto hajonet = toKomplex(inputs);
+        auto outputs_ptr = new QVector<komplex>();
+        newtonNullstellen(hajonet, outputs_ptr);
+        QVector<komplex> outputs = *outputs_ptr;
+        delete outputs_ptr;
+        return outputs;
     }
 }
 void Nullstellenfinder::berechnen(){
     QString koeffizientenstring = ui->lineKoeffizienten->text();
     ui->textNullstellen->clear();
     QVector<double> inputs;
-    auto liste = koeffizientenstring.split(';');
+    auto liste = koeffizientenstring.split(',');
     foreach(QString zahl, liste){
         if (zahl == ""){
             inputs.append(0.0);
@@ -204,7 +210,7 @@ void Nullstellenfinder::berechnen(){
     }
     QVector<komplex> outputs = PolynomHandler(inputs);
     foreach(komplex z, outputs){
-
+        z.runden(6);
         ui->textNullstellen->append(z.toQstring());
         ui->textNullstellen->append("\n");
         if(z.get_real() != z.get_real()){
@@ -248,4 +254,164 @@ void Nullstellenfinder::berechnen(){
 
 
 }
+QVector<double> toReal(QVector<komplex> liste){
+    QVector<double> erg;
+    foreach(auto x, liste){
+        if(!istUngefaerGleich(x.get_imag(),0)){
+            debug("Umwandlung zu real geht nicht. Der imaginäre Anteil ist != 0");
+            return erg;
+        }
+    }
+    foreach(auto x, liste){
+        erg.append(x.get_real());
+    }
+    return erg;
+}
+QVector<komplex> toKomplex(QVector<double> liste){
+    QVector<komplex> erg;
+    foreach(auto x, liste){
+        erg.append(komplex(x,0));
+    }
+    return erg;
+}
+bool istUngefaerGleich(double x, double y, double genauigkeit){
+    double differenz = abs(x-y);
+    if(differenz < genauigkeit){
+        return true;
+    }else{
+        return false;
+    }
+}
+bool istUngefaerGleich(komplex x, komplex y , double genauigkeit){
+    if(istUngefaerGleich(x.get_real(), y.get_real(), genauigkeit)){
+        if(x.get_imag(), y.get_imag(), genauigkeit){
+            return true;
+        }
+    }
+    return false;
+}
+QVector<komplex> ableiten(QVector<komplex> funktion){
+    QVector<komplex> erg;
+    int maxPotenz = funktion.count() - 1;
+    for(int i = 0; i < funktion.count(); i++){
+        komplex koeffizient = funktion.at(i);
+        double multiplikator = maxPotenz - i;
+        erg.append(koeffizient * multiplikator);
+    }
 
+    erg.remove(maxPotenz);
+    return erg;
+}
+QVector<komplex> listeReversen(QVector<komplex> liste){
+    QVector<komplex> reversed;
+    for(int i = liste.count() - 1; i >= 0; i--){
+        reversed.append(liste.at(i));
+    }
+    return reversed;
+}
+QVector<double> listeReversen(QVector<double> liste){
+    return toReal(listeReversen(toKomplex(liste)));
+}
+QVector<komplex> hornerschema(QVector<komplex> funktion, komplex nullstelle){
+    QVector<komplex> erg;
+    QVector<komplex> zwischenerg;
+    /*
+    if(!istUngefaerGleich(yWert(funktion, nullstelle), komplex(0,0), pow(10, -1))){
+        debug("hornerschema kann nicht angewandt werden. ist keine Nullstelle!");
+        return erg;
+    }
+    */
+    //Hornerschema
+    zwischenerg.append(0);
+    for(int i = 0; i < funktion.count(); i++){
+        komplex wert = (funktion.at(i) + zwischenerg.at(i));
+        erg.append(wert);
+        zwischenerg.append(wert * nullstelle);
+    }
+    if(!istUngefaerGleich(erg.last(), komplex(0,0), pow(10,-3))){
+        debug("hornerschema kann nicht angewandt werden. ist keine Nullstelle!");
+        erg.clear();
+        return erg;
+    }else{
+        erg.remove(erg.count()-1);
+        return erg;
+    }
+}
+komplex yWert(QVector<komplex> funktion, komplex x){
+    komplex y(0,0);
+    funktion = listeReversen(funktion);
+    for(int i = 0; i < funktion.count(); i++){
+        komplex koeffizient = funktion.at(i);
+        y = y + (koeffizient * pow(x, i));
+    }
+    return y;
+}
+komplex newton(QVector<komplex> funktion, komplex startwert){
+    QVector<komplex> ableitung = ableiten(funktion);
+    komplex nullstelle = startwert;
+    komplex neueNullstelle;
+    komplex neuerWert;
+
+    bool NullstelleGefunden = false;
+    int counter1 = 0;
+    int maxCounter1 = 1000;
+    int counter2 = 1;
+    int maxCounter2 = 100;
+    while(counter2 < maxCounter2){
+        while(counter1 < maxCounter1){
+            komplex wert = yWert(funktion, nullstelle);
+            komplex wertAbleitung = yWert(ableitung, nullstelle);
+            if(istUngefaerGleich(wertAbleitung, komplex(0,0))){
+                break;
+            }
+            neueNullstelle = nullstelle - (wert/wertAbleitung);
+            neuerWert = yWert(funktion, neueNullstelle);
+            if(istUngefaerGleich(wert, neuerWert)){
+                NullstelleGefunden = true;
+                break;
+            }
+            nullstelle = neueNullstelle;
+            counter1++;
+        }
+        if(NullstelleGefunden){
+            break;
+        }
+
+        nullstelle = startwert * pow(-1, counter2) * counter2;
+        counter2++;
+    }
+    if(NullstelleGefunden){
+        return nullstelle;
+    }else{
+        debug("Nullstelle konnte nicht gefunden werden");
+        return komplex(0,0);
+    }
+}
+void newtonNullstellen(QVector<komplex> funktion, QVector<komplex>* ergebnisse){
+    QVector<komplex> erg;
+    int grad = funktion.count() - 1;
+    if(grad == 2){
+        erg.append(pqFormel(funktion));
+
+    }else{
+        komplex nullstelle = newton(funktion);
+        nullstelle.runden();
+        erg.append(nullstelle);
+        auto neueFunktion = hornerschema(funktion, nullstelle);
+        newtonNullstellen(neueFunktion, ergebnisse);
+    }
+    ergebnisse->append(erg);
+}
+QVector<komplex> pqFormel(QVector<komplex> inputs){
+    QVector<komplex> outputs;
+    komplex a(inputs.at(0));
+    komplex b(inputs.at(1));
+    komplex c(inputs.at(2));
+    komplex p(b/a);
+    komplex q(c/a);
+    komplex x1 = (p/-2.0)+pow(pow(p/2.0,2) - q, 0.5);
+    komplex x2 = (p/-2.0)-pow(pow(p/2.0,2) - q, 0.5);
+    outputs.append(x1);
+    outputs.append(x2);
+    return outputs;
+}
