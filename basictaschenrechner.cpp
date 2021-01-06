@@ -59,22 +59,22 @@ void basicTaschenrechner::KommaButtonpressed(){
 }
 void basicTaschenrechner::NumPressed(){
     labelClear();
-    QPushButton* Button = (QPushButton*) sender();
-    QString butVal = Button->text();
+    QPushButton* Button = (QPushButton*) sender();//ist ein pointer auf das Objekt, das diese Funktion uffruft
+    QString butVal = Button->text();//ruft den Text des Senders ab. das ist geanu die Zahl
     QString displayVal = ui->Display->text();
-    if(displayVal.toDouble() == 0 || displayVal.toDouble() == 0.0){
-        if(komma){
-            butVal = "." + butVal;
-            komma = false;
+    if(displayVal.toDouble() == 0 || displayVal.toDouble() == 0.0){//wenn aufm TR eine Null steht
+        if(komma){//und das komma zuvor gedrückt wurde
+            butVal = "." + butVal;//ist der neue Wert
+            komma = false;//und das Komma wird wieder auf false gesetzt
         }
-        ui->Display->setText(butVal);
-    }else{
+        ui->Display->setText(butVal);//der neue Wert wird angezeigt
+    }else{//falls keine Null da stand
         QString newVal;
-        if(komma){
+        if(komma){//wenn das komma gedrückt worden ist
             newVal = displayVal +"." + butVal;
             komma = false;
-        }else{
-            newVal = displayVal + butVal;
+        }else{//wennd as komma nicht gedrückt worden ist
+            newVal = displayVal + butVal;//Hier werden Strings aneinander gehangen
         }
 
         double dblBNewval = newVal.toDouble();
@@ -87,10 +87,11 @@ void basicTaschenrechner::MathButtonpressed(){
     multTrigger = false;
     addTrigger = false;
     subTrigger = false;
-    QString displayVal = ui->Display->text();
-    calcVal = displayVal.toDouble();
-    QPushButton* button = (QPushButton*) sender();
-    QString ButVal = button->text();
+    QString displayVal = ui->Display->text();//ruft die zahl aufm TR als String ab
+    calcVal = displayVal.toDouble();//konvertiert diesen String zu nem double
+    QPushButton* button = (QPushButton*) sender();//pointer zu Senderobjekt
+    QString ButVal = button->text();//ruft den Text des senders ab
+    //je nachdem welcher Button das war, wird der Trigger gesetzt
     if(QString::compare(ButVal, "/", Qt::CaseInsensitive) == 0){
         divTrigger = true;
     }else if(QString::compare(ButVal, "*", Qt::CaseInsensitive) == 0){
@@ -102,15 +103,16 @@ void basicTaschenrechner::MathButtonpressed(){
     }else{
         potTrigger = true;
     }
-    ui->Display->setText("");
+    ui->Display->setText("");//Text auf dem TR wird "gelöscht"
 }
 
 void basicTaschenrechner::EqualsButton(){
     labelClear();
     double solution = 0.0;
-    QString displaVal = ui->Display->text();
-    double dblDisplayVal = displaVal.toDouble();
-    if(addTrigger || subTrigger || multTrigger || divTrigger || potTrigger){
+    QString displaVal = ui->Display->text();//ruft den auf dem TR angezeigten Wert ab
+    double dblDisplayVal = displaVal.toDouble();//konvertiert ihn zu nem double
+    if(addTrigger || subTrigger || multTrigger || divTrigger || potTrigger){//prüft ob eine Rechenoperation vorliegt
+        //wenn ja, wird diese aufgeführt
         if(addTrigger){
             solution = calcVal + dblDisplayVal;
         }else if(subTrigger){
@@ -131,11 +133,11 @@ void basicTaschenrechner::EqualsButton(){
 void basicTaschenrechner::ChangeNumberSign(){
     labelClear();
     QString displayVal = ui->Display->text();
-    QRegExp reg("[-]?[0-9.]*");
-    if(reg.exactMatch(displayVal)){
+    QRegExp reg("[-]?[0-9.]*");//erstellt ein bestimmtes Muster
+    if(reg.exactMatch(displayVal)){//wenn die angezeigte Zahl genau diesem Muster entspricht
         double dblDisplayVal = displayVal.toDouble();
-        double dblDisplayvalSign = dblDisplayVal * -1;
-        ui->Display->setText(QString::number(dblDisplayvalSign));
+        double dblDisplayvalSign = dblDisplayVal * -1;//wird das vorzeichen umgedreht
+        ui->Display->setText(QString::number(dblDisplayvalSign));//und angezeigt
     }
 }
 
@@ -144,7 +146,7 @@ void basicTaschenrechner::clear(){
     ui->Display->setText(QString::number(0));
 }
 
-void basicTaschenrechner::handler(){
+void basicTaschenrechner::handler(){//soll das Menu handlen
     labelClear();
     QAction* x = (QAction*) sender();
     auto Buttonname = x->text();
@@ -189,10 +191,10 @@ void basicTaschenrechner::Fakultaet(){
     }else if(val == -1){
         ui->labelFehlermeldung->setText("-1! ist nicht definiert!");
     }else{
-        ui->Display->setText(QString::number(tgamma(val + 1)));
+        ui->Display->setText(QString::number(tgamma(val + 1)));//benutzt die Gamma Funktion. dadurch auch Fakultät von reellen Zahlen möglich
     }
 }
-void basicTaschenrechner::oneClick(){
+void basicTaschenrechner::oneClick(){//kümmert sich um Funktionen die nur einen inputwert brauchen
     labelClear();
     QString displayVal = ui->Display->text();
     double v = displayVal.toDouble();

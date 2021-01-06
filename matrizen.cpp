@@ -7,6 +7,8 @@ matrizen::matrizen()
 
 }
 matrizen::matrizen(int zeilenzahl, int spaltenzahl){
+    //erstellt eine Matrix mit der Zeilen- und Spaltenzahl
+    //dabei sind alle Elemente null
     QVector<double> spalte;
     for(int i = 0; i < spaltenzahl; i++){
         spalte.append(0);
@@ -16,18 +18,24 @@ matrizen::matrizen(int zeilenzahl, int spaltenzahl){
     }
 }
 matrizen::matrizen(const matrizen* x){
+    //der Kopierkonstruktor
+    //erstllt eine Matrix die genau die gleichen Eigenschaften hat wie die die übergeben wurde
     this->matrix = x->matrix;
 }
 double matrizen::get_wert(int zeilenzahl, int spaltenzahl) const {
+    //gibt den Wert an einer bestimmten Position zurück
     return this->matrix.at(zeilenzahl).at(spaltenzahl);
 }
 void matrizen::set_wert(double wert, int zeilenzahl, int spaltenzahl){
+    //setzt den Wert an einer bestimmten Position
     this->matrix[zeilenzahl][spaltenzahl] = wert;
 }
 int matrizen::zeilenzahl() const {
+    //gibt die Anzahl an Zeilen zurück
     return this->matrix.count();
 }
 int matrizen::spaltenzahl() const {
+    //gibt die Anzahl an Spalten zurück
     if(this->matrix.empty()){
         return 0;
     }else{
@@ -36,6 +44,7 @@ int matrizen::spaltenzahl() const {
 
 }
 matrizen matrizen::get_spalte(int spaltenindex) const {
+    //gibt die Spalte als Spaltenvektor zurück
     matrizen spalte(this->zeilenzahl(), 1);
     if(spaltenindex >= this->spaltenzahl()){
         debug("Spaltenindex Überlauf!");
@@ -47,6 +56,7 @@ matrizen matrizen::get_spalte(int spaltenindex) const {
     return spalte;
 }
 void matrizen::set_spalte(matrizen spalte, int spaltenindex){
+    //bekommt einen Spaltenvektor und setzt ihn auf die gewünschte Spalte in der Matrix
     if(spaltenindex >= this->spaltenzahl()){
         debug("Spaltenindex Überlauf! konnte nicht gesetzt werden");
         return;
@@ -60,6 +70,7 @@ void matrizen::set_spalte(matrizen spalte, int spaltenindex){
 
 }
 matrizen matrizen::get_zeile(int zeilenindex) const {
+    //gibt die Spalte als Zeilenvektor zurück
     matrizen zeile(1, this->spaltenzahl());
     if(zeilenindex >= this->zeilenzahl()){
         debug("Zeilenindex Überlauf!");
@@ -71,11 +82,12 @@ matrizen matrizen::get_zeile(int zeilenindex) const {
     return zeile;
 }
 void matrizen::set_zeile(matrizen zeile, int zeilenindex){
+    //bekommt einen Zeilenvektor und setzt ihn auf die gewünschte Zeile in der Matrix
     if(zeilenindex >= this->zeilenzahl()){
         debug("Zeilenindex Überlauf! konnte nicht gesetzt werden");
         return;
     }
-    if(zeile.spaltenzahl() != 1){
+    if(zeile.zeilenzahl() != 1){
         debug("Set_Zeile geht nicht.Ist kein Zeilenvektor");
     }
     for(int i = 0; i < this->spaltenzahl(); i++){
@@ -83,6 +95,7 @@ void matrizen::set_zeile(matrizen zeile, int zeilenindex){
     }
 }
 void matrizen::spaltentausch(int x, int y){
+    //tauscht zwei Spalten
     if(x == y){
         return;
     }
@@ -92,6 +105,7 @@ void matrizen::spaltentausch(int x, int y){
     this->set_spalte(spalte1, y);
 }
 void matrizen::zeilentausch(int x, int y){
+    //tauscht zwei Zeilen
     if(x == y){
         return;
     }
@@ -104,6 +118,7 @@ void matrizen::zeilentausch(int x, int y){
 
 }
 void matrizen::zeileMult(int zeilenindex, double multiplikator){
+    //multipliziert eine Zeile mit einem Wert
     if(multiplikator == 1){
         return;
     }
@@ -117,11 +132,12 @@ void matrizen::zeileMult(int zeilenindex, double multiplikator){
     //    this->print();
 }
 void matrizen::zeileMultAdd(int veraenderndeZeile, int addierendeZeile, double multiplikator){
+    //multipliziert eine Zeile und addiert sie auf eine andere drauf
     auto zeileVeraendert = this->get_zeile(veraenderndeZeile);
     auto zeileAddieren = this->get_zeile(addierendeZeile);
     for(int i = 0; i < zeileVeraendert.spaltenzahl(); i++){
         //zeileVeraendert[i] += (zeileAddieren.at(i) * multiplikator);
-        double wert = zeileVeraendert.get_wert(0,i) * multiplikator * zeileAddieren.get_wert(0, i);
+        double wert = zeileVeraendert.get_wert(0,i) + multiplikator * zeileAddieren.get_wert(0, i);
         zeileVeraendert.set_wert(wert,0, i);
     }
     this->set_zeile(zeileVeraendert, veraenderndeZeile);
@@ -143,6 +159,7 @@ void matrizen::print() const {
 
 }
 bool matrizen::isSquare() const {
+    //überprüft, ob die Matrix quadratisch ist
     if(this->zeilenzahl() == this->spaltenzahl()){
         return true;
     }else{
@@ -150,6 +167,7 @@ bool matrizen::isSquare() const {
     }
 }
 void matrizen::toIdentity(){
+    //wandelt eine Matrix in die Einhetismatrix um
     if(this->isSquare()){
         for(int spaltenzahl = 0; spaltenzahl < this->spaltenzahl(); spaltenzahl++){
             for(int zeilenzahl = 0; zeilenzahl < this->zeilenzahl(); zeilenzahl++){
@@ -166,39 +184,47 @@ void matrizen::toIdentity(){
     }
 }
 double matrizen::det() const {
+    //Berechnet die Determinante der Matrix
+    //Wenn die Matrix eine 1x1 Matrix ist, dann ist die Determinante gleich dem einzigen Element
+    //Wenn sie größer ist, dann wird der Laplacesche Entwicklungssatz verwendet
+    //und durch Rekursion auf eine 1x1 matrix zurückgeführt
     double det = 0;
-
 
     if(!this->isSquare()){
         debug("aus einer nich quadratischen Matrix kann keine Determinante berechnet werden");
         return 0;
     }
-    if(this->zeilenzahl() == 2){//Base Case
-        det = ((this->get_wert(0,0)*this->get_wert(1,1))-(this->get_wert(0,1)*this->get_wert(1,0)));
-        return det;
+    if(this->zeilenzahl() == 1){//Base Case
+        return this->get_wert(0,0);
     }else{
         int vorzeichen = 1;
 
         for(int index = 0; index < this->zeilenzahl(); index++){
-            matrizen kopie(this->zeilenzahl(), this->spaltenzahl());
-            kopie.copy(this);
-            kopie.zeileLoeschen(0);
-            kopie.spalteLoeschen(index);
+            matrizen kopie(this);//Matrix wird kopiert
+            kopie.zeileLoeschen(0);//erste Zeile wird weggeschnitten
+            kopie.spalteLoeschen(index);//und die n-nte Spalte
+            //Die Determinante ist dann der Wert in der ersten Zeile und der n-ten Spalte
+            //mal die Determinante von kopie mal das vorzeichen
+            //und das plus die nächste Determinante
             det += vorzeichen * this->get_wert(0, index) * kopie.det();
-            vorzeichen *= -1;
+            vorzeichen *= -1;//alternierendes Vorzeichen
         }
     }
     return det;
 }
 void matrizen::zeileLoeschen(int zeilenindex){
+    //löscht eine Zeile
     this->matrix.remove(zeilenindex);
 }
 void matrizen::spalteLoeschen(int spaltenindex){
+    //löscht eine Spalte
     for(int zeilenindex = 0; zeilenindex < this->zeilenzahl(); zeilenindex++){
         this->matrix[zeilenindex].remove(spaltenindex);
     }
 }
 void matrizen::copy(const matrizen* x){
+    //kopiert eine Matrix in diese Matrix
+    //mit dem Kopierkonstruktor wird diese Methode eig nicht mehr gebraucht
     if(this->zeilenzahl() != x->zeilenzahl() || this->spaltenzahl() != x->spaltenzahl()){
         debug("Matrizen haben nich die gleichen Dimensionen");
         return;
@@ -211,8 +237,8 @@ void matrizen::copy(const matrizen* x){
 
 }
 void matrizen::transponieren(){
-    matrizen kopie(this->zeilenzahl(), this->spaltenzahl());
-    kopie.copy(this);
+    //transponiert eine Matrix
+    matrizen kopie(this);
     this->resize(this->spaltenzahl(), this->zeilenzahl());
     this->nullen();
     for(int spaltenzahl = 0; spaltenzahl < this->spaltenzahl(); spaltenzahl++){
@@ -223,28 +249,30 @@ void matrizen::transponieren(){
 
 }
 void matrizen::resize(int zeilenanzahl, int spaltenanzahl){
-    while(this->zeilenzahl() > zeilenanzahl){
+    //nimmt diese Matrix und bringt sie auf ein neues Format
+    while(this->zeilenzahl() > zeilenanzahl){//Wenn Zeilen zu viel sind, werden die letzten gelöscht
         this->matrix.erase(this->matrix.end()-1);
     }
-    while(this->spaltenzahl() > spaltenanzahl){
+    while(this->spaltenzahl() > spaltenanzahl){//Wenn Spalten zu viel sind, werden die letzen gelöscht
         for(int i = 0; i < this->zeilenzahl(); i++){
             this->matrix[i].erase(this->matrix[i].end()-1);
         }
     }
     QVector<double> zeile;
-    for(int i = 0; i < this->spaltenzahl(); i++){
+    for(int i = 0; i < this->spaltenzahl(); i++){//eine Nullzeile mit der gewünschten Spaltenzahl wird erstellt
         zeile.append(0);
     }
-    while(this->zeilenzahl() < zeilenanzahl){
+    while(this->zeilenzahl() < zeilenanzahl){//wenn Zeilen zu wenig sind, dann werden Nullzeilen hinzugefügt
         this->matrix.append(zeile);
     }
-    while(this->spaltenzahl() < spaltenanzahl){
+    while(this->spaltenzahl() < spaltenanzahl){//Wenn Spalten zu wenig sind, dann werden Nullspalten hinzugefügt
         for(int i = 0; i < this->zeilenzahl(); i++){
             this->matrix[i].append(0);
         }
     }
 }
 void matrizen::nullen(){
+    //ersetzt jedes Element der Matrix durch nullen
     for(int spaltenzahl = 0; spaltenzahl < this->spaltenzahl(); spaltenzahl++){
         for(int zeilenzahl = 0; zeilenzahl < this->zeilenzahl(); zeilenzahl++){
             this->set_wert(0, zeilenzahl, spaltenzahl);
@@ -252,7 +280,8 @@ void matrizen::nullen(){
     }
 }
 void matrizen::join(matrizen x){
-    if(this->zeilenzahl() != x.zeilenzahl()){
+    //verbindet zwei Matrizen spaltenweise
+    if(this->zeilenzahl() != x.zeilenzahl()){//deshalb brauchen sie die geiche Zeilenzahl
         debug("Join geht nicht. haben nicht die gleiche Zeilenanzahl");
         return;
     }
@@ -266,7 +295,8 @@ void matrizen::join(matrizen x){
     }
 }
 void matrizen::seperate(){
-    if(this->spaltenzahl() != 2*this->zeilenzahl()){
+    //Wenn zwei quadratische Matrizen zusammengefügt worden sind, dann wird hier die vordere Matrize abgeschnitten
+    if(this->spaltenzahl() != 2*this->zeilenzahl()){//deshalb muss die Matrize doppelt so viele Spalten wie Zeilen haben
         debug("geht net!");
         return;
     }
@@ -275,9 +305,9 @@ void matrizen::seperate(){
     }
 }
 int matrizen::findeZeilemitMax(int spaltenindex, int startZeilenIndex) const {
-    int index = -1;
-    double temp = INFINITY;
-    temp *= -1;
+    //findet die Zeile mit dem größten Absolutwert, die unter der startZeile ist, innerhab einer Spalte
+    int index = NAN;
+    double temp = -INFINITY;
     for(int i = startZeilenIndex; i < this->zeilenzahl(); i++){
         double wert = this->get_wert(i, spaltenindex);
         wert = abs(wert);
@@ -289,6 +319,7 @@ int matrizen::findeZeilemitMax(int spaltenindex, int startZeilenIndex) const {
     return index;
 }
 bool matrizen::istUngefaehrGleich(matrizen x, int genauigkeit = pow(10, -6)) const {
+    //zwei Matrizen sind gleich, wenn die absolute Differenz Elementenweise überall kleiner ist als genauigkeit
     if(this->zeilenzahl() != x.zeilenzahl() || this->spaltenzahl() != x.spaltenzahl()){
         debug("kann man nicht vergleichen");
         return false;
@@ -307,45 +338,49 @@ bool matrizen::istUngefaehrGleich(matrizen x, int genauigkeit = pow(10, -6)) con
     return true;
 }
 void matrizen::inverse(){
+    //Invertierung einer Matrix nach dem Gauß-Jordan Verfahren
+    //grobes Prinzip:
+    //Die Einheitsmatrix wird neben dran geschrieben
+    //es dürfen nur Zeilen getauscht, Zeilen mit einer Konstante (!=0) multipliziert und Zeilen addiert werden
+    //das Ziel ist es am Ende die Einheitsmatrix auf der linken Seite zu bekommen, dann ist rechts die Inverse
 
-    //Gauß Jordan Verfahren
-
-
-    if(!this->isSquare()){
+    if(!this->isSquare()){//eine Matrix kann man nur invertieren wenn sie Quadratisch
         debug("Inverse geht nur für quadratische Matrizen");
         return;
     }
-    if(this->det() == 0){
+    if(this->det() == 0){//und ihre Determinante ungleich 0 ist
         debug("Inverse geht nur für Matrizen deren det != 0 ist");
         return;
     }
-    matrizen startmatrix(this);
+    matrizen startmatrix(this);//Speichert die Matrix ab
     matrizen einheitsmatrix(this);
-    einheitsmatrix.toIdentity();
-    const int maxZeile = this->zeilenzahl();
-    this->join(einheitsmatrix);
+    einheitsmatrix.toIdentity();//generiert eine Einheitsmatrix mit den gleichen Dimenionen
+    const int maxZeile = this->zeilenzahl();//eine Konstante die die Anzahl an zeilen beinhaltet
+    this->join(einheitsmatrix);//verbindet diese Matrix mit der Einheitsmatrix
 
-    for(int diagIndex = 0; diagIndex < maxZeile; diagIndex++){
-        int i = diagIndex + 1;
-        double pivotelement = this->get_wert(diagIndex, diagIndex);
-        while(istUngefaehrgleich(pivotelement, 0) && i < maxZeile){
-            this->zeilentausch(i, diagIndex);
-            pivotelement = this->get_wert(diagIndex, diagIndex);
-            i++;
+    for(int diagIndex = 0; diagIndex < maxZeile; diagIndex++){//es wird durch jede Zeile gegangen
+        int i = diagIndex + 1;//i ist ein Index der in der darauffolgenden Zeile startet
+        double pivotelement = this->get_wert(diagIndex, diagIndex);//das ist das Element in dieser Zeile in der Hauptdiagonalen
+        while(istUngefaehrgleich(pivotelement, 0) && i < maxZeile){//solange dieses Element = 0 ist und i kleiner ist als die maximale Zeilenzahl
+            this->zeilentausch(i, diagIndex);//Zeile wird getauscht
+            pivotelement = this->get_wert(diagIndex, diagIndex);//da Zeile getauscht wurde, gibt es jetzt auch ein neues pivotelement
+            i++;//Index wird erhöht. falls das Pivotelement wieder null sein sollte wird die übernächdte Zeile genommen etc
         }//versucht das Pivotelement ungleich von Null zu machen
+        //jetzt sollte das Pivotelement != 0 sein aber es wird nochmal auf nummer sicher gegangen
         if(!istUngefaehrgleich(pivotelement, 0)){
-            this->zeileMult(diagIndex, 1.0/pivotelement);
+            this->zeileMult(diagIndex, 1.0/pivotelement);//Zeile wird so multipliziert das das Pivotelement 1 wird
         }
-        for(int zeilenIndex = 0; zeilenIndex < maxZeile; zeilenIndex++){
-            if(diagIndex != zeilenIndex){
-                double element = this->get_wert(zeilenIndex, diagIndex);
-                if(!istUngefaehrgleich(0, element)){
+        for(int zeilenIndex = 0; zeilenIndex < maxZeile; zeilenIndex++){//es wird über alle Zeilen Iteriert
+            if(diagIndex != zeilenIndex){//die Zeile in der wir gerade sind wird ausgelassen
+                double element = this->get_wert(zeilenIndex, diagIndex);//das element in der gleichen Spalte wie das Pivotelement
+                if(!istUngefaehrgleich(0, element)){//wenn diess Element nicht 0 ist
                     double mult = -element;
-                    this->zeileMultAdd(zeilenIndex, diagIndex, mult);
+                    this->zeileMultAdd(zeilenIndex, diagIndex, mult);//dann wird die zeile mit dem Pivotelement so multipliziert und auf die andere Zeile addiert, dass das element 0 wird
                 }
             }
-        }
-    }
+        }//jetzt sollten alle Elemente in dieser Spalte außer das Pivotelement null sein
+    }//das wird für alle Spalten gemacht
+    //jetzt solle links die Einheitsmatrix und rechts die inverse sein
     this->seperate();
 
     /*
@@ -396,6 +431,8 @@ void matrizen::inverse(){
 
 }
 void matrizen::spaltenalgorithmus(int zeilenindex, int spaltenindex){
+    //wurde für ein anderes Verfahren gebraucht
+    //ist jetzt eig überflüssig
     zeilenindex++;
     while(zeilenindex < this->zeilenzahl()){
         if(istUngefaehrgleich(this->get_wert(zeilenindex, spaltenindex),0)){//vllt ein close to statt ein ==
@@ -415,6 +452,8 @@ void matrizen::spaltenalgorithmus(int zeilenindex, int spaltenindex){
     }
 }
 void matrizen::zeilenalgorithmus(int zeilenindex, int spaltenindex){
+    //wurde für ein anderes Verfahren gebraucht
+    //ist jetzt eig überflüssig
     spaltenindex++;
     while(spaltenindex < this->zeilenzahl()){
         if(istUngefaehrgleich(this->get_wert(zeilenindex, spaltenindex),0)){//vllt ein close to statt ein ==
@@ -434,6 +473,7 @@ void matrizen::zeilenalgorithmus(int zeilenindex, int spaltenindex){
     }
 }
 matrizen matrizen::operator*(matrizen x) const {
+    //zwei Matrizen werden multipliziert
     matrizen erg;
     if(this->spaltenzahl() != x.zeilenzahl()){
         debug("MatrixMultiplikation geht net. falsche Dimensionen");
@@ -452,6 +492,7 @@ matrizen matrizen::operator*(matrizen x) const {
     return erg;
 }
 bool istUngefaehrgleich(double z1, double z2, double genauigkeit){
+    //schaut ob zwei Zahlen innerhalb einer Toleranz gleich sind
     if(abs(z1-z2)<genauigkeit){
         return true;
     }else{
@@ -459,6 +500,7 @@ bool istUngefaehrgleich(double z1, double z2, double genauigkeit){
     }
 }
 matrizen matrizen::operator+(matrizen x) const {
+    //addiert zwei Matrizen
     matrizen erg(this->zeilenzahl(), this->spaltenzahl());
     if(this->zeilenzahl() != x.zeilenzahl() || this->spaltenzahl() != x.spaltenzahl()){
         return matrizen();
@@ -471,6 +513,7 @@ matrizen matrizen::operator+(matrizen x) const {
     return erg;
 }
 matrizen matrizen::operator-(matrizen x) const {
+    //subtrahiert zwei Matrizen
     matrizen erg(this->zeilenzahl(), this->spaltenzahl());
     if(this->zeilenzahl() != x.zeilenzahl() || this->spaltenzahl() != x.spaltenzahl()){
         return matrizen();
@@ -480,6 +523,7 @@ matrizen matrizen::operator-(matrizen x) const {
     return erg;
 }
 matrizen matrizen::operator*(double d)const {
+    //multipliziert eine Matrix mit einer Konstanten
     matrizen erg(this->zeilenzahl(), this->spaltenzahl());
     for(int zeilenindex = 0; zeilenindex < erg.zeilenzahl(); zeilenindex++){
         for(int spaltenindex = 0; spaltenindex < erg.spaltenzahl(); spaltenindex++){
@@ -489,65 +533,84 @@ matrizen matrizen::operator*(double d)const {
     return erg;
 }
 void matrizen::gauss(){
+    //wendet das Gauß Verfahren an um eine obere Dreiecksmatrix zu erzeugen
+
+
     /*
     if(this->spaltenzahl() - 1 != this->zeilenzahl()){
         debug("gauß macht keinen Sinn");
         return;
     }
     */
-    int maxIterationen = this->kleinsteDimension();
-    int diagonalIndex = 0;
-    for(int spaltenindex = 0; spaltenindex < maxIterationen; spaltenindex++){
-        int i = 0;
-        while(this->get_wert(diagonalIndex, diagonalIndex) == 0 && i < maxIterationen){
-            this->zeilentausch(diagonalIndex, i);
-            i++;
-        }//Jetzt sollte keine null mehr in der Hauptdiagonalen stehen
-        for(int j = 0; j < diagonalIndex; j++){
-            this->zeileMultAdd(diagonalIndex, j, -this->get_wert(diagonalIndex, j));
+    while(!this->gaussform()){//solange nicht die Gaussform vorliegt
+    const int maxIterationen = this->kleinsteDimension();
+    for(int diagIndex = 0; diagIndex < maxIterationen; diagIndex++){//wird durch die diaagonale Iteriert
+        double Pivotelement = this->get_wert(diagIndex, diagIndex);//zieht sich das erste hauptdiagonalenelement
+        int i = diagIndex + 1;//Zeilen sollen nur die unteren der aktuellen genommen werden
+        while(istUngefaehrgleich(0, Pivotelement) && i < this->zeilenzahl()){//solange das Pivotelement null ist und noch nicht das zeilenende erreicht
+            this->zeilentausch(i, diagIndex);//werden Zeilen getauscht
+            Pivotelement = this->get_wert(diagIndex, diagIndex);//der neue Pivotelement wird gesetzt
+            i++;//und es wird dei nächste zeile ausgewählt
+        }//Das Pivotelement solle nicht mehr null sein. Wenn es Null ist, dann wird die gaußform nicht errreicht. Deshalb die while !gaußform schleife
+        if(!istUngefaehrgleich(0, Pivotelement)){//Trotzdem wird es nochmals kontrolliert
+            this->zeileMult(diagIndex, 1.0/Pivotelement);//wenn es nicht null ist, dann wird die Zeile normiert
         }
-        double wert = this->get_wert(diagonalIndex, diagonalIndex);
-        if(wert != 0){
-            this->zeileMult(diagonalIndex, 1.0/this->get_wert(diagonalIndex, diagonalIndex));
-        }
-
-        diagonalIndex++;
-
-    }
-
-    for(int i = 0; i < maxIterationen; i++){
-        int counter = i + 1;
-        while(this->get_wert(i,i) == 0 && counter<maxIterationen){
-            this->zeilentausch(i,counter);
-            counter++;
+        for(int j = diagIndex + 1; j < zeilenzahl(); j++){//Jetzt wird durch die unteren Zeilen durchiteriert und das Zuel ist es alles in der Pivotspalte null zu bekommen
+            double element = this->get_wert(j, diagIndex);
+            if(!istUngefaehrgleich(0, element)){
+                this->zeileMultAdd(j, diagIndex, -element);
+            }
         }
     }
-    for(int i = 0; i < maxIterationen; i++){
-        if(this->get_wert(i,i) != 0){
-            this->zeileMult(i, 1.0/this->get_wert(i,i));
+    }
+}
+bool matrizen::gaussform()const{
+    //Überprüft, ob die Gaußform vorliegt, also ob es eine obere Dreiecksmatrix ist
+    //falls sie nicht Quadratisch ist, dann müssen alle Elemente unter der Hauptdiagonalen null sein
+    const int iterationen = this->kleinsteDimension();
+    bool einHauptdiagonalenelementWarSchonNull = false;
+    for(int i = 0; i < iterationen; i++){
+        for(int j = i; j < this->zeilenzahl(); j++){
+            if(i == j){
+                if(einHauptdiagonalenelementWarSchonNull){
+                    if(!istUngefaehrgleich(0, this->get_wert(j,i))){
+                        return false;
+                    }
+                }else{
+                    if(istUngefaehrgleich(0, this->get_wert(j,i))){
+                        einHauptdiagonalenelementWarSchonNull = true;
+                    }
+                }
+            }else{
+                if(!istUngefaehrgleich(0, this->get_wert(j, i))){
+                    return false;
+                }
+            }
         }
     }
-
+    return true;
 }
 int matrizen::rang() const {
-    matrizen x(this->zeilenzahl(), this->spaltenzahl());
-    x.copy(this);
-    x.nullZeilenLoeschen();
-    if(x.zeilenzahl() == 0){
+    //bestimmt den Rang einer Matrix
+    matrizen x(this);
+    x.nullZeilenLoeschen();//unnötige Zeilen werden direkt gelöscht
+    x.nullSpaltenLoeschen();//unnötige Spaletn werden direkt gelöscht
+    if(x.zeilenzahl() == 0){//falls jetzt nix mehr da ist, wird 0 zurückgegeben
         return 0;
     }
-    if(x.zeilenzahl() == 1){
+    if(x.zeilenzahl() == 1){//oder falls nur eine Zeile
         return 1;
     }
-    if(x.spaltenzahl() == 1){
+    if(x.spaltenzahl() == 1){//oder nur eine Spalte da ist
         return 1;
     }
-    x.gauss();
+    x.gauss();//Gauß wird angewendet um evtl lineare Abhängigkeiten rauszufiltern
     x.nullZeilenLoeschen();
-    int rang = x.kleinsteDimension();
+    x.nullSpaltenLoeschen();
+    int rang = x.kleinsteDimension();//der Rang kann maximal die kleinste Dimension sein und Nullzeilen zählen nicht
     for(int i = 0; i < x.zeilenzahl(); i++){
         int j = i + 1;
-        while(j < x.zeilenzahl()){
+        while(j < x.zeilenzahl()){//jetzt wird geprüft ob irgendwelche Zeilen linear Abhängig sind, falls ja, wird der Rang um 1 verringert
             if(x.linearAbhaengig(i, j)){
                 rang--;
             }
@@ -557,6 +620,8 @@ int matrizen::rang() const {
     return rang;
 }
 bool matrizen::linearAbhaengig(int x, int y) const {
+    //Überprüft ob zwei Teilen linear abhängig sind. also ob zeile1 * konstante = zeile2
+    //der Faktor muss natürlich ungleich 0 sein
     double factor;
     bool factorGefunden = false;
     auto zeileX = this->get_zeile(x);
@@ -591,9 +656,10 @@ bool matrizen::linearAbhaengig(int x, int y) const {
         }
         return true;
     }
-    return true;//wenn sie hier angekommen sind, dann müssen beide zeilen Nullzeilen sein
+    return true;//wenn sie hier angekommen sind, dann müssen beide Zeilen Nullzeilen sein
 }
 bool matrizen::nullZeile(int zeilenindex) const {
+    //überprüft ob eine Zeile null ist
     auto zeile = this->get_zeile(zeilenindex);
     for(int i = 0; i < zeile.spaltenzahl(); i++){
         double x = zeile.get_wert(0,i);
@@ -603,16 +669,41 @@ bool matrizen::nullZeile(int zeilenindex) const {
     }
     return true;
 }
+bool matrizen::nullSpalte(int spaltenindex) const {
+    //Überprüft ob eine Spalte null ist
+    auto spalte = this->get_spalte(spaltenindex);
+    for(int i = 0; i < spalte.zeilenzahl(); i++){
+        double x = spalte.get_wert(i,0);
+        if(!istUngefaehrgleich(0, x)){
+            return false;
+        }
+    }
+    return true;
+}
 void matrizen::nullZeilenLoeschen(){
+    //löscht Nullzeilen
     int i = 0;
     while(i < this->zeilenzahl()){
         if(this->nullZeile(i)){
             this->zeileLoeschen(i);
+        }else{
+            i++;
         }
-        i++;
+    }
+}
+void matrizen::nullSpaltenLoeschen(){
+    //Löscht nullspalten
+    int i = 0;
+    while(i < this->spaltenzahl()){
+        if(this->nullSpalte(i)){
+            this->spalteLoeschen(i);
+        }else{
+            i++;
+        }
     }
 }
 bool matrizen::diagonalMatrix() const {
+    //überprüft ob es eine diagonalMatrix ist
     for(int zeilenindex = 0; zeilenindex < this->zeilenzahl(); zeilenindex++){
         for(int spaltenindex = 0; spaltenindex < this->spaltenzahl(); spaltenindex++){
             if(zeilenindex != spaltenindex && this->get_wert(zeilenindex, spaltenindex) != 0){
@@ -633,6 +724,7 @@ bool matrizen::obereDreiecksMatrix() const {
     return true;
 }
 bool matrizen::einheitsMatrix() const {
+    //überprüft ob es eine obere Dreiceksmatrix ist
     for(int zeilenindex = 0; zeilenindex < this->zeilenzahl(); zeilenindex++){
         for(int spaltenindex = 0; spaltenindex < this->spaltenzahl(); spaltenindex++){
             if(zeilenindex == spaltenindex && this->get_wert(zeilenindex, spaltenindex) != 1){
@@ -646,6 +738,7 @@ bool matrizen::einheitsMatrix() const {
     return true;
 }
 bool matrizen::nullMatrix() const {
+    //überprüft ob es eine Nullmatrix ist
     for(int zeilenindex = 0; zeilenindex < this->zeilenzahl(); zeilenindex++){
         for(int spaltenindex = 0; spaltenindex < this->spaltenzahl(); spaltenindex++){
             if(this->get_wert(zeilenindex, spaltenindex) != 0){
@@ -656,6 +749,7 @@ bool matrizen::nullMatrix() const {
     return true;
 }
 bool matrizen::einsMatrix() const {
+    //überprüft ob es eine einsMatrix ist
     for(int zeilenindex = 0; zeilenindex < this->zeilenzahl(); zeilenindex++){
         for(int spaltenindex = 0; spaltenindex < this->spaltenzahl(); spaltenindex++){
             if(this->get_wert(zeilenindex, spaltenindex) != 1){
@@ -666,12 +760,14 @@ bool matrizen::einsMatrix() const {
     return true;
 }
 bool matrizen::symetrischeMatrix() const {
+    //überprüft ob es eine Symetrische matrix ist
     matrizen x(this->zeilenzahl(), this->spaltenzahl());
     x.copy(this);
     x.transponieren();
     return (this->istUngefaehrGleich(x));
 }
 bool matrizen::schiefsymetrischeMatrix() const {
+    //überprüft ob es eine schiefsymmetrische Matrix ist
     matrizen x(this->zeilenzahl(), this->spaltenzahl());
     matrizen y(this->zeilenzahl(), this->spaltenzahl());
     x.copy(this);
@@ -681,21 +777,22 @@ bool matrizen::schiefsymetrischeMatrix() const {
     return y.istUngefaehrGleich(x);
 }
 bool matrizen::orthogonnaleMatrix() const {
-    matrizen x(this->zeilenzahl(), this->spaltenzahl());
-    matrizen y(this->zeilenzahl(), this->spaltenzahl());
-    x.copy(this);
-    y.copy(this);
+    //überprüft ob es eine orthogonale Matrix ist
+    matrizen x(this);
+    matrizen y(this);
     x.transponieren();
     y = x * y;
     x.toIdentity();
     return y.istUngefaehrGleich(x);
 }
 bool matrizen::idempotenteMatrix() const {
+    //überprüft ob es eine Idempotente Matrix ist
     matrizen x(this->zeilenzahl(), this->spaltenzahl());
     x.copy(this);
     return x.istUngefaehrGleich(x*x);
 }
 int matrizen::spur() const {
+    //berechnet die Spur der Matrix
     if(this->isSquare()){
         double erg = 0;
         for(int i = 0; i < this->zeilenzahl(); i++){
@@ -707,6 +804,7 @@ int matrizen::spur() const {
     return 0;
 }
 matrizen matrizen::hadamard(matrizen x) const {
+    //berechnet das hadamart Produkt zweier matrizen
     matrizen erg;
     if(this->zeilenzahl() != x.zeilenzahl() && this->spaltenzahl() != x.spaltenzahl()){
         debug("Hadamardprodukt geht nicht. falsche Dimension");
@@ -722,6 +820,8 @@ matrizen matrizen::hadamard(matrizen x) const {
     return erg;
 }
 QVector<double> matrizen::eigenwerte()const{
+    //soll Eigenwerte berechnen
+    //Ich würds noch nicht benutzen...
     QVector<double> eigenwerte;
     //QR Zerlegung
     if(!this->isSquare()){
@@ -742,55 +842,57 @@ QVector<double> matrizen::eigenwerte()const{
     QRZerlegungsmatrix = QRZerlegungsmatrix * einheitsmatrix;
     while(weitermachen){
 
-    for(int n = 0; n < QRZerlegungsmatrix.spaltenzahl(); n++){//Gram Schmidt Orthogonalisierung und setzt Q und R
-        matrizen anSenk = QRZerlegungsmatrix.get_spalte(n);
-        matrizen an = anSenk;
-        for(int sum = 0; sum < n; sum++){
-            matrizen q_sum = Q.get_spalte(sum);
-            double sp = skalarprodukt(an, q_sum);
-            anSenk = anSenk - (q_sum * (sp/q_sum.betragsquadrat()));
-            R.set_wert(sp/q_sum.betragsquadrat(), sum, n);
+        for(int n = 0; n < QRZerlegungsmatrix.spaltenzahl(); n++){//Gram Schmidt Orthogonalisierung und setzt Q und R
+            matrizen anSenk = QRZerlegungsmatrix.get_spalte(n);
+            matrizen an = anSenk;
+            for(int sum = 0; sum < n; sum++){
+                matrizen q_sum = Q.get_spalte(sum);
+                double sp = skalarprodukt(an, q_sum);
+                anSenk = anSenk - (q_sum * (sp/q_sum.betragsquadrat()));
+                R.set_wert(sp/q_sum.betragsquadrat(), sum, n);
+            }
+            double laenge =anSenk.betrag();
+            R.set_wert(laenge, n, n);
+            anSenk = anSenk * (1.0/laenge);
+            Q.set_spalte(anSenk, n);
         }
-        double laenge =anSenk.betrag();
-        R.set_wert(laenge, n, n);
-        anSenk = anSenk * (1.0/laenge);
-        Q.set_spalte(anSenk, n);
+        QRZerlegungsmatrix = R * Q;
+        if(Q.istUngefaehrGleich(vorherigeIteration, (double) 0.0001)){
+            weitermachen = false;
+        }
+        if(counter%20 == 0){
+            matrizen();
+        }
+        if(!(counter < maxCounter)){
+            return eigenwerte;
+        }
+        vorherigeIteration = Q;
+        counter++;
     }
-    QRZerlegungsmatrix = R * Q;
-    if(Q.istUngefaehrGleich(vorherigeIteration, (double) 0.0001)){
-         weitermachen = false;
+    for(int i = 0; i < R.zeilenzahl(); i++){
+        eigenwerte.append(R.get_wert(i,i));
     }
-    if(counter%20 == 0){
-        matrizen();
-    }
-    if(!(counter < maxCounter)){
-        return eigenwerte;
-    }
-    vorherigeIteration = Q;
-    counter++;
-    }
-for(int i = 0; i < R.zeilenzahl(); i++){
-eigenwerte.append(R.get_wert(i,i));
-}
-return eigenwerte;
+    return eigenwerte;
 }
 double skalarprodukt(matrizen x, matrizen y){
+    //berechnet das Skalarprodukt zweier Vektoren
     double sp = 0;
-    if(x.spaltenzahl() == 1){
-        x.transponieren();
+    if(x.spaltenzahl() == 1){//wenn x ein Spaltenvektor ist
+        x.transponieren();//dann wird er zum Zeilenvektor gemacht
     }
-    if(y.zeilenzahl() == 1){
-        y.transponieren();
+    if(y.zeilenzahl() == 1){//wenn y ein Zeilenvektor ist
+        y.transponieren();//dann wird er zum Spaltenvektor gemacht
     }
     if(x.spaltenzahl() != y.zeilenzahl()){
         debug("Skalarprodukt geht nicht. verschiendene Dimensionen");
         return sp;
     }
-    matrizen erg = x * y;
+    matrizen erg = x * y;//das normale Matrixprodukt wird gebildet. Da kommt eine 1x1 Matrix raus
     sp = erg.get_wert(0,0);
     return sp;
 }
 matrizen matrizen::kronecker(matrizen x) const {
+    //bidlet das Kronecker Produkt
     matrizen erg(this->zeilenzahl()*x.zeilenzahl(), this->spaltenzahl()*x.spaltenzahl());
     for(int zeileA = 0; zeileA < this->zeilenzahl(); zeileA++){
         for(int spalteA = 0; spalteA < this->spaltenzahl(); spalteA++){
@@ -808,6 +910,7 @@ matrizen matrizen::kronecker(matrizen x) const {
     return erg;
 }
 int matrizen::kleinsteDimension() const {
+    //gibt die kleinere Dimension zurück. Wenn beide gleich groß sind dann irgendeine
     if(this->zeilenzahl() < this->spaltenzahl()){
         return this->zeilenzahl();
     }else{
@@ -815,6 +918,8 @@ int matrizen::kleinsteDimension() const {
     }
 }
 double matrizen::betrag() const {
+    //berechnet den Betrag eines Vektors
+    /*
     double betrag = 0;
     matrizen kopie(this);
     if(kopie.zeilenzahl() == 1){
@@ -827,10 +932,13 @@ double matrizen::betrag() const {
     for(int i = 0; i < kopie.zeilenzahl(); i++){
         betrag += kopie.get_wert(i,0) * kopie.get_wert(i,0);
     }
+    */
+    double betrag = this->betragsquadrat();
     betrag = pow(betrag, 0.5);
     return betrag;
 }
 double matrizen::betragsquadrat() const {
+    //berechnet den Betrag im Quadrat eines Vektors
     double betrag = 0;
     matrizen kopie(this);
     if(kopie.zeilenzahl() == 1){

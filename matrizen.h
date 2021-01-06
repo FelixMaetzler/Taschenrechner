@@ -5,6 +5,8 @@
 #include "allgemein.h"
 #include "cmath"
 
+//Bibliothek zum Rechnen mit Matrizen
+
 class matrizen
 {
     QVector<QVector<double>> matrix;
@@ -49,11 +51,14 @@ void zeilenalgorithmus(int, int);
 void spaltenalgorithmus(int, int);
 
 void gauss();
+bool gaussform()const;
 int rang()const;
 int spur()const;
 bool linearAbhaengig(int, int)const;
 bool nullZeile(int)const;
+bool nullSpalte(int)const;
 void nullZeilenLoeschen();
+void nullSpaltenLoeschen();
 
 bool diagonalMatrix()const;
 bool obereDreiecksMatrix()const;

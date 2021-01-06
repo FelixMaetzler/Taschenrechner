@@ -2,34 +2,42 @@
 
 komplex::komplex()
 {
+    //Standartonstrukter der Real & Imaginärteil auf 0 setzt
     this->set_real(0);
     this->set_imag(0);
 }
 komplex::komplex(double real, double imag){
+    //Konstruktor der zwei Argumente nimmt und diese zuweist
     this->set_real(real);
     this->set_imag(imag);
 }
 komplex::komplex(double d){
+    //Konstruktor der ein Argument nimmt und den Realteil auf den Input setzt und den Imaginärteil auf 0
     this->set_real(d);
     this->set_imag(0);
 }
 double komplex::get_real() const {
+    //gibt den Realteil zurück
     return this->real;
 }
-
 double komplex::get_imag() const {
+    //gibt den Imaginätteil zurück
     return this->imag;
 }
 void komplex::set_real(double real){
+    //setzt den Realteil
     this->real = real;
 }
 void komplex::set_imag(double imag){
+    //setzt den Imaginärteil
     this->imag = imag;
 }
 double komplex::betrag() const {
+    //gibt den Betrag der komplexen Zahl zurück
     return std::pow(this->get_real()*this->get_real()+this->get_imag()*this->get_imag(), 0.5);
 }
 double komplex::winkel() const {
+    //gibt den Winkel zur positiven x-Achse zurück
     if(this->get_real() == 0 && this->get_imag() == 0)
     {
         //hier fliegt uns was mächtig um die Ohren
@@ -40,31 +48,41 @@ double komplex::winkel() const {
         return std::atan2(this->get_imag(), this->get_real());
     }
 }
-komplex komplex::toKaart(){
+komplex komplex::toKaart() const {
+    //gibt die komplexe Zahl in kaartesischer Form zurück
+    //sollte eig nicht außerhalb dieser Klasse benutzt werden
     double real = this->get_real() * cos(this->get_imag());
     double imag = this->get_real() * sin(this->get_imag());
     return komplex(real, imag);
 }
-komplex komplex::toPol(){
+komplex komplex::toPol() const {
+    //gibt eine komplexe Zahl zurück deren Realteil der betrag und deren Imaginärteil der Winkel ist
+    //sollte eig nicht außerhalb dieser Klasse benutzt werden
     return komplex(this->betrag(), this->winkel());
 }
-komplex komplex::operator*(double d){
+komplex komplex::operator*(double d) const {
+    //multipliziert eine komplexe Zahl mit einer reellen Zahl
     return komplex(this->get_real()*d, this->get_imag()*d);
 }
-komplex komplex::operator/(double d){
+komplex komplex::operator/(double d) const {
+    //dividiert eine komplexe Zahl durch eine reelle Zahl
     return komplex(this->get_real()/d, this->get_imag()/d);
 }
 komplex komplex::operator+(komplex z) const {
+    //addiert zwei komplexe Zahlen
     return komplex(this->get_real()+z.get_real(), this->get_imag()+z.get_imag());
 }
 komplex komplex::operator-(komplex z) const {
+    //subtrahiert zwei komplexe Zahlen
     return komplex(this->get_real()-z.get_real(), this->get_imag()-z.get_imag());
 }
 komplex komplex::operator*(komplex z) const {
+    //multipliziert zwei komplexe Zahlen
     return komplex((this->get_real()*z.get_real())-(this->get_imag()*z.get_imag()),
                    (this->get_real()*z.get_imag())+(this->get_imag()*z.get_real()));
 }
 komplex komplex::operator/(komplex z) const {
+    //dividiert zwei komplexe Zahlen
     if(z.get_imag() == 0.0 && z.get_real() == 0.0){
         debug("Teilen durch 0+0j geht nicht!!!");
         return komplex();
@@ -78,19 +96,20 @@ komplex komplex::operator/(komplex z) const {
 
 }
 
-bool komplex::operator==(komplex a){
+bool komplex::operator==(komplex a) const {
+    //vergleicht ob zwei komplexe Zahlen gleich sind
     if(this->get_real() == a.get_real() && this->get_imag()==a.get_imag()){
         return true;
     }else{
         return false;
     }
 }
-bool komplex::operator!=(komplex a){
+bool komplex::operator!=(komplex a) const {
+    //vergleicht ob zwei komplexe Zahlen ungleich sind
     return (!(*this == a));
 }
-
-
-QString komplex::toQstring(void)const{
+QString komplex::toQstring(void) const {
+    //wandelt eine komplexe Zahl in einen String um
     QString s = "";
     if(this->get_imag() == 0.0){
         s += QString::number(this->get_real());
@@ -107,13 +126,10 @@ QString komplex::toQstring(void)const{
         s += QString::number(abs(this->get_imag()));
         s += "j";
     }
-
     return s;
 }
-
-
-
 komplex pow(komplex z, double d){
+    //potentziert eine komplexe Zahl mit einer reellen Zahl
     if(d == 0.0){
         return komplex(1.0);
     }else if(d == 1.0){
@@ -127,6 +143,7 @@ komplex pow(komplex z, double d){
     }
 }
 komplex pow(double d, komplex z){
+    //potenziert eine reelle Zahl mit einer komplexen Zahl
     if(z.get_imag() == 0.0){
         return komplex(pow(d, z.get_real()));
     }else{
@@ -138,6 +155,7 @@ komplex pow(double d, komplex z){
     }
 }
 komplex pow(komplex a, komplex b){
+    //potenziert zwei komplexe Zahlen
     if(a.get_imag() == 0.0){
         return pow(a.get_real(), b);
     }else if(b.get_imag() == 0.0){
@@ -151,11 +169,13 @@ komplex pow(komplex a, komplex b){
     }
 }
 void debug(komplex z){
+    //gibt eine komplexe Zahl in der Konsole aus
     QString s = z.toQstring();
     debug(s);
     return;
 }
 void komplex::runden(int nachkommastellen){
+    //rundet eine komplexe Zahl auf eine gewisse Anzahl nachkommastellen
     double nks = nachkommastellen;
     double real = this->get_real();
     double imag = this->get_imag();

@@ -5,10 +5,13 @@
 #include "cmath"
 #include <QtDebug>
 #include "allgemein.h"
+
+//Bibliothek zum handlen komplexer Zahlen
 class komplex
 {
     double real;
     double imag;
+
 public:
     komplex();
     komplex(double, double);
@@ -22,16 +25,16 @@ public:
     double winkel(void) const;
     void runden(int nachkommastellen = 9);
 
-    komplex operator*(double);
-    komplex operator/(double);
+    komplex operator*(double)const;
+    komplex operator/(double)const;
 
     komplex operator+(komplex)const;
     komplex operator-(komplex)const;
     komplex operator*(komplex)const;
     komplex operator/(komplex)const;
 
-    bool operator==(komplex);
-    bool operator!=(komplex);
+    bool operator==(komplex)const;
+    bool operator!=(komplex)const;
 
     QString toQstring(void)const;
 
@@ -39,8 +42,8 @@ public:
 
 
     //Diese Funktionen sollten nicht benutzt werden
-    komplex toKaart(void);
-    komplex toPol(void);
+    komplex toKaart(void)const;
+    komplex toPol(void)const;
 };
 komplex pow(komplex, double);
 komplex pow(double, komplex);
