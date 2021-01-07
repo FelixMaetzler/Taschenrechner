@@ -39,24 +39,29 @@ MainWindow::MainWindow(QWidget *parent)
     connect(MainWindow::findChild<QAction*>("BasicTaschenrechner"), SIGNAL(triggered()),this , SLOT(handler()));
     connect(MainWindow::findChild<QAction*>("Nullstellenfinder"), SIGNAL(triggered()),this , SLOT(handler()));
     connect(MainWindow::findChild<QAction*>("Matrixrechner"), SIGNAL(triggered()),this , SLOT(handler()));
-/*
-    matrizen matrix(3,3);
-    matrix.set_wert(1, 0,0);
+
+    matrizen matrix(4,4);
+    matrix.set_wert(5, 0,0);
     matrix.set_wert(2, 1,0);
-    matrix.set_wert(35, 2,0);
+    matrix.set_wert(4, 2,0);
+    matrix.set_wert(5, 3,0);
 
+    matrix.set_wert(5, 0,1);
+    matrix.set_wert(1, 1,1);
+    matrix.set_wert(2, 2,1);
+    matrix.set_wert(-8, 3,1);
 
-    matrix.set_wert(2, 0,1);
-    matrix.set_wert(5, 1,1);
-    matrix.set_wert(6, 2,1);
+    matrix.set_wert(-3, 0,2);
+    matrix.set_wert(9, 1,2);
+    matrix.set_wert(-6, 2,2);
+    matrix.set_wert(-9, 3,2);
 
+    matrix.set_wert(-7, 0,3);
+    matrix.set_wert(6, 1,3);
+    matrix.set_wert(-5, 2,3);
+    matrix.set_wert(2, 3,3);
+    matrix.charakteristischesPolynom();
 
-    matrix.set_wert(35, 0,2);
-    matrix.set_wert(6, 1,2);
-    matrix.set_wert(5, 2,2);
-
-    matrix.eigenwerte();
-*/
 }
 
 MainWindow::~MainWindow()

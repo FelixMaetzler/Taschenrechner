@@ -61,8 +61,9 @@ void matrizen::set_spalte(matrizen spalte, int spaltenindex){
         debug("Spaltenindex Überlauf! konnte nicht gesetzt werden");
         return;
     }
-    if(spalte.zeilenzahl() != 1){
+    if(spalte.spaltenzahl() != 1){
         debug("Set_Spalte geht nicht.Ist kein Spaltenvektor");
+        return;
     }
     for(int i = 0; i < this->zeilenzahl(); i++){
         this->set_wert(spalte.get_wert(i,0), i, spaltenindex);
@@ -89,6 +90,7 @@ void matrizen::set_zeile(matrizen zeile, int zeilenindex){
     }
     if(zeile.zeilenzahl() != 1){
         debug("Set_Zeile geht nicht.Ist kein Zeilenvektor");
+        return;
     }
     for(int i = 0; i < this->spaltenzahl(); i++){
         this->set_wert(zeile.get_wert(0, i), zeilenindex, i);
@@ -542,15 +544,19 @@ void matrizen::gauss(){
         return;
     }
     */
+    int counter = 1;
     while(!this->gaussform()){//solange nicht die Gaussform vorliegt
     const int maxIterationen = this->kleinsteDimension();
-    for(int diagIndex = 0; diagIndex < maxIterationen; diagIndex++){//wird durch die diaagonale Iteriert
+    for(int diagIndex = 0; diagIndex < maxIterationen; diagIndex++){//wird durch die diagonale Iteriert
         double Pivotelement = this->get_wert(diagIndex, diagIndex);//zieht sich das erste hauptdiagonalenelement
         int i = diagIndex + 1;//Zeilen sollen nur die unteren der aktuellen genommen werden
         while(istUngefaehrgleich(0, Pivotelement) && i < this->zeilenzahl()){//solange das Pivotelement null ist und noch nicht das zeilenende erreicht
             this->zeilentausch(i, diagIndex);//werden Zeilen getauscht
             Pivotelement = this->get_wert(diagIndex, diagIndex);//der neue Pivotelement wird gesetzt
             i++;//und es wird dei nächste zeile ausgewählt
+            if(counter % 5 == 0){
+                this->zeileMultAdd(0, diagIndex, -1);
+            }
         }//Das Pivotelement solle nicht mehr null sein. Wenn es Null ist, dann wird die gaußform nicht errreicht. Deshalb die while !gaußform schleife
         if(!istUngefaehrgleich(0, Pivotelement)){//Trotzdem wird es nochmals kontrolliert
             this->zeileMult(diagIndex, 1.0/Pivotelement);//wenn es nicht null ist, dann wird die Zeile normiert
@@ -562,6 +568,7 @@ void matrizen::gauss(){
             }
         }
     }
+    counter++;
     }
 }
 bool matrizen::gaussform()const{
@@ -819,10 +826,32 @@ matrizen matrizen::hadamard(matrizen x) const {
     }
     return erg;
 }
-QVector<double> matrizen::eigenwerte()const{
+QVector<komplex> matrizen::eigenwerte()const{
     //soll Eigenwerte berechnen
     //Ich würds noch nicht benutzen...
-    QVector<double> eigenwerte;
+    QVector<komplex> eigenwerte;
+    QVector<double> charakteristischeGleichung;
+    if(!this->isSquare()){
+        debug("Eigenwerte nur von quadratischen Matrizen");
+        return eigenwerte;
+    }
+    if(this->zeilenzahl() == 1){
+        charakteristischeGleichung.append(-1);
+        charakteristischeGleichung.append(this->get_wert(0,0));
+    }
+    if(this->zeilenzahl() == 2){
+        charakteristischeGleichung.append(1);
+        double p = -this->get_wert(0,0) - this->get_wert(1,1);
+        double q = this->get_wert(0,0) * this->get_wert(1,1) - this->get_wert(1,0) * this->get_wert(0,1);
+        charakteristischeGleichung.append(p);
+        charakteristischeGleichung.append(q);
+    }
+    if(this->zeilenzahl() == 3){
+
+    }
+
+    eigenwerte = PolynomHandler(charakteristischeGleichung);
+    /*
     //QR Zerlegung
     if(!this->isSquare()){
         return eigenwerte;
@@ -872,6 +901,7 @@ QVector<double> matrizen::eigenwerte()const{
     for(int i = 0; i < R.zeilenzahl(); i++){
         eigenwerte.append(R.get_wert(i,i));
     }
+    */
     return eigenwerte;
 }
 double skalarprodukt(matrizen x, matrizen y){
@@ -952,4 +982,110 @@ double matrizen::betragsquadrat() const {
         betrag += kopie.get_wert(i,0) * kopie.get_wert(i,0);
     }
     return betrag;
+}
+QVector<double> matrizen::charakteristischesPolynom() const {
+    //Algorithmus von Samuelson-Berkowitz
+    //https://de.wikipedia.org/wiki/Algorithmus_von_Samuelson-Berkowitz
+    if(!this->isSquare()){
+        debug("Charakterischrisches polynom nur für quadratische Matrizen");
+        return QVector<double>();
+    }
+    matrizen vect(2,1);
+    vect.set_wert(1,0,0);
+    vect.set_wert(-this->get_wert(0,0), 1, 0);
+
+    for(int r = 1; r < this->zeilenzahl(); r++){
+        auto q= this->q(r+1);
+        q.Toeplitz();
+        vect = q * vect;
+    }
+    QVector<double> polynom;
+    for(int i = 0; i < vect.zeilenzahl(); i++){
+        polynom.append(vect.get_wert(i,0));
+    }
+    return polynom;
+}
+void matrizen::Toeplitz(){
+    if(this->spaltenzahl() != 1){
+        debug("Toeplitzmatrix kann nicht gebildet werden");
+    }
+    int d = this->zeilenzahl() - 1;
+    matrizen kopie(this);
+    this->resize(d + 1, d);
+    for(int zeilenindex = 0; zeilenindex < d + 1; zeilenindex++){
+        for(int spaltenindex = 0; spaltenindex < d; spaltenindex++){
+            if(zeilenindex >= spaltenindex){
+                int k = zeilenindex - spaltenindex;
+                auto wert = kopie.get_wert(k, 0);
+                this->set_wert(wert, zeilenindex, spaltenindex);
+            }else{
+                this->set_wert(0, zeilenindex, spaltenindex);
+            }
+        }
+    }
+}
+matrizen matrizen::R(int zeilenindex) const {
+    auto zeile = this->get_zeile(zeilenindex);
+    while(zeile.spaltenzahl() > zeilenindex){
+        zeile.spalteLoeschen(zeilenindex);
+    }
+    return zeile;
+}
+matrizen matrizen::S(int spaltenindex) const {
+    auto spalte = this->get_spalte(spaltenindex);
+    while(spalte.zeilenzahl() > spaltenindex){
+        spalte.zeileLoeschen(spaltenindex);
+    }
+    return spalte;
+}
+matrizen matrizen::A(int n) const {
+    matrizen kopie(this);
+    kopie.resize(n, n);
+    return kopie;
+}
+matrizen matrizen::power(int n) const {
+    matrizen kopie(this);
+    if(n == 0){
+        kopie.toIdentity();
+        return kopie;
+    }
+    for(int i = 1; i < n; i++){
+        kopie = kopie * kopie;
+    }
+    return kopie;
+}
+matrizen matrizen::q(int n) const {
+    int r = n - 1;
+    matrizen erg(n + 1, 1);
+    erg.set_wert(1,0,0);
+    erg.set_wert(-get_wert(r,r),1,0);
+    for(int k = 1; k <= r; k++){
+        auto R = this->R(r);
+        auto A = this->A(r);
+        A = A.power(k-1);
+        auto S =  this->S(r);
+        auto wert = R * A * S;
+        erg.set_wert(-wert.get_wert(0,0), k+1, 0);
+    }
+    return erg;
+}
+matrizen matrizen::unterbestimmt()const{
+    matrizen kopie(this);
+    kopie.gauss();
+    kopie.nullZeilenLoeschen();
+    int freiheitsgrade = kopie.spaltenzahl() - kopie.zeilenzahl() - 1;
+    if(freiheitsgrade != 1){
+        debug("untrbestimmt. nicht implementiert");
+        return matrizen();
+    }
+    matrizen erg(this->zeilenzahl(), freiheitsgrade);
+    erg.set_wert(1, this->zeilenzahl()-1, 0);
+    for(int diagIndex = kopie.kleinsteDimension()-1; diagIndex >= 0; diagIndex--){
+        double wert = kopie.get_wert(diagIndex, kopie.spaltenzahl()-1);
+        for(int j = diagIndex + 1;j < kopie.spaltenzahl()-1;j++ ){
+            wert -= kopie.get_wert(diagIndex, j) * erg.get_wert(j,0);
+        }
+        erg.set_wert(wert, diagIndex, 0);
+    }
+    return erg;
 }

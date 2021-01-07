@@ -395,10 +395,50 @@ void Matrix::spezielleMatrizen(int welcheMatrix, matrizen matrix){
         }
     }
     if(matrix.nullMatrix()){
-        text += "Nullmatrix";
+        text += "Nullmatrix\n";
     }
     if(matrix.einsMatrix()){
         text += "Einsmatrix";
+    }
+    if(quadratisch){
+        auto polynom = matrix.charakteristischesPolynom();
+        auto eigenwerte = PolynomHandler(polynom);
+        text += "Eigenwerte:\n";
+        foreach(auto x, eigenwerte){
+            text += x.toQstring();
+            text += "\n";
+        }
+        /*
+        text += "Eigenvektoren:\n";
+        matrizen eigenvektoren(matrix.zeilenzahl(), 0);
+        foreach(auto x, eigenwerte){
+            if(istUngefaehrgleich(x.get_imag(), 0)){
+
+                matrizen neueMatrix(matrix);
+                neueMatrix.toIdentity();
+                neueMatrix = matrix - (neueMatrix * x.get_real());
+                neueMatrix.resize(neueMatrix.zeilenzahl(), neueMatrix.spaltenzahl()+1);
+                neueMatrix.gauss();
+                matrizen eigenvektor = neueMatrix.unterbestimmt();
+                if(eigenvektor.zeilenzahl() == eigenvektoren.zeilenzahl()){
+                    eigenvektoren.resize(eigenvektoren.zeilenzahl(), eigenvektoren.spaltenzahl()+1);
+                    eigenvektoren.set_spalte(eigenvektor, eigenvektoren.spaltenzahl()-1);
+                }
+            }
+
+        }
+        for(int i = 0; i < eigenvektoren.spaltenzahl(); i++){
+            auto vektor = eigenvektoren.get_spalte(i);
+            text += "(";
+            for (int j = 0;j < vektor.zeilenzahl() ;j++ ) {
+                text += QString::number(vektor.get_wert(j,0));
+                if(j != vektor.zeilenzahl() - 1){
+                    text += ", ";
+                }
+            }
+            text += ")";
+        }
+        */
     }
     if(welcheMatrix == Matrix1){
         ui->textEigenschaften1->setText(text);

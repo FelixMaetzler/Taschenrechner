@@ -111,19 +111,23 @@ bool komplex::operator!=(komplex a) const {
 QString komplex::toQstring(void) const {
     //wandelt eine komplexe Zahl in einen String um
     QString s = "";
-    if(this->get_imag() == 0.0){
-        s += QString::number(this->get_real());
-    }else if(this->get_real() == 0.0){
-        s += QString::number(this->get_imag());
+    komplex kopie;
+    kopie.set_imag(this->get_imag());
+    kopie.set_real(this->get_real());
+    kopie.runden();
+    if(kopie.get_imag() == 0.0){
+        s += QString::number(kopie.get_real());
+    }else if(kopie.get_real() == 0.0){
+        s += QString::number(kopie.get_imag());
         s += "j";
     }else{
-        s += QString::number(this->get_real());
-        if(this->get_imag()>=0){
+        s += QString::number(kopie.get_real());
+        if(kopie.get_imag()>=0){
             s+= " + ";
         }else{
             s+= " - ";
         }
-        s += QString::number(abs(this->get_imag()));
+        s += QString::number(abs(kopie.get_imag()));
         s += "j";
     }
     return s;

@@ -36,6 +36,7 @@ public:
     bool operator==(komplex)const;
     bool operator!=(komplex)const;
 
+
     QString toQstring(void)const;
 
 

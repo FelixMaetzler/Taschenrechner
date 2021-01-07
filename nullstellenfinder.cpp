@@ -292,6 +292,9 @@ bool istUngefaerGleich(komplex x, komplex y , double genauigkeit){
 }
 QVector<komplex> ableiten(QVector<komplex> funktion){
     QVector<komplex> erg;
+    if(funktion.empty()){
+        return erg;
+    }
     int maxPotenz = funktion.count() - 1;
     for(int i = 0; i < funktion.count(); i++){
         komplex koeffizient = funktion.at(i);
@@ -327,6 +330,9 @@ QVector<komplex> hornerschema(QVector<komplex> funktion, komplex nullstelle){
         komplex wert = (funktion.at(i) + zwischenerg.at(i));
         erg.append(wert);
         zwischenerg.append(wert * nullstelle);
+    }
+    if(erg.empty()){
+        return erg;
     }
     if(!istUngefaerGleich(erg.last(), komplex(0,0), pow(10,-3))){
         debug("hornerschema kann nicht angewandt werden. ist keine Nullstelle!");
@@ -389,6 +395,12 @@ komplex newton(QVector<komplex> funktion, komplex startwert){
 }
 void newtonNullstellen(QVector<komplex> funktion, QVector<komplex>* ergebnisse){
     QVector<komplex> erg;
+    foreach(auto x, funktion){
+        if(x.betrag() > pow(10, 9)){
+            debug("Polynom ist zu groß um die Newtonnullstellen zu berechen");
+            return;
+        }
+    }
     int grad = funktion.count() - 1;
     if(grad == 2){
         erg.append(pqFormel(funktion));

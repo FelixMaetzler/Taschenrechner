@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "allgemein.h"
 #include "cmath"
+#include "nullstellenfinder.h"
 
 //Bibliothek zum Rechnen mit Matrizen
 
@@ -76,7 +77,15 @@ double betragsquadrat()const;
 matrizen hadamard(matrizen)const;
 matrizen kronecker(matrizen)const;
 int kleinsteDimension()const;
-QVector<double> eigenwerte()const;
+QVector<komplex> eigenwerte()const;
+QVector<double> charakteristischesPolynom()const;
+void Toeplitz();
+matrizen R(int)const;
+matrizen A(int)const;
+matrizen S(int)const;
+matrizen q(int)const;
+matrizen power(int)const;
+matrizen unterbestimmt()const;
 
 matrizen operator*(matrizen)const;
 matrizen operator*(double)const;
