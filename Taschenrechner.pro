@@ -17,6 +17,7 @@ SOURCES += \
     matrix.cpp \
     matrizen.cpp \
     nullstellenfinder.cpp \
+    random.cpp
 
 
 
@@ -29,6 +30,7 @@ HEADERS += \
     matrix.h \
     matrizen.h \
     nullstellenfinder.h \
+    random.h
 
 
 
@@ -37,7 +39,8 @@ FORMS += \
     basictaschenrechner.ui \
     mainwindow.ui \
     matrix.ui \
-    nullstellenfinder.ui
+    nullstellenfinder.ui \
+    random.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

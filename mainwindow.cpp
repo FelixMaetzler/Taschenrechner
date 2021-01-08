@@ -36,9 +36,16 @@ MainWindow::MainWindow(QWidget *parent)
     menu->addAction(action);
     ui->menubar->addMenu(menu);
 
+    action = new QAction("Random");
+    action->setObjectName("Random");
+    action->setParent(menu);
+    menu->addAction(action);
+    ui->menubar->addMenu(menu);
+
     connect(MainWindow::findChild<QAction*>("BasicTaschenrechner"), SIGNAL(triggered()),this , SLOT(handler()));
     connect(MainWindow::findChild<QAction*>("Nullstellenfinder"), SIGNAL(triggered()),this , SLOT(handler()));
     connect(MainWindow::findChild<QAction*>("Matrixrechner"), SIGNAL(triggered()),this , SLOT(handler()));
+    connect(MainWindow::findChild<QAction*>("Random"), SIGNAL(triggered()),this , SLOT(handler()));
 
     matrizen matrix(4,4);
     matrix.set_wert(5, 0,0);
@@ -89,6 +96,12 @@ void MainWindow::handler(){
     if(Buttonname == "Matrixrechner"){
 
         auto y = new Matrix();
+        y->show();
+        this->close();
+    }
+    if(Buttonname == "Random"){
+
+        auto y = new random();
         y->show();
         this->close();
     }

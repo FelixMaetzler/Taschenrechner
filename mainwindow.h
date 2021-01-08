@@ -10,7 +10,7 @@
 #include "nullstellenfinder.h"
 #include "matrix.h"
 #include "matrizen.h"
-
+#include "random.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
