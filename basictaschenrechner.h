@@ -5,7 +5,7 @@
 #include <mainwindow.h>
 
 #include <allgemein.h>
-
+#include <QShortcut>
 namespace Ui {
 class basicTaschenrechner;
 }
