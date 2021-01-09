@@ -9,6 +9,7 @@ random::random(QWidget *parent) :
 
     connect(ui->lineEingabePrim, SIGNAL(textChanged(const QString&)), this, SLOT(erneuern()));
     connect(ui->lineEingabeAnderes, SIGNAL(textChanged(const QString&)), this, SLOT(erneuern()));
+    connect(ui->ButtonMenu, SIGNAL(released()), this, SLOT(handler()));
 }
 
 random::~random()
@@ -146,4 +147,9 @@ int anzahlEnthalten(QVector<long long> liste, long long n){
         }
     }
     return counter;
+}
+void random::handler(){//soll das Menu handlen
+    auto y = new MainWindow();
+    y->show();
+    this->close();
 }

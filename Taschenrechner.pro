@@ -16,6 +16,7 @@ SOURCES += \
     mainwindow.cpp \
     matrix.cpp \
     matrizen.cpp \
+    nullstelle.cpp \
     nullstellenfinder.cpp \
     random.cpp
 
@@ -29,6 +30,7 @@ HEADERS += \
     mainwindow.h \
     matrix.h \
     matrizen.h \
+    nullstelle.h \
     nullstellenfinder.h \
     random.h
 

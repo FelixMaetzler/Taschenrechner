@@ -97,8 +97,8 @@ basicTaschenrechner::basicTaschenrechner(QWidget *parent) :
     connect(ui->ButtonQuadratwurzel, SIGNAL(released()), this, SLOT(oneClick()));
     connect(ui->ButtonProzent, SIGNAL(released()), this, SLOT(oneClick()));
 
+    connect(ui->ButtoMenu, SIGNAL(released()), this, SLOT(handler()));
 
-    connect(ui->actionMenu, SIGNAL(triggered()),this , SLOT(handler()));
 }
 
 basicTaschenrechner::~basicTaschenrechner()
@@ -201,16 +201,9 @@ void basicTaschenrechner::clear(){
 
 void basicTaschenrechner::handler(){//soll das Menu handlen
     labelClear();
-    QAction* x = (QAction*) sender();
-    auto Buttonname = x->text();
-
-    qDebug() << QString(Buttonname);
-    if(Buttonname == "Menu"){
-
-        auto y = new MainWindow();
-        y->show();
-        this->close();
-    }
+    auto y = new MainWindow();
+    y->show();
+    this->close();
 }
 void basicTaschenrechner::Fakultaet(){
     labelClear();

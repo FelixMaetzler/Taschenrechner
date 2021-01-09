@@ -10,10 +10,17 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    connect(ui->ButtonMatrix, SIGNAL(released()), this, SLOT(handler()));
+    connect(ui->ButtonNullstelle, SIGNAL(released()), this, SLOT(handler()));
+    connect(ui->ButtonRandom, SIGNAL(released()), this, SLOT(handler()));
+    connect(ui->ButtonTaschenrechner, SIGNAL(released()), this, SLOT(handler()));
+    /*
     //setMenuBar(addmenu(ui->menubar));
     QMenu* menu = new QMenu("TR");
     menu->setObjectName("TR");
     menu->setParent(this);
+
     QAction* action = new QAction("Menu");
     action->setObjectName("Menu");
     action->setParent(menu);
@@ -46,7 +53,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(MainWindow::findChild<QAction*>("Nullstellenfinder"), SIGNAL(triggered()),this , SLOT(handler()));
     connect(MainWindow::findChild<QAction*>("Matrixrechner"), SIGNAL(triggered()),this , SLOT(handler()));
     connect(MainWindow::findChild<QAction*>("Random"), SIGNAL(triggered()),this , SLOT(handler()));
-
+    */
+    /*
     matrizen matrix(4,4);
     matrix.set_wert(5, 0,0);
     matrix.set_wert(2, 1,0);
@@ -68,19 +76,21 @@ MainWindow::MainWindow(QWidget *parent)
     matrix.set_wert(-5, 2,3);
     matrix.set_wert(2, 3,3);
     matrix.charakteristischesPolynom();
-
+*/
 }
 
 MainWindow::~MainWindow()
 {
+
     delete ui;
 }
 
 void MainWindow::handler(){
+    /*
     QAction* x = (QAction*) sender();
     auto Buttonname = x->text();
 
-    qDebug() << QString(Buttonname);
+    //qDebug() << QString(Buttonname);
     if(Buttonname == "BasicTaschenrechner"){
 
         auto y = new basicTaschenrechner();
@@ -105,4 +115,24 @@ void MainWindow::handler(){
         y->show();
         this->close();
     }
+    */
+    auto button = (QPushButton*) sender();
+    auto name = button->objectName();
+    if(name.contains("Tasche")){
+        auto y = new basicTaschenrechner();
+        y->show();
+    }
+    if(name.contains("Matri")){
+        auto y = new Matrix();
+        y->show();
+    }
+    if(name.contains("Null")){
+        auto y = new Nullstellenfinder();
+        y->show();
+    }
+    if(name.contains("Rand")){
+        auto y = new random();
+        y->show();
+    }
+    this->close();
 }

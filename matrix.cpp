@@ -36,7 +36,7 @@ Matrix::Matrix(QWidget *parent) :
 
     connect(ui->lineMatrixErg, SIGNAL(textChanged(const QString&)), this, SLOT(anzeigen()));
 
-
+    connect(ui->ButtonMenu, SIGNAL(released()), this, SLOT(handler()));
 }
 
 Matrix::~Matrix()
@@ -447,4 +447,9 @@ void Matrix::spezielleMatrizen(int welcheMatrix, matrizen matrix){
     }else{
         ui->textEigenschaftenErg->setText(text);
     }
+}
+void Matrix::handler(){//soll das Menu handlen
+    auto y = new MainWindow();
+    y->show();
+    this->close();
 }

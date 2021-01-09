@@ -2,14 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QDebug>
+//#include "matrizen.h"
 #include "basictaschenrechner.h"
-#include "allgemein.h"
-#include "nullstellenfinder.h"
-#include "komplex.h"
 #include "nullstellenfinder.h"
 #include "matrix.h"
-#include "matrizen.h"
 #include "random.h"
 
 QT_BEGIN_NAMESPACE
@@ -30,4 +26,5 @@ private slots:
     void handler();
 
 };
+
 #endif // MAINWINDOW_H

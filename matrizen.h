@@ -4,8 +4,8 @@
 #include <QMainWindow>
 #include "allgemein.h"
 #include "cmath"
-#include "nullstellenfinder.h"
-
+//#include "nullstellenfinder.h"
+#include "nullstelle.h"
 //Bibliothek zum Rechnen mit Matrizen
 
 class matrizen

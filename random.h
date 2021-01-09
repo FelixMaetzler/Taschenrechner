@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "cmath"
 #include "allgemein.h"
+#include "mainwindow.h"
 namespace Ui {
 class random;
 }
@@ -21,6 +22,7 @@ private:
 
 private slots:
 void erneuern();
+void handler();
 };
 
 QVector<long long> primFaktorZerlegung(long long);

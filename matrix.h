@@ -1,9 +1,10 @@
 #ifndef MATRIX_H
 #define MATRIX_H
-
+#include "matrizen.h"
 #include <QMainWindow>
 #include "allgemein.h"
-#include "matrizen.h"
+
+#include "mainwindow.h"
 
 namespace Ui {
 class Matrix;
@@ -28,7 +29,7 @@ void change();
 void rechnungen();
 void erg(matrizen);
 void spezielleMatrizen(int, matrizen);
-
+void handler();
 };
 
 
