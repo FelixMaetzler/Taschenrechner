@@ -11,111 +11,126 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Randomzeugs</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background:black</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLineEdit" name="lineEingabePrim">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>90</y>
-      <width>71</width>
-      <height>21</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="linePrimfaktorzerlegung">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>140</y>
-      <width>271</width>
-      <height>21</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEingabeAnderes">
-    <property name="geometry">
-     <rect>
-      <x>460</x>
-      <y>50</y>
-      <width>113</width>
-      <height>21</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineggT">
-    <property name="geometry">
-     <rect>
-      <x>360</x>
-      <y>150</y>
-      <width>113</width>
-      <height>21</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="linekgV">
-    <property name="geometry">
-     <rect>
-      <x>570</x>
-      <y>150</y>
-      <width>113</width>
-      <height>21</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>390</x>
-      <y>130</y>
-      <width>47</width>
-      <height>14</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>ggT</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>610</x>
-      <y>130</y>
-      <width>47</width>
-      <height>14</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>kgV</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>60</y>
-      <width>101</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Primfaktorzerlegung</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="ButtonMenu">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>20</y>
-      <width>80</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Menu</string>
-    </property>
-   </widget>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="9" column="3">
+     <widget class="QLineEdit" name="linekgV">
+      <property name="styleSheet">
+       <string notr="true">color:white</string>
+      </property>
+      <property name="placeholderText">
+       <string>Hier steht dann das kleinste gemeinsame Vielfache</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="1">
+     <widget class="QLabel" name="label_4">
+      <property name="styleSheet">
+       <string notr="true">color:white</string>
+      </property>
+      <property name="text">
+       <string>ggT und kgV</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1" colspan="3">
+     <widget class="QLineEdit" name="lineEingabeAnderes">
+      <property name="toolTip">
+       <string/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color:white</string>
+      </property>
+      <property name="placeholderText">
+       <string>Hier die Zahlen durch Kommata getrennt eingeben</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1" colspan="3">
+     <widget class="QTextBrowser" name="linePrimfaktorzerlegung">
+      <property name="toolTip">
+       <string/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color:white</string>
+      </property>
+      <property name="placeholderText">
+       <string>hier steht dann die Primfaktorzerlegung</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="1">
+     <widget class="QLabel" name="label">
+      <property name="styleSheet">
+       <string notr="true">color:white</string>
+      </property>
+      <property name="text">
+       <string>ggT</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="3">
+     <widget class="QLabel" name="label_2">
+      <property name="styleSheet">
+       <string notr="true">color:white</string>
+      </property>
+      <property name="text">
+       <string>kgV</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1" colspan="3">
+     <widget class="QLineEdit" name="lineEingabePrim">
+      <property name="toolTip">
+       <string/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color:white</string>
+      </property>
+      <property name="placeholderText">
+       <string>Hier die zu zerlegende Zahl eingeben</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLabel" name="label_3">
+      <property name="styleSheet">
+       <string notr="true">color:white</string>
+      </property>
+      <property name="text">
+       <string>Primfaktorzerlegung</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="1">
+     <widget class="QLineEdit" name="lineggT">
+      <property name="styleSheet">
+       <string notr="true">color:white</string>
+      </property>
+      <property name="placeholderText">
+       <string>Hier steht dann der größte gemeinsame Teiler</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QPushButton" name="ButtonMenu">
+      <property name="toolTip">
+       <string>geht wieder zurück zur Rechnerauswahl</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background:rgb(54, 54, 54)</string>
+      </property>
+      <property name="text">
+       <string>Menu</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

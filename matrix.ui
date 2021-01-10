@@ -2,323 +2,382 @@
 <ui version="4.0">
  <class>Matrix</class>
  <widget class="QMainWindow" name="Matrix">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>945</width>
-    <height>864</height>
+    <width>1301</width>
+    <height>686</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Matrizenrechner</string>
+  </property>
+  <property name="layoutDirection">
+   <enum>Qt::LeftToRight</enum>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background:black</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>50</y>
-      <width>561</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Bitte die einzelnen Matrixelemente durch Kommata trennen und einzelne Zeilen durch Semikola</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineMatrix1">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>90</y>
-      <width>291</width>
-      <height>21</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QTextBrowser" name="textMatrix1">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>120</y>
-      <width>256</width>
-      <height>192</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineMatrix2">
-    <property name="geometry">
-     <rect>
-      <x>500</x>
-      <y>90</y>
-      <width>291</width>
-      <height>21</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QTextBrowser" name="textMatrix2">
-    <property name="geometry">
-     <rect>
-      <x>520</x>
-      <y>120</y>
-      <width>256</width>
-      <height>192</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="ButtonChangeAB">
-    <property name="geometry">
-     <rect>
-      <x>390</x>
-      <y>90</y>
-      <width>80</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>&lt;==&gt;</string>
-    </property>
-   </widget>
-   <widget class="QTextBrowser" name="textMatrixErg">
-    <property name="geometry">
-     <rect>
-      <x>324</x>
-      <y>410</y>
-      <width>256</width>
-      <height>192</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="ButtonChangeAErg">
-    <property name="geometry">
-     <rect>
-      <x>294</x>
-      <y>360</y>
-      <width>81</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>&lt;==</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="ButtonChangeBErg">
-    <property name="geometry">
-     <rect>
-      <x>524</x>
-      <y>370</y>
-      <width>81</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>==&gt;</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="ButtonMult">
-    <property name="geometry">
-     <rect>
-      <x>390</x>
-      <y>120</y>
-      <width>80</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>*</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineMatrixErg">
-    <property name="geometry">
-     <rect>
-      <x>304</x>
-      <y>390</y>
-      <width>291</width>
-      <height>21</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelError">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>330</y>
-      <width>451</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Error: </string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="ButtonAdd">
-    <property name="geometry">
-     <rect>
-      <x>390</x>
-      <y>220</y>
-      <width>80</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>+</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="ButtonSub">
-    <property name="geometry">
-     <rect>
-      <x>390</x>
-      <y>250</y>
-      <width>80</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>-</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="ButtonInverse1">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>140</y>
-      <width>80</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>^-1</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="ButtonInverse2">
-    <property name="geometry">
-     <rect>
-      <x>800</x>
-      <y>120</y>
-      <width>80</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>^-1</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="ButtonLGS">
-    <property name="geometry">
-     <rect>
-      <x>390</x>
-      <y>280</y>
-      <width>80</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>LGS</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="ButtonTransponieren1">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>170</y>
-      <width>80</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Tranponieren</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="ButtonTransponieren2">
-    <property name="geometry">
-     <rect>
-      <x>800</x>
-      <y>150</y>
-      <width>80</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Tranponieren</string>
-    </property>
-   </widget>
-   <widget class="QTextBrowser" name="textEigenschaften1">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>390</y>
-      <width>256</width>
-      <height>192</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QTextBrowser" name="textEigenschaften2">
-    <property name="geometry">
-     <rect>
-      <x>640</x>
-      <y>410</y>
-      <width>256</width>
-      <height>192</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QTextBrowser" name="textEigenschaftenErg">
-    <property name="geometry">
-     <rect>
-      <x>310</x>
-      <y>620</y>
-      <width>256</width>
-      <height>192</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="ButtonHadamard">
-    <property name="geometry">
-     <rect>
-      <x>390</x>
-      <y>160</y>
-      <width>80</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Hadamard</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="ButtonKronecker">
-    <property name="geometry">
-     <rect>
-      <x>390</x>
-      <y>190</y>
-      <width>80</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Kronecker</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="ButtonMenu">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>20</y>
-      <width>80</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Menu</string>
-    </property>
-   </widget>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="8" column="3">
+     <widget class="QPushButton" name="ButtonLGS">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Löst ein lieares Gleichungssystem.&lt;/p&gt;&lt;p&gt;dazu gibt es 3 Möglichkeiten:&lt;/p&gt;&lt;p&gt;1. Man gibt in Matrix 1 die Koeffizientenmatrix ein und hängt als letzte Spalte den Ergebnisvektor dran.&lt;/p&gt;&lt;p&gt;2. Man gibt in Matrix 1 die Koeffizientenmatrix ein und in Matrix 2 den Ergebnisspaltenvektor.&lt;/p&gt;&lt;p&gt;3. Man gibt in Matrix 1 die Koeffizientenmatrix ein und in Matrix 2 den Ergebniszeilenvektor.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background:rgb(0, 0, 255)</string>
+      </property>
+      <property name="text">
+       <string>LGS</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="5">
+     <widget class="QLineEdit" name="lineMatrix2">
+      <property name="styleSheet">
+       <string notr="true">color:white</string>
+      </property>
+      <property name="placeholderText">
+       <string>Hier die Matrix 2 eingeben</string>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="1">
+     <widget class="QPushButton" name="ButtonChangeAErg">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;überschreibt Matrix 1 mit der Ergebnismatrix.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background:rgb(54, 54, 54)</string>
+      </property>
+      <property name="text">
+       <string>&lt;==</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="3">
+     <widget class="QPushButton" name="ButtonHadamard">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;bildet das Hadamardprodukt der beiden Matrizen.&lt;/p&gt;&lt;p&gt;multipliziert die beiden Matrizen elementweise.&lt;/p&gt;&lt;p&gt;Ergebnismatrix = Matrix 1 ⨀ Matrix 2&lt;/p&gt;&lt;p&gt;dafür müssen die Matrizen die gleiche Dimension haben.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background:rgb(0, 0, 255)</string>
+      </property>
+      <property name="text">
+       <string extracomment="U+2A00">⨀</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="3">
+     <widget class="QPushButton" name="ButtonAdd">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;addiert die beiden Matrizen elementweise.&lt;/p&gt;&lt;p&gt;Ergebnismatrix = Matrix 1 + Matrix 2&lt;/p&gt;&lt;p&gt;dafür müssen die Matrizen die gleiche Dimension haben.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background:rgb(0, 0, 255)</string>
+      </property>
+      <property name="text">
+       <string>+</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="6">
+     <widget class="QPushButton" name="ButtonTransponieren2">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;transponiert Matrix 2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background:rgb(255, 85, 0)</string>
+      </property>
+      <property name="text">
+       <string>Tranponieren</string>
+      </property>
+     </widget>
+    </item>
+    <item row="13" column="2" colspan="3">
+     <widget class="QTextBrowser" name="textMatrixErg">
+      <property name="styleSheet">
+       <string notr="true">color:white</string>
+      </property>
+      <property name="placeholderText">
+       <string>Hier wird die Ergebnismatrix angezeigt</string>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="5">
+     <widget class="QPushButton" name="ButtonChangeBErg">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;überschreibt Matrix 2 mit der Ergebnismatrix.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background:rgb(54, 54, 54)</string>
+      </property>
+      <property name="text">
+       <string>==&gt;</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="lineMatrix1">
+      <property name="styleSheet">
+       <string notr="true">color:white</string>
+      </property>
+      <property name="placeholderText">
+       <string>Hier die Matrix 1 eingeben</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="4">
+     <widget class="QPushButton" name="pushButton_2">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="text">
+       <string>PushButton</string>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="13" column="1">
+     <widget class="QTextBrowser" name="textEigenschaften1">
+      <property name="styleSheet">
+       <string notr="true">color:white</string>
+      </property>
+      <property name="placeholderText">
+       <string>Hier werden die Eigenschaften von Matrix 1 angezeigt</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="3">
+     <widget class="QPushButton" name="ButtonMult">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;führt eine Matrizenmultiplikation durch.&lt;/p&gt;&lt;p&gt;Ergebnismatrix = Matrix 1 &lt;span style=&quot; font-family:'Segoe UI Symbol','sans-serif';&quot;&gt;•&lt;/span&gt; Matrix 2&lt;/p&gt;&lt;p&gt;Wenn Matrix 1 die Dimension a&lt;span style=&quot; font-family:'Cambria Math','serif'; font-size:11pt;&quot;&gt;⨯&lt;/span&gt;&lt;span style=&quot; font-family:'Segoe UI Symbol','sans-serif';&quot;&gt;b hat,&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Segoe UI Symbol','sans-serif';&quot;&gt;dann muss Matrix 2 die Dimension b&lt;/span&gt;&lt;span style=&quot; font-family:'Cambria Math','serif'; font-size:11pt;&quot;&gt;⨯&lt;/span&gt;&lt;span style=&quot; font-family:'Segoe UI Symbol','sans-serif';&quot;&gt;c haben.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Segoe UI Symbol','sans-serif';&quot;&gt;Die resultierende Matrix hat dann die Dimension a&lt;/span&gt;&lt;span style=&quot; font-family:'Cambria Math','serif'; font-size:11pt;&quot;&gt;⨯&lt;/span&gt;&lt;span style=&quot; font-family:'Segoe UI Symbol','sans-serif';&quot;&gt;c&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="statusTip">
+       <string/>
+      </property>
+      <property name="whatsThis">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background:rgb(0, 0, 255)</string>
+      </property>
+      <property name="text">
+       <string extracomment="U+25CF">●</string>
+      </property>
+     </widget>
+    </item>
+    <item row="13" column="5">
+     <widget class="QTextBrowser" name="textEigenschaften2">
+      <property name="styleSheet">
+       <string notr="true">color:white</string>
+      </property>
+      <property name="placeholderText">
+       <string>Hier werden die Eigenschaften von Matrix 2 angezeigt</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="6">
+     <widget class="QPushButton" name="ButtonInverse2">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;bildet die Inverse von Matrix 2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background:rgb(255, 85, 0)</string>
+      </property>
+      <property name="text">
+       <string>^-1</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QPushButton" name="ButtonMenu">
+      <property name="toolTip">
+       <string>geht wieder zurück zur Rechnerauswahl</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background:rgb(54, 54, 54)</string>
+      </property>
+      <property name="text">
+       <string>Menu</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="5" rowspan="6">
+     <widget class="QTextBrowser" name="textMatrix2">
+      <property name="styleSheet">
+       <string notr="true">color:white</string>
+      </property>
+      <property name="placeholderText">
+       <string>Hier wird die Matrix 2 angezeigt</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="3">
+     <widget class="QPushButton" name="ButtonKronecker">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;bildet das Kroneckerprodukt der beiden Matrizen.&lt;/p&gt;&lt;p&gt;Ergebnismatrix = Matrix 1 ⨂ Matrix 2&lt;/p&gt;&lt;p&gt;Wenn Matrix 1 die Dimension a&lt;span style=&quot; font-family:'Cambria Math','serif'; font-size:11pt;&quot;&gt;⨯&lt;/span&gt;&lt;span style=&quot; font-family:'Segoe UI Symbol','sans-serif';&quot;&gt;b hat&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Segoe UI Symbol','sans-serif';&quot;&gt;und Matrix 2 die Dimension c&lt;/span&gt;&lt;span style=&quot; font-family:'Cambria Math','serif'; font-size:11pt;&quot;&gt;⨯d&lt;/span&gt;&lt;span style=&quot; font-family:'Segoe UI Symbol','sans-serif';&quot;&gt; hat,&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Segoe UI Symbol','sans-serif';&quot;&gt;dann hat die resultierende Matrix die Dimension (a•c)&lt;/span&gt;&lt;span style=&quot; font-family:'Cambria Math','serif'; font-size:11pt;&quot;&gt;⨯(b&lt;/span&gt;&lt;span style=&quot; font-family:'Segoe UI Symbol','sans-serif';&quot;&gt;•&lt;/span&gt;&lt;span style=&quot; font-family:'Cambria Math','serif'; font-size:11pt;&quot;&gt;d)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background:rgb(0, 0, 255)</string>
+      </property>
+      <property name="text">
+       <string extracomment="U+2A02">⨂</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="QPushButton" name="ButtonTransponieren1">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;transponiert Matrix 1&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background:rgb(255, 85, 0)</string>
+      </property>
+      <property name="text">
+       <string>Tranponieren</string>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="1" colspan="5">
+     <widget class="QLineEdit" name="lineMatrixErg">
+      <property name="styleSheet">
+       <string notr="true">color:white</string>
+      </property>
+     </widget>
+    </item>
+    <item row="14" column="2" rowspan="2" colspan="3">
+     <widget class="QTextBrowser" name="textEigenschaftenErg">
+      <property name="styleSheet">
+       <string notr="true">color:white</string>
+      </property>
+      <property name="placeholderText">
+       <string>Hier werden die Eigenschaften der Ergebnismatrix angezeigt</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QPushButton" name="ButtonInverse1">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;bildet die Inverse von Matrix 1&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background:rgb(255, 85, 0)</string>
+      </property>
+      <property name="text">
+       <string>^-1</string>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
+      <property name="default">
+       <bool>false</bool>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="1" colspan="7">
+     <widget class="QLabel" name="labelError">
+      <property name="styleSheet">
+       <string notr="true">color:white</string>
+      </property>
+      <property name="text">
+       <string>Error: </string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="2">
+     <widget class="QPushButton" name="pushButton">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="text">
+       <string>PushButton</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="3">
+     <widget class="QPushButton" name="ButtonChangeAB">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;tauscht Matrix 1 mit Matrix 2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background:rgb(54, 54, 54)</string>
+      </property>
+      <property name="text">
+       <string>&lt;==&gt;</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="3">
+     <widget class="QPushButton" name="ButtonSub">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;subtrahiert die beiden Matrizen elementweise.&lt;/p&gt;&lt;p&gt;Ergebnismatrix = Matrix 1 - Matrix 2&lt;/p&gt;&lt;p&gt;dafür müssen die Matrizen die gleiche Dimension haben.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background:rgb(0, 0, 255)</string>
+      </property>
+      <property name="text">
+       <string>-</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1" rowspan="6">
+     <widget class="QTextBrowser" name="textMatrix1">
+      <property name="toolTip">
+       <string/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color:white</string>
+      </property>
+      <property name="html">
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="placeholderText">
+       <string>Hier wird die Matrix 1 angezeigt</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1" colspan="5">
+     <widget class="QLabel" name="label">
+      <property name="styleSheet">
+       <string notr="true">color:white</string>
+      </property>
+      <property name="text">
+       <string>Bitte die einzelnen Matrixelemente durch Kommata und einzelne Zeilen durch Semikola trennen</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>945</width>
+     <width>1301</width>
      <height>21</height>
     </rect>
    </property>

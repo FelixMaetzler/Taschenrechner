@@ -43,7 +43,7 @@ void random::erneuern(){
             auto faktoren = primFaktorZerlegung(zahl);
             QString text = "";
             foreach(int x, faktoren){
-                text += QString::number(x) + ", ";
+                text += QString::number(x) + "\n";
             }
             ui->linePrimfaktorzerlegung->setText(text);
         }

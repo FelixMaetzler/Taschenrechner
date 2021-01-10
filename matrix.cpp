@@ -14,6 +14,8 @@ Matrix::Matrix(QWidget *parent) :
     ui->textMatrix2->setReadOnly(true);
 
     ui->labelError->clear();
+    ui->pushButton->setVisible(false);
+    ui->pushButton_2->setVisible(false);
 
     ui->lineMatrixErg->setHidden(true);//nur für Debug auf false. später muss es wieder true
 
@@ -398,7 +400,7 @@ void Matrix::spezielleMatrizen(int welcheMatrix, matrizen matrix){
         text += "Nullmatrix\n";
     }
     if(matrix.einsMatrix()){
-        text += "Einsmatrix";
+        text += "Einsmatrix\n";
     }
     if(quadratisch){
         auto polynom = matrix.charakteristischesPolynom();

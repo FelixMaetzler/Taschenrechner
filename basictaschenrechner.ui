@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>stinknormaler Taschenrechner</string>
   </property>
   <property name="styleSheet">
    <string notr="true">background:black</string>
@@ -403,6 +403,9 @@
     </item>
     <item row="0" column="0">
      <widget class="QPushButton" name="ButtoMenu">
+      <property name="toolTip">
+       <string>geht wieder zurück zur Rechnerauswahl</string>
+      </property>
       <property name="styleSheet">
        <string notr="true">background:rgb(54, 54, 54)</string>
       </property>
