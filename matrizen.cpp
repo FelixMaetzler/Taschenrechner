@@ -283,17 +283,16 @@ void matrizen::nullen(){
 }
 void matrizen::join(matrizen x){
     //verbindet zwei Matrizen spaltenweise
-    if(this->zeilenzahl() != x.zeilenzahl()){//deshalb brauchen sie die geiche Zeilenzahl
+    if(this->zeilenzahl() != x.zeilenzahl()){//deshalb brauchen sie die gleiche Zeilenzahl
         debug("Join geht nicht. haben nicht die gleiche Zeilenanzahl");
         return;
     }
-    for(int i = 0; i < this->zeilenzahl(); i++){
-        QVector<double> zeile;
-        for(int j = 0; j < x.spaltenzahl(); j++){
-            double wert = x.get_wert(0,j);
-            zeile.append(wert);
-        }
-        this->matrix[i].append(zeile);
+    const int originalMaxSpaltenindex = this->spaltenzahl();
+    this->resize(this->zeilenzahl(), this->spaltenzahl()+x.spaltenzahl());
+
+    for(int i = 0; i < x.zeilenzahl(); i++){
+        auto spalte = x.get_spalte(i);
+        this->set_spalte(spalte, originalMaxSpaltenindex+i);
     }
 }
 void matrizen::seperate(){
