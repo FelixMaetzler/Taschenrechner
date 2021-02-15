@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->ButtonNullstelle, SIGNAL(released()), this, SLOT(handler()));
     connect(ui->ButtonRandom, SIGNAL(released()), this, SLOT(handler()));
     connect(ui->ButtonTaschenrechner, SIGNAL(released()), this, SLOT(handler()));
+    connect(ui->ButtonRegression, SIGNAL(released()), this, SLOT(handler()));
     /*
     //setMenuBar(addmenu(ui->menubar));
     QMenu* menu = new QMenu("TR");
@@ -132,6 +133,10 @@ void MainWindow::handler(){
     }
     if(name.contains("Rand")){
         auto y = new random();
+        y->show();
+    }
+    if(name.contains("Regre")){
+        auto y = new Regression();
         y->show();
     }
     this->close();

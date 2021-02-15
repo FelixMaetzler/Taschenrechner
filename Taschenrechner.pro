@@ -18,7 +18,8 @@ SOURCES += \
     matrizen.cpp \
     nullstelle.cpp \
     nullstellenfinder.cpp \
-    random.cpp
+    random.cpp \
+    regression.cpp
 
 
 
@@ -32,7 +33,8 @@ HEADERS += \
     matrizen.h \
     nullstelle.h \
     nullstellenfinder.h \
-    random.h
+    random.h \
+    regression.h
 
 
 
@@ -42,7 +44,8 @@ FORMS += \
     mainwindow.ui \
     matrix.ui \
     nullstellenfinder.ui \
-    random.ui
+    random.ui \
+    regression.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -20,22 +20,6 @@
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QPushButton" name="ButtonTaschenrechner">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">background:rgb(54, 54, 54)</string>
-        </property>
-        <property name="text">
-         <string>Taschenrechner</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="1">
        <widget class="QPushButton" name="ButtonNullstelle">
         <property name="sizePolicy">
@@ -81,6 +65,32 @@
         </property>
         <property name="text">
          <string>Random</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QPushButton" name="ButtonTaschenrechner">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background:rgb(54, 54, 54)</string>
+        </property>
+        <property name="text">
+         <string>Taschenrechner</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QPushButton" name="ButtonRegression">
+        <property name="styleSheet">
+         <string notr="true">background:rgb(54, 54, 54)</string>
+        </property>
+        <property name="text">
+         <string>Regression</string>
         </property>
        </widget>
       </item>
