@@ -17,8 +17,8 @@
    <widget class="QPushButton" name="ButtonMenu">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>50</y>
+      <x>20</x>
+      <y>80</y>
       <width>80</width>
       <height>22</height>
      </rect>
@@ -37,7 +37,7 @@
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>100</y>
+      <y>180</y>
       <width>461</width>
       <height>21</height>
      </rect>
@@ -46,8 +46,8 @@
    <widget class="QSpinBox" name="spinBox">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>60</y>
+      <x>30</x>
+      <y>180</y>
       <width>42</width>
       <height>22</height>
      </rect>
@@ -66,8 +66,8 @@
    <widget class="QPlainTextEdit" name="plainPunkte">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>160</y>
+      <x>220</x>
+      <y>250</y>
       <width>311</width>
       <height>151</height>
      </rect>
@@ -76,8 +76,8 @@
    <widget class="QLineEdit" name="lineAnzeige">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>40</y>
+      <x>430</x>
+      <y>30</y>
       <width>113</width>
       <height>21</height>
      </rect>
@@ -86,8 +86,72 @@
    <widget class="QLineEdit" name="lineBestimmheitsmass">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>50</y>
+      <x>620</x>
+      <y>30</y>
+      <width>113</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>10</y>
+      <width>181</width>
+      <height>154</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QRadioButton" name="radioPolynom">
+       <property name="text">
+        <string>Polynomisch</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioExponential">
+       <property name="text">
+        <string>Exponentiell</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioLogarithmus">
+       <property name="text">
+        <string>Logarithmisch</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioPotenz">
+       <property name="text">
+        <string>Potenz</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioLn_beliebig">
+       <property name="text">
+        <string>Logarithmisch (beliebige Basis)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioExp_beliebig">
+       <property name="text">
+        <string>Exponentiell (beliebige Basis)</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLineEdit" name="lineBasis">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>100</y>
       <width>113</width>
       <height>21</height>
      </rect>

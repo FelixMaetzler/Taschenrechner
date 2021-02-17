@@ -13,6 +13,12 @@ Regression::Regression(QWidget *parent) :
     connect(ui->spinBox, SIGNAL(valueChanged(int)), this, SLOT(handeln()));
     connect(ui->ButtonMenu, SIGNAL(released()), this, SLOT(handler()));
     connect(ui->lineEingabe, SIGNAL(textChanged(const QString&)), this, SLOT(handeln()));
+    connect(ui->radioExponential, SIGNAL(toggled(bool )), this, SLOT(handeln()));
+    connect(ui->radioPolynom, SIGNAL(toggled(bool )), this, SLOT(handeln()));
+    connect(ui->radioLogarithmus, SIGNAL(toggled(bool )), this, SLOT(handeln()));
+    connect(ui->radioPotenz, SIGNAL(toggled(bool )), this, SLOT(handeln()));
+    connect(ui->radioExp_beliebig, SIGNAL(toggled(bool )), this, SLOT(handeln()));
+    connect(ui->radioLn_beliebig, SIGNAL(toggled(bool )), this, SLOT(handeln()));
 }
 
 Regression::~Regression()
@@ -82,6 +88,64 @@ matrizen lineareRegression(QVector<double>* xWerte, QVector<double>* yWerte, con
 
     return erg;
 }
+matrizen exponentielleRegression(QVector<double>* xWerte, QVector<double>* yWerte){
+    auto LNderyWerte = new QVector<double>();
+    foreach(double y, *yWerte){
+        if(y <= 0){
+            debug("Logarithmus geht nur von positiven Zahlen");
+            break;
+        }
+        double ln = log(y);
+        LNderyWerte->append(ln);
+    }
+    auto koeffizienten = lineareRegression(xWerte, LNderyWerte, 1);
+    //y = a * e^(bx)
+    double a = exp(koeffizienten.get_wert(0,0));
+    //double b = koeffizienten.get_wert(1,0);
+    koeffizienten.set_wert(a, 0, 0);
+    return koeffizienten;
+}
+matrizen logarithmischeRegression(QVector<double>* xWerte, QVector<double>* yWerte){
+    auto LNderxWerte = new QVector<double>();
+    foreach(double x, *xWerte){
+        if(x <= 0){
+            debug("Logarithmus geht nur von positiven Zahlen");
+            break;
+        }
+        double ln = log(x);
+        LNderxWerte->append(ln);
+    }
+    auto koeffizienten = lineareRegression(LNderxWerte, yWerte, 1);
+    //y = a * ln(x) + b
+    return koeffizienten;
+}
+matrizen potenzRegression(QVector<double>* xWerte, QVector<double>* yWerte){
+    //y = a * x^b
+    auto LNderxWerte = new QVector<double>();
+    auto LNderyWerte = new QVector<double>();
+    foreach(double x, *xWerte){
+        if(x <= 0){
+            debug("Logarithmus geht nur von positiven Zahlen");
+            break;
+        }
+        double ln = log(x);
+        LNderxWerte->append(ln);
+    }
+
+    foreach(double y, *yWerte){
+        if(y <= 0){
+            debug("Logarithmus geht nur von positiven Zahlen");
+            break;
+        }
+        double ln = log(y);
+        LNderyWerte->append(ln);
+    }
+    auto koeffizienten = lineareRegression(LNderxWerte, LNderyWerte, 1);
+    //double b = koeffizienten.get_wert(1, 0);
+    double a = exp(koeffizienten.get_wert(0 ,0));
+    koeffizienten.set_wert(a, 0, 0);
+    return koeffizienten;
+}
 void Regression::handeln(){
     auto liste = eingabe();
     PunkteAnzeigen(liste);
@@ -92,25 +156,156 @@ void Regression::handeln(){
     yWerte->remove(0, liste->count()/2);
     //beide Listen sind jetzt wieder so wie sie sein sollten
 
-    int grad = ui->spinBox->value();
-    if(grad + 2 <= xWerte->count() && xWerte->count() == yWerte->count()){
-        //dann ist es eine Regression
-        ui->lineAnzeige->setText("Regression");
-        auto x = lineareRegression(xWerte, yWerte, grad);
-        PolynomAnzeigen(x);
-        auto R = Bestimmheitsmass(x, xWerte, yWerte);
-        ui->lineBestimmheitsmass->setText(QString::number(R));
-    }
-    if(grad + 1 == xWerte->count() && xWerte->count() == yWerte->count()){
-        //dann ist es eine Interpolation
-        ui->lineAnzeige->setText("Interpolation");
-        auto x = lineareRegression(xWerte, yWerte, grad);
-        PolynomAnzeigen(x);
-        auto R = Bestimmheitsmass(x, xWerte, yWerte);
-        ui->lineBestimmheitsmass->setText(QString::number(R));
-    }
+    ui->lineAnzeige->clear();
+    ui->lineBestimmheitsmass->clear();
+    ui->lineAusgabe->clear();
 
+    if(ui->radioPolynom->isChecked()){
+        ui->spinBox->show();
+        int grad = ui->spinBox->value();
+        if(grad + 2 <= xWerte->count() && xWerte->count() == yWerte->count()){
+            //dann ist es eine Regression
+            ui->lineAnzeige->setText("Regression");
+            auto x = lineareRegression(xWerte, yWerte, grad);
+            PolynomAnzeigen(x);
+            auto R = Bestimmheitsmass(x, xWerte, yWerte);
+            ui->lineBestimmheitsmass->setText(QString::number(R));
+        }
+        if(grad + 1 == xWerte->count() && xWerte->count() == yWerte->count()){
+            //dann ist es eine Interpolation
+            ui->lineAnzeige->setText("Interpolation");
+            auto x = lineareRegression(xWerte, yWerte, grad);
+            PolynomAnzeigen(x);
+            auto R = Bestimmheitsmass(x, xWerte, yWerte);
+            ui->lineBestimmheitsmass->setText("R^2 = " + QString::number(R));
+        }
+    }else if(ui->radioExponential->isChecked()){
+        ui->spinBox->hide();
+        if(xWerte->count() > 1 && xWerte->count() == yWerte->count()){
+            auto LNyWerte = new QVector<double>();
+            foreach(double y, *yWerte){
+                if(y <= 0){
+                    ui->lineAnzeige->setText("mindestens ein Y Wert ist nicht positiv");
+                    return;
+                }
+                LNyWerte->append(log(y));
+            }
+            auto exFunktion = exponentielleRegression(xWerte, yWerte);
+            matrizen lineareFunktion(2, 1);
+            lineareFunktion.set_wert(log(exFunktion.get_wert(0, 0)), 0, 0);
+            lineareFunktion.set_wert(exFunktion.get_wert(1, 0), 1, 0);
+            double R = Bestimmheitsmass(lineareFunktion, xWerte, LNyWerte);
+            ui->lineBestimmheitsmass->setText("R^2 = " + QString::number(R));
+            ExponentialAnzeigen(exFunktion.get_wert(0, 0), exFunktion.get_wert(1, 0));
+        }else{
+            ui->lineAnzeige->setText("zu wenig Punkte");
+        }
+    }else if(ui->radioLogarithmus->isChecked()){
+        ui->spinBox->hide();
+        if(xWerte->count() > 1 && xWerte->count() == yWerte->count()){
+            auto LNxWerte = new QVector<double>();
+            foreach(double x, *xWerte){
+                if(x <= 0){
+                    ui->lineAnzeige->setText("mindestens ein X Wert ist nicht positiv");
+                    return;
+                }
+                LNxWerte->append(log(x));
+            }
+            auto lnFunktion = logarithmischeRegression(xWerte, yWerte);
+            double R = Bestimmheitsmass(lnFunktion, LNxWerte, yWerte);
+            ui->lineBestimmheitsmass->setText("R^2 = " + QString::number(R));
+            LogarithmischAnzeigen(lnFunktion.get_wert(1, 0), lnFunktion.get_wert(0, 0));
+        }else{
+            ui->lineAnzeige->setText("zu wenig Punkte");
+        }
 
+    }else if(ui->radioPotenz->isChecked()){
+        ui->spinBox->hide();
+        if(xWerte->count() > 1 && xWerte->count() == yWerte->count()){
+            auto LNxWerte = new QVector<double>();
+            auto LNyWerte = new QVector<double>();
+            foreach(double x, *xWerte){
+                if(x <= 0){
+                    ui->lineAnzeige->setText("mindestens ein X Wert ist nicht positiv");
+                    return;
+                }
+                LNxWerte->append(log(x));
+            }
+
+            foreach(double y, *yWerte){
+                if(y <= 0){
+                    ui->lineAnzeige->setText("mindestens ein Y Wert ist nicht positiv");
+                    return;
+                }
+                LNyWerte->append(log(y));
+            }
+
+            auto potenzfunktion = potenzRegression(xWerte, yWerte);
+            matrizen lineareFunktion(2, 1);
+            double a = potenzfunktion.get_wert(0, 0);
+            double b = potenzfunktion.get_wert(1, 0);
+            lineareFunktion.set_wert(log(a), 0, 0);
+            lineareFunktion.set_wert(b, 1, 0);
+            double R = Bestimmheitsmass(lineareFunktion, LNxWerte, LNyWerte);
+            ui->lineBestimmheitsmass->setText("R^2 = " + QString::number(R));
+            PotenzAnzeigen(potenzfunktion.get_wert(0, 0), potenzfunktion.get_wert(1, 0));
+        }else{
+            ui->lineAnzeige->setText("zu wenig Punkte");
+        }
+    }else if(ui->radioExp_beliebig->isChecked()){
+        ui->spinBox->hide();
+        const QString zahl = ui->lineBasis->text();
+        const double basis = zahl.toDouble();
+        if(basis <= 0){
+            ui->lineAnzeige->setText("Basis muss positiv sein");
+            return;
+        }
+        if(xWerte->count() > 1 && xWerte->count() == yWerte->count()){
+            auto LNyWerte = new QVector<double>();
+            foreach(double y, *yWerte){
+                if(y <= 0){
+                    ui->lineAnzeige->setText("mindestens ein Y Wert ist nicht positiv");
+                    return;
+                }
+                LNyWerte->append(log(y));
+            }
+            auto exFunktion = exponentielleRegression(xWerte, yWerte);
+            matrizen lineareFunktion(2, 1);
+            lineareFunktion.set_wert(log(exFunktion.get_wert(0, 0)), 0, 0);
+            lineareFunktion.set_wert(exFunktion.get_wert(1, 0), 1, 0);
+            double R = Bestimmheitsmass(lineareFunktion, xWerte, LNyWerte);
+            ui->lineBestimmheitsmass->setText("R^2 = " + QString::number(R));
+            ExponentialAnzeigen(exFunktion.get_wert(0, 0), exFunktion.get_wert(1, 0), basis);
+        }else{
+            ui->lineAnzeige->setText("zu wenig Punkte");
+        }
+
+    }else if(ui->radioLn_beliebig){
+        ui->spinBox->hide();
+        const QString zahl = ui->lineBasis->text();
+        const double basis = zahl.toDouble();
+        if(basis <= 0){
+            ui->lineAnzeige->setText("Basis muss positiv sein");
+            return;
+        }
+        if(xWerte->count() > 1 && xWerte->count() == yWerte->count()){
+            auto LNxWerte = new QVector<double>();
+            foreach(double x, *xWerte){
+                if(x <= 0){
+                    ui->lineAnzeige->setText("mindestens ein X Wert ist nicht positiv");
+                    return;
+                }
+                LNxWerte->append(log(x));
+            }
+            auto lnFunktion = logarithmischeRegression(xWerte, yWerte);
+            double R = Bestimmheitsmass(lnFunktion, LNxWerte, yWerte);
+            ui->lineBestimmheitsmass->setText("R^2 = " + QString::number(R));
+            LogarithmischAnzeigen(lnFunktion.get_wert(1, 0), lnFunktion.get_wert(0, 0), basis);
+        }else{
+            ui->lineAnzeige->setText("zu wenig Punkte");
+        }
+
+    }
 }
 void Regression::PolynomAnzeigen(matrizen x){
     QString text = "y = ";
@@ -141,6 +336,52 @@ void Regression::PolynomAnzeigen(matrizen x){
         //ui->lineAusgabe->text() = text;
         //ui->lineAusgabe->setReadOnly(true);
     }
+}
+void Regression::ExponentialAnzeigen(double a, double b){
+    QString text = "";
+    text += QString::number(a) + " * ";
+    text += "exp(";
+    text += QString::number(b) + " * x)";
+    ui->lineAusgabe->setText(text);
+}
+void Regression::ExponentialAnzeigen(double a, double b, double basis){
+    b = b / log(basis);
+    QString text = "";
+    text += QString::number(a) + " * ";
+    text += QString::number(basis) + "^(";
+    text += QString::number(b) + " * x)";
+    ui->lineAusgabe->setText(text);
+}
+void Regression::LogarithmischAnzeigen(double a, double b){
+    //y = a * ln(x) + b
+    QString text = "";
+    text += QString::number(a) + " * ";
+    text += "ln(x) ";
+    if(b >= 0){
+        text += "+ ";
+    }
+    text += QString::number(b);
+    ui->lineAusgabe->setText(text);
+}
+void Regression::LogarithmischAnzeigen(double a, double b, double basis){
+    //y = a * log_basis(x) + b
+    a = a * log(basis);
+    QString text = "";
+    text += QString::number(a) + " * ";
+    text += "log_(" + QString::number(basis) + ")";
+    text += "(x) ";
+    if(b >= 0){
+        text += "+ ";
+    }
+    text += QString::number(b);
+    ui->lineAusgabe->setText(text);
+}
+void Regression::PotenzAnzeigen(double a, double b){
+    //y = a * x^b
+    QString text = "";
+    text += QString::number(a) + " * x^";
+    text += QString::number(b);
+    ui->lineAusgabe->setText(text);
 }
 void Regression::PunkteAnzeigen(QVector<double>* liste){
     if(liste->count() % 2 != 0){
@@ -174,18 +415,18 @@ double Regression::Bestimmheitsmass(matrizen funktion, QVector<double>* xWerte, 
     for(int i = funktion.zeilenzahl() - 1; i >= 0; i--){
         f->append(funktion.get_wert(i, 0));
     }
-   for(int i = 0; i < xWerte->count(); i++){
-       double y = yWert(*f, komplex(xWerte->at(i))).get_real();
-       double differenz1 = yWerte->at(i) - y;
-       differenz1 *= differenz1;
-       SQR += differenz1;
-       double differenz2 = yWerte->at(i) - mittelwert;
-       differenz2 *= differenz2;
-       SQT += differenz2;
-   }
+    for(int i = 0; i < xWerte->count(); i++){
+        double y = yWert(*f, komplex(xWerte->at(i))).get_real();
+        double differenz1 = yWerte->at(i) - y;
+        differenz1 *= differenz1;
+        SQR += differenz1;
+        double differenz2 = yWerte->at(i) - mittelwert;
+        differenz2 *= differenz2;
+        SQT += differenz2;
+    }
 
-   double R = 1 - (SQR / SQT);
-   return R;
+    double R = 1 - (SQR / SQT);
+    return R;
 }
 
 void Regression::handler(){//soll das Menu handlen
