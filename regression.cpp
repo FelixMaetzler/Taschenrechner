@@ -19,6 +19,9 @@ Regression::Regression(QWidget *parent) :
     connect(ui->radioPotenz, SIGNAL(toggled(bool )), this, SLOT(handeln()));
     connect(ui->radioExp_beliebig, SIGNAL(toggled(bool )), this, SLOT(handeln()));
     connect(ui->radioLn_beliebig, SIGNAL(toggled(bool )), this, SLOT(handeln()));
+    connect(ui->doubleYAchsenabschnitt, SIGNAL(valueChanged(double)), this, SLOT(handeln()));
+    connect(ui->radioYAchsenabschnitt, SIGNAL(toggled(bool )), this, SLOT(handeln()));
+
 }
 
 Regression::~Regression()
@@ -88,6 +91,40 @@ matrizen lineareRegression(QVector<double>* xWerte, QVector<double>* yWerte, con
 
     return erg;
 }
+matrizen lineareRegressionDurchUrsprung(QVector<double>* xWerte, QVector<double>* yWerte, const int Grad){
+    if(xWerte->count() != yWerte->count()){
+        debug("Punkte machen keinen Sinn");
+        return matrizen();
+    }
+    if(Grad + 1 > xWerte->count()){
+        debug("Regression macht keinen Sinn");
+        return matrizen();
+    }
+    matrizen A = matrizen(xWerte->count(), Grad);
+    matrizen y = matrizen(yWerte->count(), 1);
+    for(int zeile = 0; zeile < A.zeilenzahl(); zeile++){
+        for(int spalte = 0; spalte < A.spaltenzahl(); spalte++){
+            double wert = pow(xWerte->at(zeile), spalte + 1);
+            A.set_wert(wert, zeile, spalte);
+        }
+    }
+    //Matrix A initialisiert
+    for(int i = 0; i < y.zeilenzahl(); i++){
+        double wert = yWerte->at(i);
+        y.set_wert(wert, i, 0);
+    }
+    //Matrix y initialisiert
+    //Least Square Methode x = (A^T * A)^-1 * A^T * y
+    matrizen Atransponiert = A;
+    Atransponiert.transponieren();
+    matrizen erg = Atransponiert * A;
+    erg.inverse();
+    erg = erg * Atransponiert;
+    erg = erg * y;
+
+    return erg;
+}
+
 matrizen exponentielleRegression(QVector<double>* xWerte, QVector<double>* yWerte){
     auto LNderyWerte = new QVector<double>();
     foreach(double y, *yWerte){
@@ -163,22 +200,55 @@ void Regression::handeln(){
     if(ui->radioPolynom->isChecked()){
         ui->spinBox->show();
         int grad = ui->spinBox->value();
-        if(grad + 2 <= xWerte->count() && xWerte->count() == yWerte->count()){
-            //dann ist es eine Regression
-            ui->lineAnzeige->setText("Regression");
-            auto x = lineareRegression(xWerte, yWerte, grad);
-            PolynomAnzeigen(x);
-            auto R = Bestimmheitsmass(x, xWerte, yWerte);
-            ui->lineBestimmheitsmass->setText(QString::number(R));
+        if(grad + 1 <= xWerte->count() && xWerte->count() == yWerte->count()){
+
+            if(!ui->radioYAchsenabschnitt->isChecked()){
+                //ui->lineAnzeige->setText("Regression");
+                auto x = lineareRegression(xWerte, yWerte, grad);
+                PolynomAnzeigen(x);
+                auto R = Bestimmheitsmass(x, xWerte, yWerte);
+                ui->lineBestimmheitsmass->setText(QString::number(R));
+                return;
+            }else{
+                if(grad == 0){
+                    matrizen x(1, 1);
+                    x.set_wert(ui->doubleYAchsenabschnitt->value(), 0, 0);
+                    PolynomAnzeigen(x);
+
+                    auto R = Bestimmheitsmass(x, xWerte, yWerte);
+                    ui->lineBestimmheitsmass->setText(QString::number(R));
+                    return;
+                }
+                if(grad == xWerte->count() + 1){
+                    xWerte->append(0);
+                    yWerte->append(ui->doubleYAchsenabschnitt->value());
+                    auto x = lineareRegression(xWerte, yWerte, grad);
+                    PolynomAnzeigen(x);
+                    auto R = Bestimmheitsmass(x, xWerte, yWerte);
+                    ui->lineBestimmheitsmass->setText(QString::number(R));
+                    return;
+                }
+                for(int i = 0; i < yWerte->count(); i++){
+                    (*yWerte)[i] = yWerte->at(i) - ui->doubleYAchsenabschnitt->value();
+                }
+                auto x = lineareRegressionDurchUrsprung(xWerte, yWerte, grad);
+                for(int i = 0; i < yWerte->count(); i++){
+                    (*yWerte)[i] = yWerte->at(i) + ui->doubleYAchsenabschnitt->value();
+                }
+                matrizen neu(x.zeilenzahl() + 1, 1);
+                double yAbschnitt = ui->doubleYAchsenabschnitt->value();
+                neu.set_wert(yAbschnitt, 0, 0);
+                for(int i = 1; i < neu.zeilenzahl(); i++){
+                    neu.set_wert(x.get_wert(i - 1, 0), i, 0);
+                }
+                PolynomAnzeigen(neu);
+                auto R = Bestimmheitsmass(neu, xWerte, yWerte);
+                ui->lineBestimmheitsmass->setText(QString::number(R));
+                return;
+
+            }
         }
-        if(grad + 1 == xWerte->count() && xWerte->count() == yWerte->count()){
-            //dann ist es eine Interpolation
-            ui->lineAnzeige->setText("Interpolation");
-            auto x = lineareRegression(xWerte, yWerte, grad);
-            PolynomAnzeigen(x);
-            auto R = Bestimmheitsmass(x, xWerte, yWerte);
-            ui->lineBestimmheitsmass->setText("R^2 = " + QString::number(R));
-        }
+
     }else if(ui->radioExponential->isChecked()){
         ui->spinBox->hide();
         if(xWerte->count() > 1 && xWerte->count() == yWerte->count()){
@@ -312,11 +382,14 @@ void Regression::PolynomAnzeigen(matrizen x){
     for(int i = x.zeilenzahl() - 1;i >= 0; i--){
         double wert = x.get_wert(i, 0);
         QString zahl = "";
-        if(wert > 0 && i != x.zeilenzahl() - 1){
-            zahl += "+";
+        if(wert >= 0 && i != x.zeilenzahl() - 1){
+            if(wert != 0){
+                zahl += "+";
+            }
         }
-        zahl += QString::number(wert);
-
+        if(wert != 0){
+            zahl += QString::number(wert);
+        }
 
         if(i == 0){
             text += zahl;

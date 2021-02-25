@@ -40,6 +40,7 @@ private slots:
 
 };
 matrizen lineareRegression(QVector<double>*, QVector<double>*, const int);
+matrizen lineareRegressionDurchUrsprung(QVector<double>*, QVector<double>*, const int);
 matrizen exponentielleRegression(QVector<double>*, QVector<double>*);
 matrizen logarithmischeRegression(QVector<double>*, QVector<double>*);
 matrizen potenzRegression(QVector<double>*, QVector<double>*);
