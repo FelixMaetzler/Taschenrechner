@@ -5,6 +5,7 @@
 enum{MatrixErgebnis, Matrix1, Matrix2};
 
 
+
 Matrix::Matrix(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Matrix)
