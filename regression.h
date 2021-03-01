@@ -22,8 +22,6 @@ public:
 
 private:
     Ui::Regression *ui;
-private:
-    int PeterLombadi=1;
 
 private slots:
     void handler();
