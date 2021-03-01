@@ -1,6 +1,6 @@
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 CONFIG += c++11
 
@@ -18,6 +18,7 @@ SOURCES += \
     matrizen.cpp \
     nullstelle.cpp \
     nullstellenfinder.cpp \
+    qcustomplot.cpp \
     random.cpp \
     regression.cpp
 
@@ -33,6 +34,7 @@ HEADERS += \
     matrizen.h \
     nullstelle.h \
     nullstellenfinder.h \
+    qcustomplot.h \
     random.h \
     regression.h
 

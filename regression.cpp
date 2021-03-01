@@ -1,6 +1,7 @@
 #include "regression.h"
 #include "ui_regression.h"
 
+
 Regression::Regression(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Regression)

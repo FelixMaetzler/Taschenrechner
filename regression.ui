@@ -186,6 +186,16 @@
      <double>100000000000000000191567508573466873621595512726519201115280351459937932420398875596123614510818032353280.000000000000000</double>
     </property>
    </widget>
+   <widget class="QCustomPlot" name="Diagramm" native="true">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>280</y>
+      <width>141</width>
+      <height>91</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -199,6 +209,14 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QCustomPlot</class>
+   <extends>QWidget</extends>
+   <header>qcustomplot.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

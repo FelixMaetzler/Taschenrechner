@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+
+
 //#include "matrizen.h"
 #include "basictaschenrechner.h"
 #include "nullstellenfinder.h"
