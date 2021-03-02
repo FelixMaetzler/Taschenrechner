@@ -23,6 +23,12 @@ Regression::Regression(QWidget *parent) :
     connect(ui->doubleYAchsenabschnitt, SIGNAL(valueChanged(double)), this, SLOT(handeln()));
     connect(ui->radioYAchsenabschnitt, SIGNAL(toggled(bool )), this, SLOT(handeln()));
 
+
+    ui->Diagramm->setInteraction(QCP::iRangeDrag, true);
+    ui->Diagramm->setInteraction(QCP::iRangeZoom, true);
+
+
+
 }
 
 Regression::~Regression()
@@ -193,6 +199,8 @@ void Regression::handeln(){
     xWerte->remove(liste->count()/2, liste->count()/2);
     yWerte->remove(0, liste->count()/2);
     //beide Listen sind jetzt wieder so wie sie sein sollten
+
+    PunkteEinzeichnen(*xWerte, *yWerte);
 
     ui->lineAnzeige->clear();
     ui->lineBestimmheitsmass->clear();
@@ -508,3 +516,19 @@ void Regression::handler(){//soll das Menu handlen
     y->show();
     this->close();
 }
+void Regression::PunkteEinzeichnen(QVector<double> xWerte, QVector<double> yWerte){
+
+    ui->Diagramm->addGraph();
+    ui->Diagramm->graph(0)->setLineStyle(QCPGraph::lsNone);//keine Linie
+    ui->Diagramm->graph(0)->setScatterStyle(QCPScatterStyle::ssCross);//Kreuze an den Punkten
+    ui->Diagramm->graph(0)->setData(xWerte, yWerte);
+
+
+    ui->Diagramm->replot();
+
+
+}
+
+
+
+

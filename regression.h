@@ -36,6 +36,8 @@ private slots:
     void PunkteAnzeigen(QVector<double>*);
     double Bestimmheitsmass(matrizen, QVector<double>*, QVector<double>*);
 
+    void PunkteEinzeichnen(QVector<double>, QVector<double>);
+
 
 };
 matrizen lineareRegression(QVector<double>*, QVector<double>*, const int);

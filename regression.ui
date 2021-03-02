@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>600</height>
+    <height>886</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -66,8 +66,8 @@
    <widget class="QPlainTextEdit" name="plainPunkte">
     <property name="geometry">
      <rect>
-      <x>220</x>
-      <y>250</y>
+      <x>210</x>
+      <y>240</y>
       <width>311</width>
       <height>151</height>
      </rect>
@@ -189,10 +189,10 @@
    <widget class="QCustomPlot" name="Diagramm" native="true">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>280</y>
-      <width>141</width>
-      <height>91</height>
+      <x>80</x>
+      <y>480</y>
+      <width>571</width>
+      <height>301</height>
      </rect>
     </property>
    </widget>
