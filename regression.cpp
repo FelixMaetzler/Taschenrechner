@@ -23,7 +23,7 @@ Regression::Regression(QWidget *parent) :
     connect(ui->doubleYAchsenabschnitt, SIGNAL(valueChanged(double)), this, SLOT(handeln()));
     connect(ui->radioYAchsenabschnitt, SIGNAL(toggled(bool )), this, SLOT(handeln()));
 
-
+    ui->Diagramm->addGraph();
     ui->Diagramm->setInteraction(QCP::iRangeDrag, true);
     ui->Diagramm->setInteraction(QCP::iRangeZoom, true);
 
@@ -518,7 +518,7 @@ void Regression::handler(){//soll das Menu handlen
 }
 void Regression::PunkteEinzeichnen(QVector<double> xWerte, QVector<double> yWerte){
 
-    ui->Diagramm->addGraph();
+
     ui->Diagramm->graph(0)->setLineStyle(QCPGraph::lsNone);//keine Linie
     ui->Diagramm->graph(0)->setScatterStyle(QCPScatterStyle::ssCross);//Kreuze an den Punkten
     ui->Diagramm->graph(0)->setData(xWerte, yWerte);
