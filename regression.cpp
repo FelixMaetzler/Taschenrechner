@@ -23,6 +23,9 @@ Regression::Regression(QWidget *parent) :
     connect(ui->doubleYAchsenabschnitt, SIGNAL(valueChanged(double)), this, SLOT(handeln()));
     connect(ui->radioYAchsenabschnitt, SIGNAL(toggled(bool )), this, SLOT(handeln()));
 
+    connect(ui->Diagramm, SIGNAL(mouseWheel(QWheelEvent*)), this, SLOT(handeln()));
+    connect(ui->Diagramm, SIGNAL(mouseMove(QMouseEvent*)), this, SLOT(handeln()));
+
     ui->Diagramm->addGraph();
     ui->Diagramm->addGraph();
     ui->Diagramm->setInteraction(QCP::iRangeDrag, true);
@@ -393,6 +396,8 @@ void Regression::PolynomAnzeigen(matrizen x){
         monome.append(x.get_wert(i, 0));
     }
     PolynomAnzeigen(monome);
+    this->polynom.clear();
+    this->polynom.append(monome);
 
     QString text = "y = ";
     for(int i = x.zeilenzahl() - 1;i >= 0; i--){
@@ -546,15 +551,19 @@ void Regression::PolynomAnzeigen(QVector<double> polynom){
 
 
     double Schrittweite = Xrange / 100;
-    QVector<double> xWerte;
-    QVector<double> yWerte;
+
     for(double i = XlowerBound; i <= XupperBound; i += Schrittweite){
         double y = yWert(polynom, i);
-        xWerte.append(i);
-        yWerte.append(y);
+        this->xWerte.append(i);
+        this->yWerte.append(y);
     }
-    ui->Diagramm->graph(1)->setData(xWerte, yWerte);
+FunktionAnzeigen();
+}
+void Regression::FunktionAnzeigen(){
+    ui->Diagramm->graph(1)->setData(this->xWerte, this->yWerte);
     ui->Diagramm->replot();
+    this->xWerte.clear();
+    this->yWerte.clear();
 }
 
 

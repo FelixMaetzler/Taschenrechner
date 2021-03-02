@@ -19,9 +19,14 @@ class Regression : public QMainWindow
 public:
     explicit Regression(QWidget *parent = nullptr);
     ~Regression();
-
+QVector<double> polynom;
 private:
     Ui::Regression *ui;
+
+    QVector<double> xWerte;
+    QVector<double> yWerte;
+public slots:
+    void PolynomAnzeigen(QVector<double>);
 
 private slots:
     void handler();
@@ -37,9 +42,9 @@ private slots:
     double Bestimmheitsmass(matrizen, QVector<double>*, QVector<double>*);
 
     void PunkteEinzeichnen(QVector<double>, QVector<double>);
-    void PolynomAnzeigen(QVector<double>);
 
 
+    void FunktionAnzeigen(void);
 };
 matrizen lineareRegression(QVector<double>*, QVector<double>*, const int);
 matrizen lineareRegressionDurchUrsprung(QVector<double>*, QVector<double>*, const int);
