@@ -136,6 +136,20 @@ komplex yWert(QVector<double> input, komplex x){
     }
     return y;
 }
+double yWert(QVector<double> input, double x){
+    //Rechnet bei einem gegebenen Polynom und einem gegebenen x den yWert an der Stelle x aus
+    //input muss so sortiert sein, dass der höchste Grad an Index 0 ist
+    QVector<double> inputs;
+    for(int i = input.count() - 1; i >= 0; i--){//sortiert die ganze Liste um. somit ist der Term mit dem niedrigsten Grad ganz vorne
+        inputs.append(input.at(i));
+    }
+    double y = 0;//neutrales Element bezüglich der Addition
+    for(int i = 0; i < inputs.count(); i++){
+        //da jetzt der Index mit der Potenz übereinstimmt, funktioniert folgendes:
+        y = y + pow(x, i) * inputs.at(i);
+    }
+    return y;
+}
 komplex appAusrechnen(QVector<double> inputs, QVector<komplex> appValues, int i){
     //rechnet bei gegebenen Polynom, bei den gegebenen Nullstellen einer Iteration und dem index der nullstelle die berechnet werden soll
     //die Nullstelle des index für die nächste Generation aus

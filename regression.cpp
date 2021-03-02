@@ -24,6 +24,7 @@ Regression::Regression(QWidget *parent) :
     connect(ui->radioYAchsenabschnitt, SIGNAL(toggled(bool )), this, SLOT(handeln()));
 
     ui->Diagramm->addGraph();
+    ui->Diagramm->addGraph();
     ui->Diagramm->setInteraction(QCP::iRangeDrag, true);
     ui->Diagramm->setInteraction(QCP::iRangeZoom, true);
 
@@ -387,6 +388,12 @@ void Regression::handeln(){
     }
 }
 void Regression::PolynomAnzeigen(matrizen x){
+    QVector<double> monome;
+    for(int i = x.zeilenzahl()-1; i >= 0; i--){
+        monome.append(x.get_wert(i, 0));
+    }
+    PolynomAnzeigen(monome);
+
     QString text = "y = ";
     for(int i = x.zeilenzahl() - 1;i >= 0; i--){
         double wert = x.get_wert(i, 0);
@@ -524,11 +531,31 @@ void Regression::PunkteEinzeichnen(QVector<double> xWerte, QVector<double> yWert
     ui->Diagramm->graph(0)->setData(xWerte, yWerte);
 
 
+
     ui->Diagramm->replot();
-
-
 }
+void Regression::PolynomAnzeigen(QVector<double> polynom){
+    auto xAchse = ui->Diagramm->xAxis->range();
 
+    double Xcenter = xAchse.center();
+    double Xrange = xAchse.size();
+
+
+    double XlowerBound = Xcenter - (Xrange * 0.5);
+    double XupperBound = Xcenter + (Xrange * 0.5);
+
+
+    double Schrittweite = Xrange / 100;
+    QVector<double> xWerte;
+    QVector<double> yWerte;
+    for(double i = XlowerBound; i <= XupperBound; i += Schrittweite){
+        double y = yWert(polynom, i);
+        xWerte.append(i);
+        yWerte.append(y);
+    }
+    ui->Diagramm->graph(1)->setData(xWerte, yWerte);
+    ui->Diagramm->replot();
+}
 
 
 

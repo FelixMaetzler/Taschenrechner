@@ -24,6 +24,7 @@ bool istUngefaerGleich(komplex, komplex, double genauigkeit = pow(10,-9));
 void newtonNullstellen(QVector<komplex>, QVector<komplex>*);
 komplex yWert(QVector<double>, komplex);//rechnet den yWert eines Polynoms an einer bestimmten Stelle aus
 komplex yWert(QVector<komplex>, komplex);//rechnet den yWert eines Polynoms an einer bestimmten Stelle aus
+double yWert(QVector<double>, double);//rechnet den yWert eines Polynoms an einer bestimmten Stelle aus
 komplex appAusrechnen(QVector<double>, QVector<komplex>, int);//berechnet die Nullstelle der nächsten Iteration
 QVector<komplex> PolynomHandler(QVector<double>);//einfach ein polynom übergeben und er spuckt die Nullstellen aus
 #endif // NULLSTELLE_H

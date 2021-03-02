@@ -37,6 +37,7 @@ private slots:
     double Bestimmheitsmass(matrizen, QVector<double>*, QVector<double>*);
 
     void PunkteEinzeichnen(QVector<double>, QVector<double>);
+    void PolynomAnzeigen(QVector<double>);
 
 
 };
