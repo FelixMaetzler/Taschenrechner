@@ -432,6 +432,25 @@ void Regression::PolynomAnzeigen(matrizen x){
     }
 }
 void Regression::ExponentialAnzeigen(double a, double b){
+    auto xAchse = ui->Diagramm->xAxis->range();
+
+    double Xcenter = xAchse.center();
+    double Xrange = xAchse.size();
+
+
+    double XlowerBound = Xcenter - (Xrange * 0.5);
+    double XupperBound = Xcenter + (Xrange * 0.5);
+
+
+    double Schrittweite = Xrange / 100;
+
+    for(double i = XlowerBound; i <= XupperBound; i += Schrittweite){
+        double y = a * exp(i * b);
+        this->xWerte.append(i);
+        this->yWerte.append(y);
+    }
+FunktionAnzeigen();
+
     QString text = "";
     text += QString::number(a) + " * ";
     text += "exp(";
@@ -440,6 +459,26 @@ void Regression::ExponentialAnzeigen(double a, double b){
 }
 void Regression::ExponentialAnzeigen(double a, double b, double basis){
     b = b / log(basis);
+
+    auto xAchse = ui->Diagramm->xAxis->range();
+
+    double Xcenter = xAchse.center();
+    double Xrange = xAchse.size();
+
+
+    double XlowerBound = Xcenter - (Xrange * 0.5);
+    double XupperBound = Xcenter + (Xrange * 0.5);
+
+
+    double Schrittweite = Xrange / 100;
+
+    for(double i = XlowerBound; i <= XupperBound; i += Schrittweite){
+        double y = a * pow(basis, b * i);
+        this->xWerte.append(i);
+        this->yWerte.append(y);
+    }
+FunktionAnzeigen();
+
     QString text = "";
     text += QString::number(a) + " * ";
     text += QString::number(basis) + "^(";
@@ -448,6 +487,26 @@ void Regression::ExponentialAnzeigen(double a, double b, double basis){
 }
 void Regression::LogarithmischAnzeigen(double a, double b){
     //y = a * ln(x) + b
+
+    auto xAchse = ui->Diagramm->xAxis->range();
+
+    double Xcenter = xAchse.center();
+    double Xrange = xAchse.size();
+
+
+    double XlowerBound = Xcenter - (Xrange * 0.5);
+    double XupperBound = Xcenter + (Xrange * 0.5);
+
+
+    double Schrittweite = Xrange / 100;
+
+    for(double i = XlowerBound; i <= XupperBound; i += Schrittweite){
+        double y = a * log(i) + b;
+        this->xWerte.append(i);
+        this->yWerte.append(y);
+    }
+FunktionAnzeigen();
+
     QString text = "";
     text += QString::number(a) + " * ";
     text += "ln(x) ";
@@ -459,7 +518,28 @@ void Regression::LogarithmischAnzeigen(double a, double b){
 }
 void Regression::LogarithmischAnzeigen(double a, double b, double basis){
     //y = a * log_basis(x) + b
+
+    auto xAchse = ui->Diagramm->xAxis->range();
+
+    double Xcenter = xAchse.center();
+    double Xrange = xAchse.size();
+
+
+    double XlowerBound = Xcenter - (Xrange * 0.5);
+    double XupperBound = Xcenter + (Xrange * 0.5);
+
+
+    double Schrittweite = Xrange / 100;
+
+    for(double i = XlowerBound; i <= XupperBound; i += Schrittweite){
+        double y = a * log(i) + b;
+        this->xWerte.append(i);
+        this->yWerte.append(y);
+    }
+FunktionAnzeigen();
+
     a = a * log(basis);
+
     QString text = "";
     text += QString::number(a) + " * ";
     text += "log_(" + QString::number(basis) + ")";
@@ -472,6 +552,26 @@ void Regression::LogarithmischAnzeigen(double a, double b, double basis){
 }
 void Regression::PotenzAnzeigen(double a, double b){
     //y = a * x^b
+
+    auto xAchse = ui->Diagramm->xAxis->range();
+
+    double Xcenter = xAchse.center();
+    double Xrange = xAchse.size();
+
+
+    double XlowerBound = Xcenter - (Xrange * 0.5);
+    double XupperBound = Xcenter + (Xrange * 0.5);
+
+
+    double Schrittweite = Xrange / 100;
+
+    for(double i = XlowerBound; i <= XupperBound; i += Schrittweite){
+        double y = a * pow(i, b);
+        this->xWerte.append(i);
+        this->yWerte.append(y);
+    }
+FunktionAnzeigen();
+
     QString text = "";
     text += QString::number(a) + " * x^";
     text += QString::number(b);
