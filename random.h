@@ -27,6 +27,7 @@ void handler();
 
 QVector<long long> primFaktorZerlegung(long long);
 long long ggT(QVector<long long>);
+long long euklid(long long, long long);
 long long kgV(QVector<long long>);
 bool istEnthalten(QVector<long long>, long long);
 QVector<QVector<long long>> sortieren(QVector<QVector<long long>>);

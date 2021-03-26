@@ -20,7 +20,7 @@ random::~random()
 QVector<long long> primFaktorZerlegung(long long n){
     QVector<long long> primfaktoren;
     if(n < 2){
-        debug("keine PFZ möglich");
+        //debug("keine PFZ möglich");
         return primfaktoren;
     }
     const long long anfangszahl = n;
@@ -89,6 +89,8 @@ long long kgV(QVector<long long> liste){
     return wert;
 }
 long long ggT(QVector<long long> liste){
+
+    ///*
     if(liste.count() == 1){
         if(liste.at(0) > 1){
             return liste.at(0);
@@ -112,7 +114,28 @@ long long ggT(QVector<long long> liste){
         }
     }
     return 1;
+    //*/
+    /*
+    if(liste.count() == 2){
+    return euklid(liste.at(0), liste.at(1));
+    }
+    return 1;
+    */
 }
+long long euklid(long long a, long long b){
+    if(b == 0){
+        return a;
+    }
+    if(a == 0){
+        return b;
+    }
+    if(a > b){
+        return euklid(a - b, b);
+    }else{
+        return euklid(a, b - a);
+    }
+}
+
 bool istEnthalten(QVector<long long> liste, long long n){
     foreach(auto x, liste){
         if(n == x){

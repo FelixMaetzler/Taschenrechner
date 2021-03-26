@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background:black</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="ButtonMenu">
     <property name="geometry">
@@ -24,7 +27,7 @@
      </rect>
     </property>
     <property name="toolTip">
-     <string>geht wieder zurück zur Rechnerauswahl</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;geht wieder zurück zur Rechnerauswahl&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="styleSheet">
      <string notr="true">background:rgb(54, 54, 54)</string>
@@ -42,6 +45,15 @@
       <height>21</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;hier werden die Punkte eingegeben.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;&lt;br/&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Diese müssen folgendermaßen eingegeben werden:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;&lt;br/&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;x1,y1;x2,y2;x3,y3&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:white</string>
+    </property>
+    <property name="placeholderText">
+     <string>Eingabe der Punkte für die Regression</string>
+    </property>
    </widget>
    <widget class="QSpinBox" name="spinBox">
     <property name="geometry">
@@ -51,6 +63,12 @@
       <width>42</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Hier wird der Grad des Polynoms eingestellt&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:white</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineAusgabe">
@@ -62,6 +80,18 @@
       <height>21</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Das ist der Funktionsterm der Regression&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="whatsThis">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Hier wird die Funktion angezeigt&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:white</string>
+    </property>
+    <property name="placeholderText">
+     <string>Hier steht der Funktionsterm der Regression</string>
+    </property>
    </widget>
    <widget class="QPlainTextEdit" name="plainPunkte">
     <property name="geometry">
@@ -71,6 +101,15 @@
       <width>311</width>
       <height>151</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Hier werden die Punkte angezeigt&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:white</string>
+    </property>
+    <property name="placeholderText">
+     <string>Hier werden die Punkte angezeigt</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineAnzeige">
@@ -82,6 +121,15 @@
       <height>21</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Hier werden Fehlermeldungen ausgegeben&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:white</string>
+    </property>
+    <property name="placeholderText">
+     <string>Fehlermeldungen</string>
+    </property>
    </widget>
    <widget class="QLineEdit" name="lineBestimmheitsmass">
     <property name="geometry">
@@ -91,6 +139,15 @@
       <width>113</width>
       <height>21</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Hier wird das Bestimmheitsmaß angezeigt. das sagt aus wie gut die Funktion die Punkte trifft&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:white</string>
+    </property>
+    <property name="placeholderText">
+     <string>Bestimmheitsmaß</string>
     </property>
    </widget>
    <widget class="QWidget" name="verticalLayoutWidget">
@@ -105,6 +162,12 @@
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QRadioButton" name="radioPolynom">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Nähert die Punkte mit einem Polynom an. Der Grad des Polynoms kann links der Auswahl eingestellt werden&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color:white</string>
+       </property>
        <property name="text">
         <string>Polynomisch</string>
        </property>
@@ -112,6 +175,12 @@
      </item>
      <item>
       <widget class="QRadioButton" name="radioExponential">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Nähert eine Exponentialfunktion an.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;e ist die Eulersche Zahl&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Die Form ist: f(x) = a * e^(bx)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color:white</string>
+       </property>
        <property name="text">
         <string>Exponentiell</string>
        </property>
@@ -119,6 +188,12 @@
      </item>
      <item>
       <widget class="QRadioButton" name="radioLogarithmus">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Nähert eine Logarithmusfunktion an.&lt;/p&gt;&lt;p&lt;span style=&quot; color:#000000;&quot;&gt;&gt;ln ist der natürliche Logarithmus&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;f(x) = a * ln(x) + b&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color:white</string>
+       </property>
        <property name="text">
         <string>Logarithmisch</string>
        </property>
@@ -126,6 +201,12 @@
      </item>
      <item>
       <widget class="QRadioButton" name="radioPotenz">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;nähert eine Potenzfunktion an.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;f(x) = a * x^b&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color:white</string>
+       </property>
        <property name="text">
         <string>Potenz</string>
        </property>
@@ -133,6 +214,12 @@
      </item>
      <item>
       <widget class="QRadioButton" name="radioLn_beliebig">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;nähert eine Logarithmusfunktion an, aber man kann die Basis selber wählen.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Die Basis muss rechts eingetragen werden.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;f(x) = a * log_basis(x) + b&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color:white</string>
+       </property>
        <property name="text">
         <string>Logarithmisch (beliebige Basis)</string>
        </property>
@@ -140,6 +227,12 @@
      </item>
      <item>
       <widget class="QRadioButton" name="radioExp_beliebig">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;nähert eine Exponentialfunktion an, aber man kann die Basis selber wählen.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Die Basis muss rechts eingetragen werden.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;f(x) = a * basis^(bx)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color:white</string>
+       </property>
        <property name="text">
         <string>Exponentiell (beliebige Basis)</string>
        </property>
@@ -156,6 +249,15 @@
       <height>21</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Hier wird die Basis für die Logarithmusfunktion oder für die Exponentialfunktion eingegeben&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:white</string>
+    </property>
+    <property name="placeholderText">
+     <string>gewünschte Basis</string>
+    </property>
    </widget>
    <widget class="QRadioButton" name="radioYAchsenabschnitt">
     <property name="geometry">
@@ -165,6 +267,12 @@
       <width>111</width>
       <height>20</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Damit kann man den Y-Achsenabschnitt auf einen bestimmten Wert zwingen.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Wenn aber ein Punkt mit (0, Y) angegeben wird, dann hab ich keine Ahnung was passiert ;-) &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:white</string>
     </property>
     <property name="text">
      <string>Y-Achsenabschnitt</string>
@@ -178,6 +286,12 @@
       <width>62</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Hier wird der gewünschte Y-Achsenabschnitt eingegeben&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:white</string>
     </property>
     <property name="minimum">
      <double>-10000000000000000524381184475062837195473800154429724610566137243318061834753718863820956830887857615988724636416932177829345401680187244151732297960592357271816907060120777654272.000000000000000</double>
@@ -194,6 +308,12 @@
       <width>571</width>
       <height>301</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Das ist der Graph der Funktion mit den Punkten.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Mit Mausrad kann man zoomen und mit drag kann man verschieben&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
     </property>
    </widget>
   </widget>
