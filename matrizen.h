@@ -6,11 +6,12 @@
 #include "cmath"
 //#include "nullstellenfinder.h"
 #include "nullstelle.h"
+#include "komplex.h"
 //Bibliothek zum Rechnen mit Matrizen
 
 class matrizen
 {
-    QVector<QVector<double>> matrix;
+    QVector<QVector<komplex>> matrix;
 
 public:
     matrizen();
@@ -18,8 +19,8 @@ public:
     matrizen(const matrizen*);
 
 
-    double get_wert(int, int)const;
-    void set_wert(double, int, int);
+    komplex get_wert(int, int)const;
+    void set_wert(komplex, int, int);
     int spaltenzahl(void)const;
     int zeilenzahl(void)const;
     matrizen get_spalte(int)const;
@@ -29,13 +30,13 @@ public:
     void zeilentausch(int, int);
     void spaltentausch(int, int);
 
-    void zeileMult(int, double);
-    void zeileMultAdd(int, int, double);
+    void zeileMult(int, komplex);
+    void zeileMultAdd(int, int, komplex);
     void print()const;
 
     bool isSquare()const;
     void toIdentity();
-    double det()const;
+    komplex det()const;
 
     void zeileLoeschen(int);
     void spalteLoeschen(int);
@@ -47,14 +48,14 @@ void join(matrizen);
 void seperate();
 int findeZeilemitMax(int, int)const;
 void inverse();
-bool istUngefaehrGleich(matrizen,int)const;
+bool istUngefaehrgleich(matrizen, double)const;
 void zeilenalgorithmus(int, int);
 void spaltenalgorithmus(int, int);
 
 void gauss();
 bool gaussform()const;
 int rang()const;
-int spur()const;
+komplex spur()const;
 bool linearAbhaengig(int, int)const;
 bool nullZeile(int)const;
 bool nullSpalte(int)const;
@@ -71,14 +72,14 @@ bool schiefsymetrischeMatrix()const;
 bool orthogonnaleMatrix()const;
 bool idempotenteMatrix()const;
 
-double betrag()const;
-double betragsquadrat()const;
+komplex betrag()const;
+komplex betragsquadrat()const;
 
 matrizen hadamard(matrizen)const;
 matrizen kronecker(matrizen)const;
 int kleinsteDimension()const;
 QVector<komplex> eigenwerte()const;
-QVector<double> charakteristischesPolynom()const;
+QVector<komplex> charakteristischesPolynom()const;
 void Toeplitz();
 matrizen R(int)const;
 matrizen A(int)const;
@@ -92,8 +93,8 @@ matrizen operator*(double)const;
 matrizen operator+(matrizen)const;
 matrizen operator-(matrizen)const;
 };
-bool istUngefaehrgleich(double, double, double = pow(10,-9));
-double skalarprodukt(matrizen, matrizen);
+//bool istUngefaehrGleich(double, double, double = pow(10,-9));
+komplex skalarprodukt(matrizen, matrizen);
 
 
 #endif // MATRIZEN_H

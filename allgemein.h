@@ -20,7 +20,7 @@ QMenuBar* addmenu(QMenuBar*);
 void debug(QString);
 void debug(double);
 void debug(QVector<double>);
-
+bool istUngefaehrGleich(double, double, double genauigkeit = 1E-9);
 
 
 

@@ -38,7 +38,7 @@ double komplex::betrag() const {
 }
 double komplex::winkel() const {
     //gibt den Winkel zur positiven x-Achse zurück
-    if(this->get_real() == 0 && this->get_imag() == 0)
+    if(istUngefaehrGleich(this->get_real(), 0) && istUngefaehrGleich(this->get_imag(), 0))
     {
         //hier fliegt uns was mächtig um die Ohren
         debug("Winkelbetimmung mit zwei Inputs die Null sind geht nicht");
@@ -60,14 +60,7 @@ komplex komplex::toPol() const {
     //sollte eig nicht außerhalb dieser Klasse benutzt werden
     return komplex(this->betrag(), this->winkel());
 }
-komplex komplex::operator*(double d) const {
-    //multipliziert eine komplexe Zahl mit einer reellen Zahl
-    return komplex(this->get_real()*d, this->get_imag()*d);
-}
-komplex komplex::operator/(double d) const {
-    //dividiert eine komplexe Zahl durch eine reelle Zahl
-    return komplex(this->get_real()/d, this->get_imag()/d);
-}
+
 komplex komplex::operator+(komplex z) const {
     //addiert zwei komplexe Zahlen
     return komplex(this->get_real()+z.get_real(), this->get_imag()+z.get_imag());
@@ -83,22 +76,37 @@ komplex komplex::operator*(komplex z) const {
 }
 komplex komplex::operator/(komplex z) const {
     //dividiert zwei komplexe Zahlen
-    if(z.get_imag() == 0.0 && z.get_real() == 0.0){
+    if(istUngefaehrGleich(z.get_imag(), 0) && istUngefaehrGleich(z.get_real(), 0)){
         debug("Teilen durch 0+0j geht nicht!!!");
         return komplex();
-    }else if(this->betrag() == 0){
+    }else if(istUngefaehrGleich(this->betrag(), 0)){
         return komplex();
-    }else if(this->get_imag() == 0.0 && z.get_imag() == 0.0){
-        return komplex((this->get_real()/z.get_real()));
+    }else if(istUngefaehrGleich(z.get_imag(), 0)){
+        return komplex(this->get_real() / z.get_real(), this->get_imag() / z.get_imag());
     }else{
         return (komplex(this->betrag()/z.betrag(), this->winkel()-z.winkel())).toKaart();
     }
 
 }
 
+
+komplex komplex::operator+=(komplex z) const {
+    return (*this + z);
+}
+komplex komplex::operator-=(komplex z) const {
+    return (*this - z);
+}
+komplex komplex::operator*=(komplex z) const {
+    return (*this * z);
+}
+komplex komplex::operator/=(komplex z) const {
+    return (*this / z);
+}
+
+
 bool komplex::operator==(komplex a) const {
     //vergleicht ob zwei komplexe Zahlen gleich sind
-    if(this->get_real() == a.get_real() && this->get_imag()==a.get_imag()){
+    if(istUngefaehrGleich(this->get_real(), a.get_real()) && istUngefaehrGleich(this->get_imag(), a.get_imag())){
         return true;
     }else{
         return false;
@@ -115,9 +123,9 @@ QString komplex::toQstring(void) const {
     kopie.set_imag(this->get_imag());
     kopie.set_real(this->get_real());
     kopie.runden();
-    if(kopie.get_imag() == 0.0){
+    if(istUngefaehrGleich(kopie.get_imag(), 0)){
         s += QString::number(kopie.get_real());
-    }else if(kopie.get_real() == 0.0){
+    }else if(istUngefaehrGleich(kopie.get_real(), 0)){
         s += QString::number(kopie.get_imag());
         s += "j";
     }else{
@@ -134,9 +142,9 @@ QString komplex::toQstring(void) const {
 }
 komplex pow(komplex z, double d){
     //potentziert eine komplexe Zahl mit einer reellen Zahl
-    if(d == 0.0){
-        return komplex(1.0);
-    }else if(d == 1.0){
+    if(istUngefaehrGleich(d, 0)){
+        return komplex(1);
+    }else if(istUngefaehrGleich(d, 1)){
         return z;
     }else{
         komplex x = (komplex(pow(z.betrag(), d), d * z.winkel())).toKaart();
@@ -148,7 +156,7 @@ komplex pow(komplex z, double d){
 }
 komplex pow(double d, komplex z){
     //potenziert eine reelle Zahl mit einer komplexen Zahl
-    if(z.get_imag() == 0.0){
+    if(istUngefaehrGleich(z.get_imag(), 0)){
         return komplex(pow(d, z.get_real()));
     }else{
         komplex x = ((komplex(pow(d, z.get_real()), z.get_imag()*log(d))).toKaart());
@@ -160,9 +168,9 @@ komplex pow(double d, komplex z){
 }
 komplex pow(komplex a, komplex b){
     //potenziert zwei komplexe Zahlen
-    if(a.get_imag() == 0.0){
+    if(istUngefaehrGleich(a.get_imag(), 0)){
         return pow(a.get_real(), b);
-    }else if(b.get_imag() == 0.0){
+    }else if(istUngefaehrGleich(b.get_imag(), 0)){
         return pow(a, b.get_real());
     }else{
         komplex x = (pow(a.betrag(), b)*pow(M_E, (komplex(-b.get_imag(), b.get_real())*a.winkel())));
@@ -191,4 +199,14 @@ void komplex::runden(int nachkommastellen){
     imag *= pow(10, -nks);
     this->set_real(real);
     this->set_imag(imag);
+}
+
+bool istUngefaehrGleich(komplex zahl1, komplex zahl2, double genauigkeit){
+    if(!istUngefaehrGleich(zahl1.get_real(), zahl2.get_real(), genauigkeit)){
+        return false;
+    }
+    if(!istUngefaehrGleich(zahl1.get_imag(), zahl2.get_imag(), genauigkeit)){
+        return false;
+    }
+    return true;
 }

@@ -192,11 +192,30 @@ QVector<komplex> PolynomHandler(QVector<double> inputs){
         return outputs;
     }
 }
+QVector<komplex> PolynomHandler(QVector<komplex> inputs){
+    int grad = inputs.count()-1;
+    if(grad < 1){
+        debug("Dieses Polynom ist nicht implementiert");
+        return QVector<komplex>();
+    }else if(grad == 1){
+        return linear(inputs);
+    }else if(grad == 2){
+        return pqFormel(inputs);
+    }else{
+        //return numerisch(inputs);
+        auto hajonet = inputs;
+        auto outputs_ptr = new QVector<komplex>();
+        newtonNullstellen(hajonet, outputs_ptr);
+        QVector<komplex> outputs = *outputs_ptr;
+        delete outputs_ptr;
+        return outputs;
+    }
+}
 
 QVector<double> toReal(QVector<komplex> liste){
     QVector<double> erg;
     foreach(auto x, liste){
-        if(!istUngefaerGleich(x.get_imag(),0)){
+        if(!istUngefaehrGleich(x.get_imag(),0)){
             debug("Umwandlung zu real geht nicht. Der imaginäre Anteil ist != 0");
             return erg;
         }
@@ -213,6 +232,7 @@ QVector<komplex> toKomplex(QVector<double> liste){
     }
     return erg;
 }
+/*
 bool istUngefaerGleich(double x, double y, double genauigkeit){
     double differenz = abs(x-y);
     if(differenz < genauigkeit){
@@ -229,6 +249,7 @@ bool istUngefaerGleich(komplex x, komplex y , double genauigkeit){
     }
     return false;
 }
+*/
 QVector<komplex> ableiten(QVector<komplex> funktion){
     QVector<komplex> erg;
     if(funktion.empty()){
@@ -273,7 +294,8 @@ QVector<komplex> hornerschema(QVector<komplex> funktion, komplex nullstelle){
     if(erg.empty()){
         return erg;
     }
-    if(!istUngefaerGleich(erg.last(), komplex(0,0), pow(10,-3))){
+
+    if(!istUngefaehrGleich(erg.last(), komplex(0,0), pow(10,-3))){
         debug("hornerschema kann nicht angewandt werden. ist keine Nullstelle!");
         erg.clear();
         return erg;
@@ -306,12 +328,12 @@ komplex newton(QVector<komplex> funktion, komplex startwert){
         while(counter1 < maxCounter1){
             komplex wert = yWert(funktion, nullstelle);
             komplex wertAbleitung = yWert(ableitung, nullstelle);
-            if(istUngefaerGleich(wertAbleitung, komplex(0,0))){
+            if(istUngefaehrGleich(wertAbleitung, komplex(0,0))){
                 break;
             }
             neueNullstelle = nullstelle - (wert/wertAbleitung);
             neuerWert = yWert(funktion, neueNullstelle);
-            if(istUngefaerGleich(wert, neuerWert)){
+            if(istUngefaehrGleich(wert, neuerWert)){
                 NullstelleGefunden = true;
                 break;
             }

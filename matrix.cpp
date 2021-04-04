@@ -131,13 +131,13 @@ void Matrix::anzeigen(){
         //findet die maximale zeichenlänge, damit nachher die Elemente möglichst schön untereinander sind
         for(int zeilennummer = 0; zeilennummer < Matrix.zeilenzahl(); zeilennummer++){
             for(int spaltennummer = 0; spaltennummer < Matrix.spaltenzahl(); spaltennummer++){
-                double wert = Matrix.get_wert(zeilennummer, spaltennummer);
+                komplex wert = Matrix.get_wert(zeilennummer, spaltennummer);
                 /*
             if(abs(wert) < pow(10, -6)){
                 wert = 0;
             }
             */
-                QString text = QString::number(wert);
+                QString text = wert.toQstring();
 
                 if(text.size() > max_zeichenlaenge){
                     max_zeichenlaenge = text.size();
@@ -150,7 +150,7 @@ void Matrix::anzeigen(){
             QString zeile = "";
 
             for(int spaltennummer = 0; spaltennummer < Matrix.spaltenzahl(); spaltennummer++){
-                QString zahl = QString::number(Matrix.get_wert(zeilennummer, spaltennummer));
+                QString zahl = (Matrix.get_wert(zeilennummer, spaltennummer)).toQstring();
                 int differenz = max_zeichenlaenge - zahl.size();
                 for(int i = 0; i < differenz; i++){
                     zahl += "  ";
@@ -213,11 +213,9 @@ void Matrix::erg(matrizen matrix){
 
     for(int zeilennummer = 0; zeilennummer < matrix.zeilenzahl(); zeilennummer++){
         for(int spaltennummer = 0; spaltennummer < matrix.spaltenzahl(); spaltennummer++){
-            double wert = matrix.get_wert(zeilennummer, spaltennummer);
-            if(abs(wert) < pow(10, -6)){//rundet kleinere Zahlen als 0.0000001 zu 0
-                wert = 0;
-            }
-            QString val = QString::number(wert);
+            komplex wert = matrix.get_wert(zeilennummer, spaltennummer);
+            wert.runden();
+            QString val = wert.toQstring();
             text += val + " ";
             if(spaltennummer != matrix.spaltenzahl() - 1){
                 text += ",";
@@ -317,7 +315,7 @@ void Matrix::rechnungen(){
                 //falls die letzte Zeile eine komplette Nullzeile ist, dann gibt es unendlich viele Lösungen
                 auto letzteZeile = m1.get_zeile(m1.zeilenzahl() - 1);
                 for(int i = 0; i < letzteZeile.spaltenzahl(); i++){
-                    double x = letzteZeile.get_wert(0, i);
+                    komplex x = letzteZeile.get_wert(0, i);
                     if(x != 0){
                         unendlich = false;
                         break;
@@ -372,8 +370,8 @@ void Matrix::spezielleMatrizen(int welcheMatrix, matrizen matrix){
     QString text = "";
     text += "Rang: " + QString::number(matrix.rang()) + "\n";//berechnet den Rang der Matrix
     if(quadratisch){//wenn sie quadratisch ist, dann
-        text += "Determinante: " + QString::number(matrix.det()) + "\n";//wird die Determinante
-        text += "Spur: " + QString::number(matrix.spur()) + "\n";//und die Spur berechnet
+        text += "Determinante: " + (matrix.det()).toQstring() + "\n";//wird die Determinante
+        text += "Spur: " + (matrix.spur()).toQstring() + "\n";//und die Spur berechnet
     }
     text += "Spezielle Eigenschaften der Matrix: \n\n";
     if(quadratisch){//ausßerdem wird die Matrix dann auf folgendes geprüft:
@@ -415,7 +413,7 @@ void Matrix::spezielleMatrizen(int welcheMatrix, matrizen matrix){
         text += "Eigenvektoren:\n";
         matrizen eigenvektoren(matrix.zeilenzahl(), 0);
         foreach(auto x, eigenwerte){
-            if(istUngefaehrgleich(x.get_imag(), 0)){
+            if(istUngefaehrGleich(x.get_imag(), 0)){
 
                 matrizen neueMatrix(matrix);
                 neueMatrix.toIdentity();

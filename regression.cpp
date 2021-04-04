@@ -148,7 +148,7 @@ matrizen exponentielleRegression(QVector<double>* xWerte, QVector<double>* yWert
     }
     auto koeffizienten = lineareRegression(xWerte, LNderyWerte, 1);
     //y = a * e^(bx)
-    double a = exp(koeffizienten.get_wert(0,0));
+    double a = exp(koeffizienten.get_wert(0,0).get_real());
     //double b = koeffizienten.get_wert(1,0);
     koeffizienten.set_wert(a, 0, 0);
     return koeffizienten;
@@ -190,7 +190,7 @@ matrizen potenzRegression(QVector<double>* xWerte, QVector<double>* yWerte){
     }
     auto koeffizienten = lineareRegression(LNderxWerte, LNderyWerte, 1);
     //double b = koeffizienten.get_wert(1, 0);
-    double a = exp(koeffizienten.get_wert(0 ,0));
+    double a = exp(koeffizienten.get_wert(0 ,0).get_real());
     koeffizienten.set_wert(a, 0, 0);
     return koeffizienten;
 }
@@ -275,11 +275,11 @@ void Regression::handeln(){
             }
             auto exFunktion = exponentielleRegression(xWerte, yWerte);
             matrizen lineareFunktion(2, 1);
-            lineareFunktion.set_wert(log(exFunktion.get_wert(0, 0)), 0, 0);
+            lineareFunktion.set_wert(log(exFunktion.get_wert(0, 0).get_real()), 0, 0);
             lineareFunktion.set_wert(exFunktion.get_wert(1, 0), 1, 0);
             double R = Bestimmheitsmass(lineareFunktion, xWerte, LNyWerte);
             ui->lineBestimmheitsmass->setText("R^2 = " + QString::number(R));
-            ExponentialAnzeigen(exFunktion.get_wert(0, 0), exFunktion.get_wert(1, 0));
+            ExponentialAnzeigen(exFunktion.get_wert(0, 0).get_real(), exFunktion.get_wert(1, 0).get_real());
         }else{
             ui->lineAnzeige->setText("zu wenig Punkte");
         }
@@ -297,7 +297,7 @@ void Regression::handeln(){
             auto lnFunktion = logarithmischeRegression(xWerte, yWerte);
             double R = Bestimmheitsmass(lnFunktion, LNxWerte, yWerte);
             ui->lineBestimmheitsmass->setText("R^2 = " + QString::number(R));
-            LogarithmischAnzeigen(lnFunktion.get_wert(1, 0), lnFunktion.get_wert(0, 0));
+            LogarithmischAnzeigen(lnFunktion.get_wert(1, 0).get_real(), lnFunktion.get_wert(0, 0).get_real());
         }else{
             ui->lineAnzeige->setText("zu wenig Punkte");
         }
@@ -325,13 +325,13 @@ void Regression::handeln(){
 
             auto potenzfunktion = potenzRegression(xWerte, yWerte);
             matrizen lineareFunktion(2, 1);
-            double a = potenzfunktion.get_wert(0, 0);
-            double b = potenzfunktion.get_wert(1, 0);
+            double a = potenzfunktion.get_wert(0, 0).get_real();
+            double b = potenzfunktion.get_wert(1, 0).get_real();
             lineareFunktion.set_wert(log(a), 0, 0);
             lineareFunktion.set_wert(b, 1, 0);
             double R = Bestimmheitsmass(lineareFunktion, LNxWerte, LNyWerte);
             ui->lineBestimmheitsmass->setText("R^2 = " + QString::number(R));
-            PotenzAnzeigen(potenzfunktion.get_wert(0, 0), potenzfunktion.get_wert(1, 0));
+            PotenzAnzeigen(potenzfunktion.get_wert(0, 0).get_real(), potenzfunktion.get_wert(1, 0).get_real());
         }else{
             ui->lineAnzeige->setText("zu wenig Punkte");
         }
@@ -354,11 +354,11 @@ void Regression::handeln(){
             }
             auto exFunktion = exponentielleRegression(xWerte, yWerte);
             matrizen lineareFunktion(2, 1);
-            lineareFunktion.set_wert(log(exFunktion.get_wert(0, 0)), 0, 0);
+            lineareFunktion.set_wert(log(exFunktion.get_wert(0, 0).get_real()), 0, 0);
             lineareFunktion.set_wert(exFunktion.get_wert(1, 0), 1, 0);
             double R = Bestimmheitsmass(lineareFunktion, xWerte, LNyWerte);
             ui->lineBestimmheitsmass->setText("R^2 = " + QString::number(R));
-            ExponentialAnzeigen(exFunktion.get_wert(0, 0), exFunktion.get_wert(1, 0), basis);
+            ExponentialAnzeigen(exFunktion.get_wert(0, 0).get_real(), exFunktion.get_wert(1, 0).get_real(), basis);
         }else{
             ui->lineAnzeige->setText("zu wenig Punkte");
         }
@@ -383,7 +383,7 @@ void Regression::handeln(){
             auto lnFunktion = logarithmischeRegression(xWerte, yWerte);
             double R = Bestimmheitsmass(lnFunktion, LNxWerte, yWerte);
             ui->lineBestimmheitsmass->setText("R^2 = " + QString::number(R));
-            LogarithmischAnzeigen(lnFunktion.get_wert(1, 0), lnFunktion.get_wert(0, 0), basis);
+            LogarithmischAnzeigen(lnFunktion.get_wert(1, 0).get_real(), lnFunktion.get_wert(0, 0).get_real(), basis);
         }else{
             ui->lineAnzeige->setText("zu wenig Punkte");
         }
@@ -393,7 +393,7 @@ void Regression::handeln(){
 void Regression::PolynomAnzeigen(matrizen x){
     QVector<double> monome;
     for(int i = x.zeilenzahl()-1; i >= 0; i--){
-        monome.append(x.get_wert(i, 0));
+        monome.append(x.get_wert(i, 0).get_real());
     }
     PolynomAnzeigen(monome);
     this->polynom.clear();
@@ -401,7 +401,7 @@ void Regression::PolynomAnzeigen(matrizen x){
 
     QString text = "y = ";
     for(int i = x.zeilenzahl() - 1;i >= 0; i--){
-        double wert = x.get_wert(i, 0);
+        double wert = x.get_wert(i, 0).get_real();
         QString zahl = "";
         if(wert >= 0 && i != x.zeilenzahl() - 1){
             if(wert != 0){
@@ -415,7 +415,7 @@ void Regression::PolynomAnzeigen(matrizen x){
         if(i == 0){
             text += zahl;
         }else if(i == 1){
-            if(!istUngefaehrgleich(wert, 1)){
+            if(!istUngefaehrGleich(wert, 1)){
                 text += zahl;
             }
             text += "x ";
@@ -607,7 +607,7 @@ double Regression::Bestimmheitsmass(matrizen funktion, QVector<double>* xWerte, 
     }
     mittelwert /= double(yWerte->count());
     for(int i = funktion.zeilenzahl() - 1; i >= 0; i--){
-        f->append(funktion.get_wert(i, 0));
+        f->append(funktion.get_wert(i, 0).get_real());
     }
     for(int i = 0; i < xWerte->count(); i++){
         double y = yWert(*f, komplex(xWerte->at(i))).get_real();
