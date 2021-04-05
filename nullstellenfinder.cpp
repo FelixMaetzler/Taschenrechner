@@ -23,12 +23,6 @@ QVector<komplex> linear(QVector<double> inputs){
     outputs.append(komplex(erg));
     return outputs;
 }
-QVector<komplex> linear(QVector<komplex> inputs){
-    komplex erg = (inputs.at(1)/inputs.at(0)) * -1;
-    QVector<komplex> outputs;
-    outputs.append(komplex(erg));
-    return outputs;
-}
 
 void Nullstellenfinder::handler(){//soll das Menu handlen
     auto y = new MainWindow();

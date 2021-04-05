@@ -7,7 +7,6 @@
 #include "allgemein.h"
 
 //Bibliothek zum handlen komplexer Zahlen
-
 class komplex
 {
     double real;
@@ -26,21 +25,13 @@ public:
     double winkel(void) const;
     void runden(int nachkommastellen = 9);
 
-
+    komplex operator*(double)const;
+    komplex operator/(double)const;
 
     komplex operator+(komplex)const;
     komplex operator-(komplex)const;
     komplex operator*(komplex)const;
     komplex operator/(komplex)const;
-
-
-
-
-
-    komplex operator+=(komplex)const;
-    komplex operator-=(komplex)const;
-    komplex operator*=(komplex)const;
-    komplex operator/=(komplex)const;
 
     bool operator==(komplex)const;
     bool operator!=(komplex)const;
@@ -58,7 +49,6 @@ public:
 komplex pow(komplex, double);
 komplex pow(double, komplex);
 komplex pow(komplex, komplex);
-bool istUngefaehrGleich(komplex, komplex, double genauigkeit = 1E-9);
 void debug(komplex);
 
 

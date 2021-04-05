@@ -9,7 +9,7 @@ matrizen::matrizen()
 matrizen::matrizen(int zeilenzahl, int spaltenzahl){
     //erstellt eine Matrix mit der Zeilen- und Spaltenzahl
     //dabei sind alle Elemente null
-    QVector<komplex> spalte;
+    QVector<double> spalte;
     for(int i = 0; i < spaltenzahl; i++){
         spalte.append(0);
     }
@@ -22,11 +22,11 @@ matrizen::matrizen(const matrizen* x){
     //erstllt eine Matrix die genau die gleichen Eigenschaften hat wie die die übergeben wurde
     this->matrix = x->matrix;
 }
-komplex matrizen::get_wert(int zeilenzahl, int spaltenzahl) const {
+double matrizen::get_wert(int zeilenzahl, int spaltenzahl) const {
     //gibt den Wert an einer bestimmten Position zurück
     return this->matrix.at(zeilenzahl).at(spaltenzahl);
 }
-void matrizen::set_wert(komplex wert, int zeilenzahl, int spaltenzahl){
+void matrizen::set_wert(double wert, int zeilenzahl, int spaltenzahl){
     //setzt den Wert an einer bestimmten Position
     this->matrix[zeilenzahl][spaltenzahl] = wert;
 }
@@ -119,7 +119,7 @@ void matrizen::zeilentausch(int x, int y){
     //    this->print();
 
 }
-void matrizen::zeileMult(int zeilenindex, komplex multiplikator){
+void matrizen::zeileMult(int zeilenindex, double multiplikator){
     //multipliziert eine Zeile mit einem Wert
     if(multiplikator == 1){
         return;
@@ -133,13 +133,13 @@ void matrizen::zeileMult(int zeilenindex, komplex multiplikator){
     //    debug("multipliziere Zeile: " + QString::number(zeilenindex) + " mit " +QString::number(multiplikator));
     //    this->print();
 }
-void matrizen::zeileMultAdd(int veraenderndeZeile, int addierendeZeile, komplex multiplikator){
+void matrizen::zeileMultAdd(int veraenderndeZeile, int addierendeZeile, double multiplikator){
     //multipliziert eine Zeile und addiert sie auf eine andere drauf
     auto zeileVeraendert = this->get_zeile(veraenderndeZeile);
     auto zeileAddieren = this->get_zeile(addierendeZeile);
     for(int i = 0; i < zeileVeraendert.spaltenzahl(); i++){
         //zeileVeraendert[i] += (zeileAddieren.at(i) * multiplikator);
-        komplex wert = zeileVeraendert.get_wert(0,i) + multiplikator * zeileAddieren.get_wert(0, i);
+        double wert = zeileVeraendert.get_wert(0,i) + multiplikator * zeileAddieren.get_wert(0, i);
         zeileVeraendert.set_wert(wert,0, i);
     }
     this->set_zeile(zeileVeraendert, veraenderndeZeile);
@@ -153,7 +153,7 @@ void matrizen::print() const {
     for(int zeilenzahl = 0; zeilenzahl < this->zeilenzahl(); zeilenzahl++){
         for(int spaltenzahl = 0; spaltenzahl < this->spaltenzahl(); spaltenzahl++){
 
-            text += (this->get_wert(zeilenzahl, spaltenzahl)).toQstring() + " ";
+            text += QString::number(this->get_wert(zeilenzahl, spaltenzahl)) + " ";
         }
         debug(text);
         text = "";
@@ -185,12 +185,12 @@ void matrizen::toIdentity(){
         debug("aus einer nicht quadratischen Matrix kann keine Einheitsmatrix gebildet werden");
     }
 }
-komplex matrizen::det() const {
+double matrizen::det() const {
     //Berechnet die Determinante der Matrix
     //Wenn die Matrix eine 1x1 Matrix ist, dann ist die Determinante gleich dem einzigen Element
     //Wenn sie größer ist, dann wird der Laplacesche Entwicklungssatz verwendet
     //und durch Rekursion auf eine 1x1 matrix zurückgeführt
-    komplex det = 0;
+    double det = 0;
 
     if(!this->isSquare()){
         debug("aus einer nich quadratischen Matrix kann keine Determinante berechnet werden");
@@ -208,7 +208,7 @@ komplex matrizen::det() const {
             //Die Determinante ist dann der Wert in der ersten Zeile und der n-ten Spalte
             //mal die Determinante von kopie mal das vorzeichen
             //und das plus die nächste Determinante
-            det += this->get_wert(0, index) * kopie.det() * vorzeichen;
+            det += vorzeichen * this->get_wert(0, index) * kopie.det();
             vorzeichen *= -1;//alternierendes Vorzeichen
         }
     }
@@ -260,7 +260,7 @@ void matrizen::resize(int zeilenanzahl, int spaltenanzahl){
             this->matrix[i].erase(this->matrix[i].end()-1);
         }
     }
-    QVector<komplex> zeile;
+    QVector<double> zeile;
     for(int i = 0; i < this->spaltenzahl(); i++){//eine Nullzeile mit der gewünschten Spaltenzahl wird erstellt
         zeile.append(0);
     }
@@ -310,8 +310,8 @@ int matrizen::findeZeilemitMax(int spaltenindex, int startZeilenIndex) const {
     int index = NAN;
     double temp = -INFINITY;
     for(int i = startZeilenIndex; i < this->zeilenzahl(); i++){
-        komplex zahl = this->get_wert(i, spaltenindex);
-        double wert = zahl.betrag();
+        double wert = this->get_wert(i, spaltenindex);
+        wert = abs(wert);
         if(wert > temp){
             temp = wert;
             index = i;
@@ -319,7 +319,7 @@ int matrizen::findeZeilemitMax(int spaltenindex, int startZeilenIndex) const {
     }
     return index;
 }
-bool matrizen::istUngefaehrgleich(matrizen x, double genauigkeit = pow(10, -6)) const {
+bool matrizen::istUngefaehrGleich(matrizen x, int genauigkeit = pow(10, -6)) const {
     //zwei Matrizen sind gleich, wenn die absolute Differenz Elementenweise überall kleiner ist als genauigkeit
     if(this->zeilenzahl() != x.zeilenzahl() || this->spaltenzahl() != x.spaltenzahl()){
         debug("kann man nicht vergleichen");
@@ -327,10 +327,11 @@ bool matrizen::istUngefaehrgleich(matrizen x, double genauigkeit = pow(10, -6)) 
     }
     for(int spaltenzahl = 0; spaltenzahl < this->spaltenzahl(); spaltenzahl++){
         for(int zeilenzahl = 0; zeilenzahl < this->zeilenzahl(); zeilenzahl++){
-            komplex wert1 = this->get_wert(zeilenzahl, spaltenzahl);
-            komplex wert2 = x.get_wert(zeilenzahl, spaltenzahl);
-
-            if(!istUngefaehrGleich(wert1, wert2, genauigkeit)){
+            double wert1 = this->get_wert(zeilenzahl, spaltenzahl);
+            double wert2 = x.get_wert(zeilenzahl, spaltenzahl);
+            double differenz = wert1 * double(1000000) - wert2 * double(1000000);
+            differenz = abs(differenz);
+            if(differenz > (genauigkeit * double(1000000))){
                 return false;
             }
         }
@@ -352,7 +353,6 @@ void matrizen::inverse(){
         debug("Inverse geht nur für Matrizen deren det != 0 ist");
         return;
     }
-
     matrizen startmatrix(this);//Speichert die Matrix ab
     matrizen einheitsmatrix(this);
     einheitsmatrix.toIdentity();//generiert eine Einheitsmatrix mit den gleichen Dimenionen
@@ -361,21 +361,21 @@ void matrizen::inverse(){
 
     for(int diagIndex = 0; diagIndex < maxZeile; diagIndex++){//es wird durch jede Zeile gegangen
         int i = diagIndex + 1;//i ist ein Index der in der darauffolgenden Zeile startet
-        komplex pivotelement = this->get_wert(diagIndex, diagIndex);//das ist das Element in dieser Zeile in der Hauptdiagonalen
-        while(istUngefaehrGleich(pivotelement, 0) && i < maxZeile){//solange dieses Element = 0 ist und i kleiner ist als die maximale Zeilenzahl
+        double pivotelement = this->get_wert(diagIndex, diagIndex);//das ist das Element in dieser Zeile in der Hauptdiagonalen
+        while(istUngefaehrgleich(pivotelement, 0) && i < maxZeile){//solange dieses Element = 0 ist und i kleiner ist als die maximale Zeilenzahl
             this->zeilentausch(i, diagIndex);//Zeile wird getauscht
             pivotelement = this->get_wert(diagIndex, diagIndex);//da Zeile getauscht wurde, gibt es jetzt auch ein neues pivotelement
             i++;//Index wird erhöht. falls das Pivotelement wieder null sein sollte wird die übernächdte Zeile genommen etc
         }//versucht das Pivotelement ungleich von Null zu machen
         //jetzt sollte das Pivotelement != 0 sein aber es wird nochmal auf nummer sicher gegangen
-        if(!istUngefaehrGleich(pivotelement, 0)){
-            this->zeileMult(diagIndex, komplex(1)/pivotelement);//Zeile wird so multipliziert das das Pivotelement 1 wird
+        if(!istUngefaehrgleich(pivotelement, 0)){
+            this->zeileMult(diagIndex, 1.0/pivotelement);//Zeile wird so multipliziert das das Pivotelement 1 wird
         }
         for(int zeilenIndex = 0; zeilenIndex < maxZeile; zeilenIndex++){//es wird über alle Zeilen Iteriert
             if(diagIndex != zeilenIndex){//die Zeile in der wir gerade sind wird ausgelassen
-                komplex element = this->get_wert(zeilenIndex, diagIndex);//das element in der gleichen Spalte wie das Pivotelement
-                if(!istUngefaehrGleich(0, element)){//wenn diess Element nicht 0 ist
-                    komplex mult = element * -1;
+                double element = this->get_wert(zeilenIndex, diagIndex);//das element in der gleichen Spalte wie das Pivotelement
+                if(!istUngefaehrgleich(0, element)){//wenn diess Element nicht 0 ist
+                    double mult = -element;
                     this->zeileMultAdd(zeilenIndex, diagIndex, mult);//dann wird die zeile mit dem Pivotelement so multipliziert und auf die andere Zeile addiert, dass das element 0 wird
                 }
             }
@@ -436,16 +436,16 @@ void matrizen::spaltenalgorithmus(int zeilenindex, int spaltenindex){
     //ist jetzt eig überflüssig
     zeilenindex++;
     while(zeilenindex < this->zeilenzahl()){
-        if(istUngefaehrGleich(this->get_wert(zeilenindex, spaltenindex),0)){//vllt ein close to statt ein ==
+        if(istUngefaehrgleich(this->get_wert(zeilenindex, spaltenindex),0)){//vllt ein close to statt ein ==
             zeilenindex++;
         }else{
             int ersteZeileIndex = spaltenindex;
-            komplex ersteZeileWert = this->get_wert(ersteZeileIndex, spaltenindex);
-            if(istUngefaehrGleich(ersteZeileWert, 0)){//vllt ein close to statt ein ==
+            double ersteZeileWert = this->get_wert(ersteZeileIndex, spaltenindex);
+            if(istUngefaehrgleich(ersteZeileWert, 0)){//vllt ein close to statt ein ==
                 zeilenindex++;
             }else{
-                komplex aktuellerWert = this->get_wert(zeilenindex, spaltenindex);
-                komplex mult = (aktuellerWert/ersteZeileWert) * -1;
+                double aktuellerWert = this->get_wert(zeilenindex, spaltenindex);
+                double mult = -(aktuellerWert/ersteZeileWert);
                 this->zeileMultAdd(zeilenindex, ersteZeileIndex, mult);
                 zeilenindex++;
             }
@@ -457,16 +457,16 @@ void matrizen::zeilenalgorithmus(int zeilenindex, int spaltenindex){
     //ist jetzt eig überflüssig
     spaltenindex++;
     while(spaltenindex < this->zeilenzahl()){
-        if(istUngefaehrGleich(this->get_wert(zeilenindex, spaltenindex),0)){//vllt ein close to statt ein ==
+        if(istUngefaehrgleich(this->get_wert(zeilenindex, spaltenindex),0)){//vllt ein close to statt ein ==
             spaltenindex++;
         }else{
             int ersteZeileindex = spaltenindex;
-            komplex ersteZeileWert = this->get_wert(ersteZeileindex, spaltenindex);
-            if(istUngefaehrGleich(ersteZeileWert, 0)){//vllt ein close to statt ein ==
+            double ersteZeileWert = this->get_wert(ersteZeileindex, spaltenindex);
+            if(istUngefaehrgleich(ersteZeileWert, 0)){//vllt ein close to statt ein ==
                 spaltenindex++;
             }else{
-                komplex aktuellerWert = this->get_wert(zeilenindex, spaltenindex);
-                komplex mult = (aktuellerWert/ersteZeileWert) * -1;
+                double aktuellerWert = this->get_wert(zeilenindex, spaltenindex);
+                double mult = -(aktuellerWert/ersteZeileWert);
                 this->zeileMultAdd(zeilenindex, ersteZeileindex, mult);
                 spaltenindex++;
             }
@@ -483,7 +483,7 @@ matrizen matrizen::operator*(matrizen x) const {
     erg.resize(this->zeilenzahl(), x.spaltenzahl());
     for(int zeilenindex = 0; zeilenindex < erg.zeilenzahl(); zeilenindex++){
         for(int spaltenindex = 0; spaltenindex < erg.spaltenzahl(); spaltenindex++){
-            komplex wert = 0;
+            double wert = 0;
             for(int i = 0; i < x.zeilenzahl(); i++){
                 wert += this->get_wert(zeilenindex, i) * x.get_wert(i, spaltenindex);
             }
@@ -492,8 +492,7 @@ matrizen matrizen::operator*(matrizen x) const {
     }
     return erg;
 }
-/*
-bool istUngefaehrGleich(double z1, double z2, double genauigkeit){
+bool istUngefaehrgleich(double z1, double z2, double genauigkeit){
     //schaut ob zwei Zahlen innerhalb einer Toleranz gleich sind
     if(abs(z1-z2)<genauigkeit){
         return true;
@@ -501,7 +500,6 @@ bool istUngefaehrGleich(double z1, double z2, double genauigkeit){
         return false;
     }
 }
-*/
 matrizen matrizen::operator+(matrizen x) const {
     //addiert zwei Matrizen
     matrizen erg(this->zeilenzahl(), this->spaltenzahl());
@@ -530,7 +528,7 @@ matrizen matrizen::operator*(double d)const {
     matrizen erg(this->zeilenzahl(), this->spaltenzahl());
     for(int zeilenindex = 0; zeilenindex < erg.zeilenzahl(); zeilenindex++){
         for(int spaltenindex = 0; spaltenindex < erg.spaltenzahl(); spaltenindex++){
-            erg.set_wert(this->get_wert(zeilenindex, spaltenindex) * d, zeilenindex, spaltenindex);
+            erg.set_wert(d * this->get_wert(zeilenindex, spaltenindex), zeilenindex, spaltenindex);
         }
     }
     return erg;
@@ -549,9 +547,9 @@ void matrizen::gauss(){
     while(!this->gaussform()){//solange nicht die Gaussform vorliegt
     const int maxIterationen = this->kleinsteDimension();
     for(int diagIndex = 0; diagIndex < maxIterationen; diagIndex++){//wird durch die diagonale Iteriert
-        komplex Pivotelement = this->get_wert(diagIndex, diagIndex);//zieht sich das erste hauptdiagonalenelement
+        double Pivotelement = this->get_wert(diagIndex, diagIndex);//zieht sich das erste hauptdiagonalenelement
         int i = diagIndex + 1;//Zeilen sollen nur die unteren der aktuellen genommen werden
-        while(istUngefaehrGleich(0, Pivotelement) && i < this->zeilenzahl()){//solange das Pivotelement null ist und noch nicht das zeilenende erreicht
+        while(istUngefaehrgleich(0, Pivotelement) && i < this->zeilenzahl()){//solange das Pivotelement null ist und noch nicht das zeilenende erreicht
             this->zeilentausch(i, diagIndex);//werden Zeilen getauscht
             Pivotelement = this->get_wert(diagIndex, diagIndex);//der neue Pivotelement wird gesetzt
             i++;//und es wird dei nächste zeile ausgewählt
@@ -559,13 +557,13 @@ void matrizen::gauss(){
                 this->zeileMultAdd(0, diagIndex, -1);
             }
         }//Das Pivotelement solle nicht mehr null sein. Wenn es Null ist, dann wird die gaußform nicht errreicht. Deshalb die while !gaußform schleife
-        if(!istUngefaehrGleich(0, Pivotelement)){//Trotzdem wird es nochmals kontrolliert
-            this->zeileMult(diagIndex, komplex(1)/Pivotelement);//wenn es nicht null ist, dann wird die Zeile normiert
+        if(!istUngefaehrgleich(0, Pivotelement)){//Trotzdem wird es nochmals kontrolliert
+            this->zeileMult(diagIndex, 1.0/Pivotelement);//wenn es nicht null ist, dann wird die Zeile normiert
         }
         for(int j = diagIndex + 1; j < zeilenzahl(); j++){//Jetzt wird durch die unteren Zeilen durchiteriert und das Zuel ist es alles in der Pivotspalte null zu bekommen
-            komplex element = this->get_wert(j, diagIndex);
-            if(!istUngefaehrGleich(0, element)){
-                this->zeileMultAdd(j, diagIndex, element * -1);
+            double element = this->get_wert(j, diagIndex);
+            if(!istUngefaehrgleich(0, element)){
+                this->zeileMultAdd(j, diagIndex, -element);
             }
         }
     }
@@ -581,16 +579,16 @@ bool matrizen::gaussform()const{
         for(int j = i; j < this->zeilenzahl(); j++){
             if(i == j){
                 if(einHauptdiagonalenelementWarSchonNull){
-                    if(!istUngefaehrGleich(0, this->get_wert(j,i))){
+                    if(!istUngefaehrgleich(0, this->get_wert(j,i))){
                         return false;
                     }
                 }else{
-                    if(istUngefaehrGleich(0, this->get_wert(j,i))){
+                    if(istUngefaehrgleich(0, this->get_wert(j,i))){
                         einHauptdiagonalenelementWarSchonNull = true;
                     }
                 }
             }else{
-                if(!istUngefaehrGleich(0, this->get_wert(j, i))){
+                if(!istUngefaehrgleich(0, this->get_wert(j, i))){
                     return false;
                 }
             }
@@ -630,7 +628,7 @@ int matrizen::rang() const {
 bool matrizen::linearAbhaengig(int x, int y) const {
     //Überprüft ob zwei Teilen linear abhängig sind. also ob zeile1 * konstante = zeile2
     //der Faktor muss natürlich ungleich 0 sein
-    komplex factor;
+    double factor;
     bool factorGefunden = false;
     auto zeileX = this->get_zeile(x);
     auto zeileY = this->get_zeile(y);
@@ -643,7 +641,7 @@ bool matrizen::linearAbhaengig(int x, int y) const {
     }
     if(factorGefunden){
         for(int i = 0; i < zeileX.spaltenzahl(); i++){
-            if(!istUngefaehrGleich(zeileX.get_wert(0,i) * factor, zeileY.get_wert(0,i))){
+            if(!istUngefaehrgleich(zeileX.get_wert(0,i) * factor, zeileY.get_wert(0,i))){
                 return false;
             }
         }
@@ -658,7 +656,7 @@ bool matrizen::linearAbhaengig(int x, int y) const {
     }
     if(factorGefunden){
         for(int i = 0; i < zeileX.spaltenzahl(); i++){
-            if(!istUngefaehrGleich(zeileY.get_wert(0,i) * factor, zeileX.get_wert(0,i))){
+            if(!istUngefaehrgleich(zeileY.get_wert(0,i) * factor, zeileX.get_wert(0,i))){
                 return false;
             }
         }
@@ -670,8 +668,8 @@ bool matrizen::nullZeile(int zeilenindex) const {
     //überprüft ob eine Zeile null ist
     auto zeile = this->get_zeile(zeilenindex);
     for(int i = 0; i < zeile.spaltenzahl(); i++){
-        komplex x = zeile.get_wert(0,i);
-        if(!istUngefaehrGleich(0, x)){
+        double x = zeile.get_wert(0,i);
+        if(!istUngefaehrgleich(0, x)){
             return false;
         }
     }
@@ -681,8 +679,8 @@ bool matrizen::nullSpalte(int spaltenindex) const {
     //Überprüft ob eine Spalte null ist
     auto spalte = this->get_spalte(spaltenindex);
     for(int i = 0; i < spalte.zeilenzahl(); i++){
-        komplex x = spalte.get_wert(i,0);
-        if(!istUngefaehrGleich(0, x)){
+        double x = spalte.get_wert(i,0);
+        if(!istUngefaehrgleich(0, x)){
             return false;
         }
     }
@@ -772,7 +770,7 @@ bool matrizen::symetrischeMatrix() const {
     matrizen x(this->zeilenzahl(), this->spaltenzahl());
     x.copy(this);
     x.transponieren();
-    return (this->istUngefaehrgleich(x));
+    return (this->istUngefaehrGleich(x));
 }
 bool matrizen::schiefsymetrischeMatrix() const {
     //überprüft ob es eine schiefsymmetrische Matrix ist
@@ -782,7 +780,7 @@ bool matrizen::schiefsymetrischeMatrix() const {
     y.copy(this);
     x.transponieren();
     y = y *-1;
-    return y.istUngefaehrgleich(x);
+    return y.istUngefaehrGleich(x);
 }
 bool matrizen::orthogonnaleMatrix() const {
     //überprüft ob es eine orthogonale Matrix ist
@@ -791,18 +789,18 @@ bool matrizen::orthogonnaleMatrix() const {
     x.transponieren();
     y = x * y;
     x.toIdentity();
-    return y.istUngefaehrgleich(x);
+    return y.istUngefaehrGleich(x);
 }
 bool matrizen::idempotenteMatrix() const {
     //überprüft ob es eine Idempotente Matrix ist
     matrizen x(this->zeilenzahl(), this->spaltenzahl());
     x.copy(this);
-    return x.istUngefaehrgleich(x*x);
+    return x.istUngefaehrGleich(x*x);
 }
-komplex matrizen::spur() const {
+int matrizen::spur() const {
     //berechnet die Spur der Matrix
     if(this->isSquare()){
-        komplex erg = 0;
+        double erg = 0;
         for(int i = 0; i < this->zeilenzahl(); i++){
             erg += this->get_wert(i, i);
         }
@@ -821,18 +819,17 @@ matrizen matrizen::hadamard(matrizen x) const {
     erg.resize(this->zeilenzahl(), this->spaltenzahl());
     for(int zeilenindex = 0; zeilenindex < this->zeilenzahl(); zeilenindex++){
         for(int spaltenindex = 0; spaltenindex < this->spaltenzahl(); spaltenindex++){
-            komplex wert = this->get_wert(zeilenindex, spaltenindex) * x.get_wert(zeilenindex, spaltenindex);
+            double wert = this->get_wert(zeilenindex, spaltenindex) * x.get_wert(zeilenindex, spaltenindex);
             erg.set_wert(wert, zeilenindex, spaltenindex);
         }
     }
     return erg;
 }
-
 QVector<komplex> matrizen::eigenwerte()const{
     //soll Eigenwerte berechnen
     //Ich würds noch nicht benutzen...
     QVector<komplex> eigenwerte;
-    QVector<komplex> charakteristischeGleichung;
+    QVector<double> charakteristischeGleichung;
     if(!this->isSquare()){
         debug("Eigenwerte nur von quadratischen Matrizen");
         return eigenwerte;
@@ -843,8 +840,8 @@ QVector<komplex> matrizen::eigenwerte()const{
     }
     if(this->zeilenzahl() == 2){
         charakteristischeGleichung.append(1);
-        komplex p = this->get_wert(0,0) * -1 - this->get_wert(1,1);
-        komplex q = this->get_wert(0,0) * this->get_wert(1,1) - this->get_wert(1,0) * this->get_wert(0,1);
+        double p = -this->get_wert(0,0) - this->get_wert(1,1);
+        double q = this->get_wert(0,0) * this->get_wert(1,1) - this->get_wert(1,0) * this->get_wert(0,1);
         charakteristischeGleichung.append(p);
         charakteristischeGleichung.append(q);
     }
@@ -903,14 +900,12 @@ QVector<komplex> matrizen::eigenwerte()const{
     for(int i = 0; i < R.zeilenzahl(); i++){
         eigenwerte.append(R.get_wert(i,i));
     }
-   */
+    */
     return eigenwerte;
 }
-
-
-komplex skalarprodukt(matrizen x, matrizen y){
+double skalarprodukt(matrizen x, matrizen y){
     //berechnet das Skalarprodukt zweier Vektoren
-    komplex sp = 0;
+    double sp = 0;
     if(x.spaltenzahl() == 1){//wenn x ein Spaltenvektor ist
         x.transponieren();//dann wird er zum Zeilenvektor gemacht
     }
@@ -935,7 +930,7 @@ matrizen matrizen::kronecker(matrizen x) const {
 
                     int spalte = spalteA * x.spaltenzahl() + spalteB;
                     int zeile = zeileA *  x.zeilenzahl() + zeileB;
-                    komplex wert = this->get_wert(zeileA, spalteA) * x.get_wert(zeileB, spalteB);
+                    double wert = this->get_wert(zeileA, spalteA) * x.get_wert(zeileB, spalteB);
                     erg.set_wert(wert, zeile, spalte);
                 }
             }
@@ -951,7 +946,7 @@ int matrizen::kleinsteDimension() const {
         return this->spaltenzahl();
     }
 }
-komplex matrizen::betrag() const {
+double matrizen::betrag() const {
     //berechnet den Betrag eines Vektors
     /*
     double betrag = 0;
@@ -967,13 +962,13 @@ komplex matrizen::betrag() const {
         betrag += kopie.get_wert(i,0) * kopie.get_wert(i,0);
     }
     */
-    komplex betrag = this->betragsquadrat();
+    double betrag = this->betragsquadrat();
     betrag = pow(betrag, 0.5);
     return betrag;
 }
-komplex matrizen::betragsquadrat() const {
+double matrizen::betragsquadrat() const {
     //berechnet den Betrag im Quadrat eines Vektors
-    komplex betrag = 0;
+    double betrag = 0;
     matrizen kopie(this);
     if(kopie.zeilenzahl() == 1){
         kopie.transponieren();
@@ -987,23 +982,23 @@ komplex matrizen::betragsquadrat() const {
     }
     return betrag;
 }
-QVector<komplex> matrizen::charakteristischesPolynom() const {
+QVector<double> matrizen::charakteristischesPolynom() const {
     //Algorithmus von Samuelson-Berkowitz
     //https://de.wikipedia.org/wiki/Algorithmus_von_Samuelson-Berkowitz
     if(!this->isSquare()){
         debug("Charakterischrisches polynom nur für quadratische Matrizen");
-        return QVector<komplex>();
+        return QVector<double>();
     }
     matrizen vect(2,1);
     vect.set_wert(1,0,0);
-    vect.set_wert(this->get_wert(0,0) * -1, 1, 0);
+    vect.set_wert(-this->get_wert(0,0), 1, 0);
 
     for(int r = 1; r < this->zeilenzahl(); r++){
         auto q= this->q(r+1);
         q.Toeplitz();
         vect = q * vect;
     }
-    QVector<komplex> polynom;
+    QVector<double> polynom;
     for(int i = 0; i < vect.zeilenzahl(); i++){
         polynom.append(vect.get_wert(i,0));
     }
@@ -1062,14 +1057,14 @@ matrizen matrizen::q(int n) const {
     int r = n - 1;
     matrizen erg(n + 1, 1);
     erg.set_wert(1,0,0);
-    erg.set_wert(get_wert(r,r) * -1,1,0);
+    erg.set_wert(-get_wert(r,r),1,0);
     for(int k = 1; k <= r; k++){
         auto R = this->R(r);
         auto A = this->A(r);
         A = A.power(k-1);
         auto S =  this->S(r);
         auto wert = R * A * S;
-        erg.set_wert(wert.get_wert(0,0) * -1, k+1, 0);
+        erg.set_wert(-wert.get_wert(0,0), k+1, 0);
     }
     return erg;
 }
@@ -1085,7 +1080,7 @@ matrizen matrizen::unterbestimmt()const{
     matrizen erg(this->zeilenzahl(), freiheitsgrade);
     erg.set_wert(1, this->zeilenzahl()-1, 0);
     for(int diagIndex = kopie.kleinsteDimension()-1; diagIndex >= 0; diagIndex--){
-        komplex wert = kopie.get_wert(diagIndex, kopie.spaltenzahl()-1);
+        double wert = kopie.get_wert(diagIndex, kopie.spaltenzahl()-1);
         for(int j = diagIndex + 1;j < kopie.spaltenzahl()-1;j++ ){
             wert -= kopie.get_wert(diagIndex, j) * erg.get_wert(j,0);
         }

@@ -26,8 +26,4 @@ void debug(QVector<double> liste){
     }
     debug(text);
 }
-bool istUngefaehrGleich(double wert1, double wert2, double genauigkeit){
-    //vergleicht ob ein Wert gleich dem anderen ist
-    //Falls diese durch Rundungen nicht exakt gleich ist
-    return (abs(wert1 - wert2) <= genauigkeit);
-}
+
